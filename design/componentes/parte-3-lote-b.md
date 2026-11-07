@@ -412,7 +412,7 @@ A lista de imóveis em grade (F1): prontidão, ocupação do mês e próxima ent
 | Os hóspedes saíram e a limpeza não começou | chip pendente "Limpeza pendente" |
 | Limpeza em andamento | chip em andamento "Limpando" |
 | Limpo, ou sem reserva por perto | chip concluída "Pronto" |
-| A limpeza não terminou antes da próxima entrada | chip atrasada "Limpeza atrasada" |
+| A limpeza da saída passou do prazo (regra R7 do banco) | chip atrasada "Limpeza atrasada" |
 
 **Ocupação do mês:** o medidor de 4px do lote A + "78%". A dica do medidor diz "78% de ocupação em novembro (23 de 30 noites)".
 

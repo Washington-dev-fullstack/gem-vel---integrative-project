@@ -16,6 +16,7 @@ Este guia cobre a **Etapa 1** (entrega de 09/11): o banco de dados criado e func
 | `backend/` | a API em Python com Flask: `app.py`, a conexão com o banco (`gemovel/conexao.py`) e os testes (`testes/`) |
 | `DESIGN.md` | o sistema de design do Gemóvel, fonte da verdade da interface |
 | `design/componentes/` | a especificação aprovada dos componentes da interface |
+| `design/telas/` | as telas aprovadas: o que cada uma mostra, faz e pede do back-end |
 | `design/exploracoes/` | protótipos descartáveis de interface (ainda não é o produto final) |
 | `docs/escola/` | a proposta do projeto integrado (PDF) e o cronograma das entregas |
 | `docs/superpowers/` | as especificações e os planos de cada etapa |

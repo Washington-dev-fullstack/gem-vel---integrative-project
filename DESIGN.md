@@ -2,10 +2,10 @@
 
 > Plataforma web para gestão de imóveis de temporada. Quem administra (no computador) cuida de imóveis, reservas, equipe e dos números do mês; a equipe de limpeza e manutenção (no celular, muitas vezes simples) vê e atualiza as próprias tarefas.
 
-- **Situação:** v0.1, aprovada em 7 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
+- **Situação:** v0.2, aprovada em 7 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
 - **Valores:** todos provisórios; podem mudar quando as telas reais forem construídas e testadas com a equipe. Saíram dos protótipos descartáveis em `design/exploracoes/` (pôster Lapidado em `index.html`; painel e agenda em `admin.html`) e foram consolidados aqui. O que mudou na consolidação está no Apêndice A.
 - **Tokens em código:** `design/exploracoes/tokens.css` (provisório). Folha visual, com o contraste medido ao vivo: `design/exploracoes/sistema.html`.
-- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura. v0.1 (7 nov 2026): componentes dos lotes A e B especificados e aprovados (Seção 4); no celular, tocar abre o detalhe e a busca vira um botão (Seção 8); ícones e busca no celular saem das perguntas em aberto (Seção 9).
+- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura. v0.1 (7 nov 2026): componentes dos lotes A e B especificados e aprovados (Seção 4); no celular, tocar abre o detalhe e a busca vira um botão (Seção 8); ícones e busca no celular saem das perguntas em aberto (Seção 9). v0.2 (7 nov 2026): telas web do admin aprovadas (`design/telas/web-admin.md`): o modelo das listas e detalhes, as variantes da Busca, do Seletor de período e do Campo, e um estado a menos para desenhar (Seção 4); "Atrasada" sai das perguntas em aberto, resolvida pela regra R7 do banco (Seção 9).
 
 ---
 
@@ -197,7 +197,7 @@ WCAG 2.x, medido contra o pior ponto do vidro composto sobre o fundo.
 
 ## 4. Componentes
 
-Situação: **especificado** = desenho fechado, na folha do lote A (`design/exploracoes/componentes.html`) ou na Parte 3 (`design/componentes/parte-3-lote-b.md`), que vira código nas entregas; **protótipo** = existe no protótipo descartável e vira código só depois da especificação; **pôster** = só no pôster da direção; **planejado** = ainda não desenhado.
+Situação: **especificado** = desenho fechado, na folha do lote A (`design/exploracoes/componentes.html`), na Parte 3 (`design/componentes/parte-3-lote-b.md`) ou nas telas web (`design/telas/web-admin.md`), que vira código nas entregas; **protótipo** = existe no protótipo descartável e vira código só depois da especificação; **pôster** = só no pôster da direção; **planejado** = ainda não desenhado.
 
 Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos, acessibilidade, movimento, temas e níveis de efeito, conteúdo) estão na Parte 1, `design/componentes/parte-1-regras-e-inventario.md`, §2; a ficha de cada peça, na folha do lote A ou na Parte 3.
 
@@ -208,7 +208,7 @@ Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos
 | Gema de status | mostrar estado pela forma | pendente (pedra bruta) · em andamento (contorno lapidado com coroa) · concluída (lapidada e preenchida, com coroa e pavilhão) · atrasada (pedra bruta com "!") | especificado |
 | Botão | ações | primário (superfície inversa + aro de prisma) · secundário (vidro) · fantasma · perigo · só ícone; tamanhos sm, md, lg; carregando e desabilitado | especificado |
 | Link | navegar no meio do texto ("Ver todas", "Abrir na agenda") | — | especificado |
-| Campo | digitar um valor | texto, área de texto, número com − e + (hóspedes), moeda, telefone, e-mail, senha (mostrar ou ocultar), horário; padrão · foco · erro · desabilitado · só leitura; rótulo em cima, dica e erro embaixo | especificado |
+| Campo | digitar um valor | texto, área de texto, número com − e + (hóspedes), moeda, telefone, e-mail, senha (mostrar ou ocultar), horário, data (o campo de data do sistema); padrão · foco · erro · desabilitado · só leitura; rótulo em cima, dica e erro embaixo | especificado |
 | Lista suspensa | escolher entre opções fixas (imóvel, tipo, responsável) | nativa estilizada · rica, com avatar, gema e a carga do dia ("Cida · 2 tarefas hoje"), no Chrome, no Edge e no Safari 27; no Firefox, a lista do sistema | especificado |
 | Caixa de seleção, rádio e interruptor | marcar, escolher um, ligar ou desligar | o interruptor vale na hora; a caixa de seleção vale quando o formulário é salvo | especificado |
 | Chip de status | estado compacto | 4 estados; rótulo de tarefa ("Pendente") ou de prontidão do imóvel ("Limpando", "Pronto") | especificado |
@@ -227,7 +227,7 @@ Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos
 | Cartão de vidro | agrupar conteúdo | elevação 1; cabeçalho com título, subtítulo e ferramentas | protótipo |
 | KPI | número do mês | herói · padrão; com variação e legenda | protótipo |
 | Alternador e segmentado | escolher visão ou modo | alternador (`aria-pressed`) · segmentado (grupo de rádio) | protótipo |
-| Seletor de período | navegar entre meses | anterior · rótulo · próximo | protótipo |
+| Seletor de período | navegar entre meses ou dias | anterior · rótulo · próximo; a variante dia ganha "Hoje", e o rótulo abre o campo de data | protótipo (mês) · especificado (dia) |
 | Seletor de datas | entrada e saída da reserva | no computador, calendário que mostra as noites já ocupadas do imóvel e calcula noites × diária; no celular, o seletor do sistema | especificado |
 | Gráfico de receita | realizado × previsto por mês | colunas empilhadas, com dica e tabela equivalente | protótipo |
 | Ocupação por imóvel | comparar imóveis | barras horizontais com linha da média | protótipo |
@@ -237,7 +237,7 @@ Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos
 | Cabeçalho de página | título, linha de contexto, ações e voltar | área · detalhe · saudação da equipe; uma ação principal e até duas secundárias | especificado |
 | Abas | dividir um detalhe ("Reservas · Tarefas · Dados") | texto com sublinhado de pontas cortadas; a aba ativa fica no endereço (`#tarefas`) | especificado |
 | Navegação | trocar de área | lateral (≥1241px) · trilho de ícones (761–1240px) · barra inferior de 3 a 5 destinos (≤760px e app da equipe). Admin: Visão geral, Agenda, Reservas, Imóveis, Tarefas e Equipe; no celular, Imóveis e Equipe ficam em "Mais". Configurações sai da v1: "Efeitos visuais" vai para o menu da conta | especificado |
-| Busca | achar imóvel, reserva, hóspede ou ação | campo com ⌘/Ctrl K e resultados agrupados (Ações, Imóveis, Reservas, Hóspedes) · no celular, botão que abre a busca em tela cheia | especificado |
+| Busca | achar imóvel, reserva, hóspede ou ação | campo com ⌘/Ctrl K e resultados agrupados (Ações, Imóveis, Reservas, Hóspedes) · no celular, botão que abre a busca em tela cheia · no formulário: só hóspedes, com nome e telefone, e a última opção "Cadastrar…" | especificado |
 | Filtros | recortar uma lista por imóvel, estado, período ou responsável | fila de botões com painel e contagem, e "Limpar"; ficam no endereço; no celular, folha inferior com "Mostrar" | especificado |
 | Tabela de dados | listas densas do admin | cabeçalho preso, ordenar por coluna, a linha abre o detalhe, menu na ponta, colunas que somem por prioridade, "Carregar mais" de 50 em 50; no celular vira linhas de lista | especificado |
 | Linha de lista | gema ou avatar, título, metadados, valor ou ação | compacta (40px, admin) · confortável (≥56px, equipe e celular); grupos por dia | especificado |
@@ -270,9 +270,9 @@ Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos
 | Modelo | Composição | Situação |
 |---|---|---|
 | Casca do admin | lateral + topo (fosco ao rolar) + conteúdo | protótipo |
-| Visão geral | saudação, Hoje, KPIs, gráficos | protótipo |
+| Visão geral | saudação, Hoje, KPIs, gráficos e a Atividade recente (telas web) | protótipo |
 | Agenda | ferramentas, linha do tempo, legenda | protótipo |
-| Listas e detalhes do admin | imóveis, reservas, tarefas (lista por dia; o quadro por estado fica para depois) e equipe; detalhe do imóvel; entrar | planejado: próxima seção, na versão web |
+| Listas e detalhes do admin | reservas (com a aba Hóspedes), imóveis e o detalhe do imóvel, tarefas (lista por dia; o quadro por estado fica para depois), equipe e entrar | especificado: `design/telas/web-admin.md` |
 | App da equipe | saudação, tarefas do dia, detalhe da tarefa | planejado: seções do celular, no fim |
 
 ### Estados que faltam desenhar
@@ -280,7 +280,6 @@ Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos
 | Onde | Estado | Prioridade |
 |---|---|---|
 | App da equipe | sem internet (guardar a mudança e sincronizar depois) | alta, nas seções do celular |
-| Sessão | sem permissão | baixa |
 
 **Tokens de componente:** sempre apontam para os semânticos; os valores ficam no arquivo de tokens. Lote A e agenda: `--btn-primary-bg: var(--color-surface-inverse)`, `--btn-primary-fg: var(--color-text-on-inverse)`, `--field-border: var(--color-border-control)`, `--field-border-focus: var(--color-focus)`, `--field-border-error: var(--status-late-fg)`, `--chip-label` (status na Obsidiana, `color-text` no Quartzo), `--bar-stay-bg` (safira), `--bar-future-bg` (`neutral-100` a 17%), `--bar-past-bg` (`neutral-0` a 6%), `--bar-block-bg` (listras a 135°). No Quartzo, provisórios até a agenda ganhar tema claro: `safira-100` com texto `safira-700`, `neutral-100`, `neutral-900` a 4% e listras a 9%.
 
@@ -440,7 +439,7 @@ Lote B, por peça: navegação `--nav-w`, `--nav-rail-w`, `--nav-item-h`, `--nav
 - Decida efeitos pelo nível (`data-tier`), não por palpite de aparelho.
 
 **Invariantes (só mudam junto com este arquivo):**
-- Status = pendente, em andamento, concluída, atrasada, sempre com a mesma forma de gema e a mesma cor (Seção 2.4).
+- Status = pendente, em andamento, concluída, atrasada, sempre com a mesma forma de gema e a mesma cor (Seção 2.4). "Atrasada" não é gravada: é calculada na hora pela regra R7 do banco (não concluída e com o prazo vencido; sem prazo, vale o horário agendado).
 - Ação primária = superfície inversa.
 - Texto ≥4,5:1; texto grande, ícones e bordas de controle ≥3:1, medidos no pior ponto do vidro.
 - Bodoni só a partir de 28px.
@@ -449,7 +448,6 @@ Lote B, por peça: navegação `--nav-w`, `--nav-rail-w`, `--nav-item-h`, `--nav
 
 **Perguntas em aberto (pergunte em vez de supor):**
 - **Tema claro do admin:** não planejado agora. Os tokens permitem; os valores de dados claros precisam ser validados antes.
-- **"Atrasada":** proposta de calcular a partir do prazo (limpeza não concluída antes da próxima entrada), em vez de salvar um quarto estado; o banco guarda os três estados do PDF. Decidir com o back-end.
 - **Sem internet no app da equipe:** guardar a mudança e sincronizar depois? Define o estado offline.
 - **Hospedagem das fontes** e subconjuntos: definir na arquitetura do front-end.
 - **Teste com a equipe:** contraste ao sol e tamanho dos alvos num Android simples.

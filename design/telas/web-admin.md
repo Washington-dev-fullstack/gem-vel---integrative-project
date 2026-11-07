@@ -1,6 +1,6 @@
-# Gemóvel — Telas web do admin (rascunho)
+# Gemóvel — Telas web do admin
 
-> Seção de telas, versão web: o admin no computador. Notebook e tablet seguem as faixas da Seção 8 do `DESIGN.md`; o celular fica para as seções do fim, a pedido de vocês. Só vale depois de aprovado. No fim estão os pontos para decidir e o que muda no `DESIGN.md`.
+> Seção de telas, versão web: o admin no computador. Notebook e tablet seguem as faixas da Seção 8 do `DESIGN.md`; o celular fica para as seções do fim, a pedido de vocês. Aprovada em 7 nov 2026, com as sete recomendações e as três variantes; o que mudou no `DESIGN.md` entrou na v0.2 (item 15).
 
 - **Base:**
   - `DESIGN.md` v0.1, maturidade L1: as telas usam só peças e tokens documentados. Não há biblioteca de Figma; nada aqui vem de inspeção de arquivo.
@@ -351,7 +351,7 @@ Equipe                                                          [+ Nova pessoa]
 
 ## 12. Lacunas: o que as peças atuais não cobrem
 
-Procurei na Seção 4 do `DESIGN.md` antes de propor, como ela pede. Três necessidades ficaram sem peça, e as três viram variantes de peças que já existem, sem componente novo. Entram no `DESIGN.md` só com o sim de vocês.
+Procurei na Seção 4 do `DESIGN.md` antes de propor, como ela pede. Três necessidades ficaram sem peça, e as três viram variantes de peças que já existem, sem componente novo. Aprovadas em 7 nov 2026; entraram no `DESIGN.md` na v0.2.
 
 | # | Necessidade | Peça mais próxima, e por que não basta | Proposta |
 |---|---|---|---|
@@ -359,11 +359,11 @@ Procurei na Seção 4 do `DESIGN.md` antes de propor, como ela pede. Três neces
 | 2 | Andar dia a dia nas tarefas | Seletor de período: só anda por mês | variante "dia" do Seletor de período, com o botão "Hoje" |
 | 3 | Escolher um dia só: início e prazo da tarefa, o rótulo do navegador de dias | Seletor de datas: é para o período da reserva, com as noites ocupadas. Campo: não tem o tipo data | o Campo ganha o tipo "data": o campo de data do sistema (`<input type="date">`) estilizado, como o Seletor de datas já faz no celular |
 
-## 13. Pontos para vocês decidirem
+## 13. Decisões (aprovadas em 7 nov 2026)
 
-Tenho uma recomendação para cada um. Se concordarem com todas, basta dizer.
+Vocês aprovaram as sete recomendações.
 
-| # | Pergunta | Recomendo | Por quê |
+| # | Pergunta | Decisão | Por quê |
 |---|---|---|---|
 | 1 | Onde ficam os hóspedes | aba "Hóspedes" dentro de Reservas | o hóspede nasce na reserva; um 7º destino na navegação pesa mais do que ajuda |
 | 2 | As três variantes do item 12 | aprovar as três | resolvem com peças que já existem |
@@ -387,7 +387,7 @@ Serve para a arquitetura e para a Etapa 2 (13/11). Ela pede cadastrar e listar: 
 | Equipe | pessoas com as tarefas de hoje e a atual; quantas tarefas futuras pendentes cada uma tem | criar (`usuario` + `funcionario`, senha só com hash, R8), editar, redefinir a senha, desativar (tira o responsável das tarefas futuras pendentes) e reativar |
 | Visão geral | o que o protótipo já usa, mais os 8 últimos registros do histórico | — |
 
-## 15. O que muda no `DESIGN.md` (só gravo com o sim de vocês)
+## 15. O que mudou no `DESIGN.md` (gravado na v0.2, em 7 nov 2026)
 
 - **Seção 4, Modelos:** "Listas e detalhes do admin" passa a especificado, apontando para este documento. A Visão geral ganha a Atividade recente.
 - **Seção 4, Componentes:** a Busca ganha a variante "no formulário"; o Seletor de período, a variante "dia"; o Campo, o tipo "data".
