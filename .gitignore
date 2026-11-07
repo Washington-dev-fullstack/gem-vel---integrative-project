@@ -1,0 +1,15 @@
+# Windows e OneDrive
+desktop.ini
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Configuração local do banco: copie de backend/.env.example
+.env
+
+# Ferramentas
+.superpowers/
+.claude/settings.local.json
