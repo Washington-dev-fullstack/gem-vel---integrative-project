@@ -1,6 +1,6 @@
-# Gemóvel — Componentes (rascunho)
+# Gemóvel — Componentes, Parte 1: regras e inventário
 
-> Parte 1 da seção de componentes do brainstorming: inventário e regras comuns. É rascunho e só vale depois de aprovado. No fim da seção, o que for aprovado entra na Seção 4 do `DESIGN.md`, com a sua confirmação antes de gravar.
+> Parte 1 da seção de componentes do brainstorming: inventário e regras comuns. Aprovada em 5 nov 2026; entrou na Seção 4 do `DESIGN.md` na v0.1, em 7 nov 2026.
 
 - **Base:** `DESIGN.md` v0 (maturidade L1) e os protótipos em `design/exploracoes/`. Não há arquivo de Figma; nada aqui vem de inspeção de biblioteca.
 - **Situação:**
@@ -232,7 +232,7 @@ Vieram da pesquisa com apps de limpeza para temporada (Turno, Breezeway). Ficam 
 
 1. **Parte 2 — folha, lote A:** primitivos, campos, lista suspensa, seletor de datas, escolhas, esqueleto, faixa de aviso e estado vazio.
 2. **Parte 3 — lote B, em documento (`parte-3-lote-b.md`):** navegação, cabeçalho, abas, menu, busca, filtros, tabela, linha de lista, cartões, atividade recente, avanço de estado, gaveta, diálogo, dica e aviso.
-3. **Fecho:** proposta de texto para a Seção 4 do `DESIGN.md`. Só gravo com o seu sim.
+3. **Fecho:** a Seção 4 do `DESIGN.md` foi gravada na v0.1, em 7 nov 2026.
 
 Esta parte também responde a duas perguntas em aberto do `DESIGN.md` (Seção 9):
 - **Ícones:** Lucide.

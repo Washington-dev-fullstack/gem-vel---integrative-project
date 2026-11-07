@@ -1,6 +1,6 @@
-# Gemóvel — Componentes, lote B (rascunho)
+# Gemóvel — Componentes, Parte 3: lote B
 
-> Parte 3 da seção de componentes. O lote A virou uma página que mostra os componentes funcionando (`design/exploracoes/componentes.html`). O lote B, a pedido de vocês, para economizar, fica só neste documento. Ele só vale depois de aprovado. No fim está o que muda na Seção 4 do `DESIGN.md`; só gravo com o sim de vocês.
+> Parte 3 da seção de componentes. O lote A virou uma página que mostra os componentes funcionando (`design/exploracoes/componentes.html`). O lote B, a pedido de vocês, para economizar, fica só neste documento. Aprovado em 7 nov 2026, com as cinco recomendações; o fim do documento diz o que mudou no `DESIGN.md` (v0.1).
 
 - **Base:**
   - `DESIGN.md` v0;
@@ -683,11 +683,11 @@ Confirma uma ação e permite desfazer. Os avisos simples e com ação já exist
 
 ---
 
-## Pontos para vocês decidirem
+## Decisões (aprovadas em 7 nov 2026)
 
-Tenho uma recomendação para cada um. Se concordarem com todas, basta dizer.
+Vocês aprovaram as cinco recomendações.
 
-| # | Pergunta | Recomendo | Por quê |
+| # | Pergunta | Decisão | Por quê |
 |---|---|---|---|
 | 1 | Admin no celular: 6 destinos em 5 lugares | Visão geral · Agenda · Reservas · Tarefas · Mais (Imóveis, Equipe); Configurações sai da v1 | são as áreas do dia a dia; imóveis e equipe mudam pouco |
 | 2 | Link de WhatsApp no cartão de pessoa | sim, ao lado do telefone | é como a equipe de limpeza se comunica no Brasil, e custa só um link |
@@ -697,7 +697,7 @@ Tenho uma recomendação para cada um. Se concordarem com todas, basta dizer.
 
 ---
 
-## O que muda no `DESIGN.md` (só gravo com o sim de vocês)
+## O que mudou no `DESIGN.md` (gravado na v0.1, em 7 nov 2026)
 
 **Seção 4 (Componentes)**
 1. **Nova situação, "especificado":** o desenho está fechado, na folha do lote A ou neste documento, e vira código nas entregas. As peças dos lotes A e B passam para ela.
@@ -723,4 +723,4 @@ Tenho uma recomendação para cada um. Se concordarem com todas, basta dizer.
 - **Seção 8:** "Dicas: tocar mostra" passa a "tocar abre o detalhe, quando ele existe; no gráfico, tocar mostra a dica".
 - **Seção 9:** Ícones (Lucide) e Busca no celular (botão que abre a busca em tela cheia) saem das perguntas em aberto, como a Parte 1 já tinha decidido.
 
-Depois disso, o próximo passo do design é o app da equipe (telas e o modo sem internet) e, em seguida, a arquitetura do front-end.
+Próximos passos, na ordem que vocês pediram: primeiro a versão web (as telas do admin no computador e a arquitetura do front-end); no fim, as seções só do celular (o app da equipe, com o modo sem internet, e o admin no celular).

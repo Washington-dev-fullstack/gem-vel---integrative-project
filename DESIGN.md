@@ -2,10 +2,10 @@
 
 > Plataforma web para gestão de imóveis de temporada. Quem administra (no computador) cuida de imóveis, reservas, equipe e dos números do mês; a equipe de limpeza e manutenção (no celular, muitas vezes simples) vê e atualiza as próprias tarefas.
 
-- **Situação:** v0, aprovada em 5 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
+- **Situação:** v0.1, aprovada em 7 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
 - **Valores:** todos provisórios; podem mudar quando as telas reais forem construídas e testadas com a equipe. Saíram dos protótipos descartáveis em `design/exploracoes/` (pôster Lapidado em `index.html`; painel e agenda em `admin.html`) e foram consolidados aqui. O que mudou na consolidação está no Apêndice A.
 - **Tokens em código:** `design/exploracoes/tokens.css` (provisório). Folha visual, com o contraste medido ao vivo: `design/exploracoes/sistema.html`.
-- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura.
+- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura. v0.1 (7 nov 2026): componentes dos lotes A e B especificados e aprovados (Seção 4); no celular, tocar abre o detalhe e a busca vira um botão (Seção 8); ícones e busca no celular saem das perguntas em aberto (Seção 9).
 
 ---
 
@@ -197,21 +197,28 @@ WCAG 2.x, medido contra o pior ponto do vidro composto sobre o fundo.
 
 ## 4. Componentes
 
-Situação: **protótipo** = existe no protótipo descartável e vira código só depois da especificação; **pôster** = só no pôster da direção; **planejado** = ainda não desenhado.
+Situação: **especificado** = desenho fechado, na folha do lote A (`design/exploracoes/componentes.html`) ou na Parte 3 (`design/componentes/parte-3-lote-b.md`), que vira código nas entregas; **protótipo** = existe no protótipo descartável e vira código só depois da especificação; **pôster** = só no pôster da direção; **planejado** = ainda não desenhado.
+
+Esta seção é o índice. As regras comuns a todas as peças (estados, tamanhos, acessibilidade, movimento, temas e níveis de efeito, conteúdo) estão na Parte 1, `design/componentes/parte-1-regras-e-inventario.md`, §2; a ficha de cada peça, na folha do lote A ou na Parte 3.
 
 ### Primitivos
 
 | Componente | Para quê | Variantes | Situação |
 |---|---|---|---|
-| Gema de status | mostrar estado pela forma | pendente (pedra bruta) · em andamento (contorno lapidado com coroa) · concluída (lapidada e preenchida, com coroa e pavilhão) · atrasada (pedra bruta com "!") | protótipo |
-| Botão | ações | primário (superfície inversa + aro de prisma) · secundário (vidro) · fantasma · perigo · só ícone; tamanhos sm, md, lg | protótipo (faltam perigo e carregando) |
-| Campo | texto, data, número, seleção | padrão · foco · erro · desabilitado; rótulo em cima, dica e erro embaixo | protótipo |
-| Chip de status | estado compacto | 4 estados; rótulo de tarefa ("Pendente") ou de prontidão do imóvel ("Limpando", "Pronto") | protótipo |
-| Pílula | etiqueta neutra | neutra · estadia em curso | protótipo |
-| Atalho (kbd) | mostra a tecla | troca ⌘ por Ctrl conforme o sistema | protótipo |
-| Avatar | pessoa | iniciais sobre prisma | protótipo |
-| Medidor | proporção simples (ocupação) | 8px · 4px | protótipo |
-| Ícone | apoio visual | traço 1,6–2px, pontas redondas; 16, 20 e 24px | protótipo (desenho próprio) |
+| Gema de status | mostrar estado pela forma | pendente (pedra bruta) · em andamento (contorno lapidado com coroa) · concluída (lapidada e preenchida, com coroa e pavilhão) · atrasada (pedra bruta com "!") | especificado |
+| Botão | ações | primário (superfície inversa + aro de prisma) · secundário (vidro) · fantasma · perigo · só ícone; tamanhos sm, md, lg; carregando e desabilitado | especificado |
+| Link | navegar no meio do texto ("Ver todas", "Abrir na agenda") | — | especificado |
+| Campo | digitar um valor | texto, área de texto, número com − e + (hóspedes), moeda, telefone, e-mail, senha (mostrar ou ocultar), horário; padrão · foco · erro · desabilitado · só leitura; rótulo em cima, dica e erro embaixo | especificado |
+| Lista suspensa | escolher entre opções fixas (imóvel, tipo, responsável) | nativa estilizada · rica, com avatar, gema e a carga do dia ("Cida · 2 tarefas hoje"), no Chrome, no Edge e no Safari 27; no Firefox, a lista do sistema | especificado |
+| Caixa de seleção, rádio e interruptor | marcar, escolher um, ligar ou desligar | o interruptor vale na hora; a caixa de seleção vale quando o formulário é salvo | especificado |
+| Chip de status | estado compacto | 4 estados; rótulo de tarefa ("Pendente") ou de prontidão do imóvel ("Limpando", "Pronto") | especificado |
+| Pílula | etiqueta neutra | neutra · estadia em curso · contador | especificado |
+| Atalho (kbd) | mostra a tecla | troca ⌘ por Ctrl conforme o sistema | especificado |
+| Avatar | pessoa | iniciais sobre prisma | especificado |
+| Medidor | proporção simples (ocupação) | 8px · 4px | especificado |
+| Ícone | apoio visual | Lucide (licença ISC, traço 1,75px) nos ícones gerais; gemas e logo em desenho próprio; 16, 20 e 24px | especificado |
+| Esqueleto facetado | carregar sem o layout pular | no formato do conteúdo que vai chegar | especificado |
+| Carregando | indicador de espera | no botão · numa área | especificado |
 
 ### Componentes
 
@@ -221,15 +228,29 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 | KPI | número do mês | herói · padrão; com variação e legenda | protótipo |
 | Alternador e segmentado | escolher visão ou modo | alternador (`aria-pressed`) · segmentado (grupo de rádio) | protótipo |
 | Seletor de período | navegar entre meses | anterior · rótulo · próximo | protótipo |
+| Seletor de datas | entrada e saída da reserva | no computador, calendário que mostra as noites já ocupadas do imóvel e calcula noites × diária; no celular, o seletor do sistema | especificado |
 | Gráfico de receita | realizado × previsto por mês | colunas empilhadas, com dica e tabela equivalente | protótipo |
 | Ocupação por imóvel | comparar imóveis | barras horizontais com linha da média | protótipo |
 | Bloco "Hoje" | o dia num relance | contagens · chegadas · alertas com ação | protótipo |
-| Dica flutuante | detalhe ao apontar ou focar | dado · reserva · limpeza | protótipo |
-| Aviso (toast) | confirmar e permitir desfazer | simples · com ação (10s, pausa ao apontar ou focar, ⌘/Ctrl Z) | protótipo |
-| Gaveta | detalhe e formulário | detalhe da reserva · nova reserva · bloqueio | protótipo |
-| Busca | achar imóvel ou hóspede | com atalho ⌘/Ctrl K | protótipo (some no celular: lacuna) |
-| Navegação | trocar de área | barra lateral com pílula de vidro · trilho de ícones · barra inferior | protótipo |
-| Cartão de tarefa | a tarefa do dia, no celular | por estado; ação principal de 48px | pôster |
+| Faixa de aviso | aviso dentro da página; o Aviso (toast) flutua e some sozinho | erro · atenção · informação · sucesso; com ação ("Tentar de novo") · fixa (sem internet) · que se fecha | especificado |
+| Estado vazio | dizer o que é e dar a primeira ação | primeiro uso · sem resultado · dia livre | especificado |
+| Cabeçalho de página | título, linha de contexto, ações e voltar | área · detalhe · saudação da equipe; uma ação principal e até duas secundárias | especificado |
+| Abas | dividir um detalhe ("Reservas · Tarefas · Dados") | texto com sublinhado de pontas cortadas; a aba ativa fica no endereço (`#tarefas`) | especificado |
+| Navegação | trocar de área | lateral (≥1241px) · trilho de ícones (761–1240px) · barra inferior de 3 a 5 destinos (≤760px e app da equipe). Admin: Visão geral, Agenda, Reservas, Imóveis, Tarefas e Equipe; no celular, Imóveis e Equipe ficam em "Mais". Configurações sai da v1: "Efeitos visuais" vai para o menu da conta | especificado |
+| Busca | achar imóvel, reserva, hóspede ou ação | campo com ⌘/Ctrl K e resultados agrupados (Ações, Imóveis, Reservas, Hóspedes) · no celular, botão que abre a busca em tela cheia | especificado |
+| Filtros | recortar uma lista por imóvel, estado, período ou responsável | fila de botões com painel e contagem, e "Limpar"; ficam no endereço; no celular, folha inferior com "Mostrar" | especificado |
+| Tabela de dados | listas densas do admin | cabeçalho preso, ordenar por coluna, a linha abre o detalhe, menu na ponta, colunas que somem por prioridade, "Carregar mais" de 50 em 50; no celular vira linhas de lista | especificado |
+| Linha de lista | gema ou avatar, título, metadados, valor ou ação | compacta (40px, admin) · confortável (≥56px, equipe e celular); grupos por dia | especificado |
+| Atividade recente | quem fez o quê e quando | vem do histórico das tarefas; 8 no cartão, 50 na gaveta "Ver histórico" | especificado |
+| Cartão de tarefa | a tarefa do dia | grande no celular (por estado; ação principal de 48px) · compacto no admin, com menu | especificado |
+| Cartão de imóvel | prontidão, próxima entrada e diária | prontidão: "Hóspedes até…", "Limpeza pendente", "Limpando", "Pronto", "Limpeza atrasada"; menu com Editar, Bloquear datas e Desativar | especificado |
+| Cartão de pessoa | função, telefone e tarefas de hoje em fila de gemas | situação agora ("Agora: limpando…", "Próxima: 14:00…", "Dia livre"); telefone com link de WhatsApp; menu com Nova tarefa, Editar e Desativar | especificado |
+| Avanço de estado | levar a tarefa ao próximo estado; assinatura do app da equipe | botão de 48px na largura toda ("Começar limpeza" → "Concluir limpeza"); a gema se lapida; aviso com "Desfazer" por 10s | especificado |
+| Menu de ações | ações de uma linha ou cartão, e o menu da conta | menu do item (ações destrutivas por último, em rubi) · menu da conta (Efeitos visuais, Sair); no celular, folha inferior | especificado |
+| Gaveta | detalhe e formulário | painel de 430px à direita · folha inferior no celular; endereço próprio (`?reserva=1042`); pergunta antes de descartar mudanças | especificado |
+| Diálogo | decidir o que não tem desfazer | descartar mudanças · sessão expirada (entrar de novo sem perder o formulário) | especificado |
+| Dica flutuante | detalhe ao apontar ou focar | rótulo · rica (dado · reserva · limpeza); nunca é o único lugar da informação | especificado |
+| Aviso (toast) | confirmar e permitir desfazer | simples (5s) · com "Desfazer" (10s, ⌘/Ctrl Z, linha de tempo); até 3 empilhados; pausa ao apontar ou focar; erro nunca vira aviso: vai para a Faixa de aviso | especificado |
 
 ### Padrões
 
@@ -237,8 +258,12 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 |---|---|---|
 | Agenda (linha do tempo) | imóveis × dias. Reserva = faceta com pontas em ângulo (entrada 15:00, saída 11:00). Gema da limpeza fica entre 11:00 e 15:00. Linha do "agora". Arrastar para criar (mouse) ou tocar (toque). Coluna dos imóveis presa ao rolar | protótipo |
 | Nova reserva | gaveta com valor = diária × noites (editável) e checagem de conflito ao vivo | protótipo |
-| Desfazer em vez de confirmar | ação reversível → aviso com "Desfazer" | protótipo |
+| Desfazer em vez de confirmar | ação reversível → aviso com "Desfazer". Excluir só chega ao servidor quando o aviso acaba (10s); se a página fechar antes, o pedido sai na hora. No Avanço de estado, desfazer apaga o último registro do histórico (mesma pessoa, menos de 10s) | especificado |
 | Tabela equivalente | todo gráfico e a agenda têm uma tabela com os mesmos dados | protótipo |
+| Formulário de cadastro | rótulo em cima; campo opcional marcado como "Opcional"; valida ao sair do campo e ao salvar; resumo de erros no topo leva o foco ao primeiro erro; ao fechar com mudanças, pergunta antes de descartar | especificado |
+| Lista com filtros | cabeçalho + filtros + tabela ou cartões + carregando, vazio e erro; os filtros continuam ao voltar | especificado |
+| Estados de dados | primeira carga com esqueleto; ao atualizar, os dados antigos ficam à vista; erro com "Tentar de novo" | especificado |
+| Entrar | e-mail e senha; o erro não diz qual dos dois está errado; cada perfil cai na sua tela (admin no painel, equipe nas tarefas) | especificado |
 
 ### Modelos
 
@@ -247,23 +272,19 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 | Casca do admin | lateral + topo (fosco ao rolar) + conteúdo | protótipo |
 | Visão geral | saudação, Hoje, KPIs, gráficos | protótipo |
 | Agenda | ferramentas, linha do tempo, legenda | protótipo |
-| App da equipe | saudação, tarefas do dia, detalhe da tarefa | planejado |
+| Listas e detalhes do admin | imóveis, reservas, tarefas (lista por dia; o quadro por estado fica para depois) e equipe; detalhe do imóvel; entrar | planejado: próxima seção, na versão web |
+| App da equipe | saudação, tarefas do dia, detalhe da tarefa | planejado: seções do celular, no fim |
 
 ### Estados que faltam desenhar
 
 | Onde | Estado | Prioridade |
 |---|---|---|
-| Painel, gráficos, agenda | carregando (esqueleto facetado) | alta |
-| Painel, agenda, app da equipe | vazio (sem imóveis, sem reservas no mês, sem tarefas hoje) | alta |
-| Tudo que fala com o servidor | erro com "Tentar de novo" | alta |
-| App da equipe | sem internet (guardar a mudança e sincronizar depois) | alta |
-| Botão | carregando · desabilitado | média |
-| Campo | desabilitado · só leitura | média |
-| Busca | celular (botão que abre a busca) | média |
-| Gaveta | sair com mudanças não salvas | média |
-| Sessão | expirada · sem permissão | baixa |
+| App da equipe | sem internet (guardar a mudança e sincronizar depois) | alta, nas seções do celular |
+| Sessão | sem permissão | baixa |
 
-**Tokens de componente (exemplos):** `--btn-primary-bg: var(--color-surface-inverse)`, `--btn-primary-fg: var(--color-text-on-inverse)`, `--field-border: var(--color-border-control)`, `--field-border-focus: var(--color-focus)`, `--field-border-error: var(--status-late-fg)`, `--chip-label` (status na Obsidiana, `color-text` no Quartzo), `--bar-stay-bg` (safira), `--bar-future-bg` (`neutral-100` a 17%), `--bar-past-bg` (`neutral-0` a 6%), `--bar-block-bg` (listras a 135°). No Quartzo, provisórios até a agenda ganhar tema claro: `safira-100` com texto `safira-700`, `neutral-100`, `neutral-900` a 4% e listras a 9%.
+**Tokens de componente:** sempre apontam para os semânticos; os valores ficam no arquivo de tokens. Lote A e agenda: `--btn-primary-bg: var(--color-surface-inverse)`, `--btn-primary-fg: var(--color-text-on-inverse)`, `--field-border: var(--color-border-control)`, `--field-border-focus: var(--color-focus)`, `--field-border-error: var(--status-late-fg)`, `--chip-label` (status na Obsidiana, `color-text` no Quartzo), `--bar-stay-bg` (safira), `--bar-future-bg` (`neutral-100` a 17%), `--bar-past-bg` (`neutral-0` a 6%), `--bar-block-bg` (listras a 135°). No Quartzo, provisórios até a agenda ganhar tema claro: `safira-100` com texto `safira-700`, `neutral-100`, `neutral-900` a 4% e listras a 9%.
+
+Lote B, por peça: navegação `--nav-w`, `--nav-rail-w`, `--nav-item-h`, `--nav-pill-bg`, `--nav-bar-h`; abas `--tab-h`, `--tab-indicator`, `--tab-indicator-h`; filtros `--filter-h`, `--filter-active-bg`; tabela `--table-row-h`, `--table-head-h`, `--table-head-fg`, `--table-divider`, `--table-head-divider`, `--table-row-open-bar`; linha de lista `--row-h-compact`, `--row-h-comfy`, `--row-pad-x`, `--row-gap`; cartões `--task-card-pad`, `--task-card-radius`, `--prop-card-min`; avanço de estado `--advance-h`, `--advance-bg`, `--advance-fg`; menu `--menu-min-w`, `--menu-item-h`, `--menu-danger-fg`; gaveta e folha `--drawer-w`, `--drawer-pad`, `--sheet-top-gap`, `--sheet-handle-w`, `--sheet-handle-h`; diálogo `--dialog-w`; dica `--tip-max-w`, `--tip-delay`, `--tip-offset`; aviso `--toast-w`, `--toast-offset`, `--toast-gap`. Os valores e as ligações estão em cada ficha da Parte 3.
 
 ---
 
@@ -392,7 +413,7 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 | Computador | ≥1241px | lateral de 232px com rótulos; KPIs em 4 colunas; gráficos lado a lado; Hoje em 3 colunas |
 | Notebook | 1021–1240px | trilho de ícones de 76px (rótulos somem, contador vai para o canto); busca de 240px; KPIs em 2 colunas; gráficos empilhados |
 | Tablet | 761–1020px | Hoje em 1 coluna (contagens em 4 colunas); topo quebra em duas linhas |
-| Celular | ≤760px | barra inferior flutuante (vidro, 8px das bordas); topo deixa de ser fixo e perde o vidro; título em 32px; margem 16px; KPIs em 1 coluna; herói em 44px; agenda com coluna de imóveis de 128px; legenda da agenda e busca somem |
+| Celular | ≤760px | barra inferior flutuante (vidro, 8px das bordas); topo deixa de ser fixo e perde o vidro; título em 32px; margem 16px; KPIs em 1 coluna; herói em 44px; agenda com coluna de imóveis de 128px; legenda da agenda some; a busca vira um botão que abre em tela cheia |
 
 **Principais adaptações:**
 
@@ -401,7 +422,7 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 | Navegação | barra inferior | lateral (trilho de ícones no notebook) |
 | Agenda | rola de lado com a coluna de imóveis presa; tocar num dia cria uma reserva de 1 noite | arrastar numa linha vazia cria a reserva; dica ao apontar |
 | Gaveta | quase tela cheia (12px de margem) | painel à direita de 430px |
-| Dicas | tocar mostra; o conteúdo também está na gaveta e na tabela | apontar ou focar mostra |
+| Dicas | tocar abre o detalhe, quando ele existe; no gráfico, tocar mostra a dica. O conteúdo também está na gaveta e na tabela | apontar ou focar mostra |
 | Formulários | campos de 44px, texto de 16px (evita o zoom do iOS) | campos de 40px |
 
 **Ponteiro:** `(hover: none) and (pointer: coarse)` troca as instruções de "arraste" por "toque" e aumenta os controles (Seção 5).
@@ -428,10 +449,8 @@ Situação: **protótipo** = existe no protótipo descartável e vira código s�
 
 **Perguntas em aberto (pergunte em vez de supor):**
 - **Tema claro do admin:** não planejado agora. Os tokens permitem; os valores de dados claros precisam ser validados antes.
-- **Ícones:** proposta de usar Lucide (licença ISC, traço 1,75px, 16/20/24px) para os ícones gerais. As gemas continuam desenho próprio.
 - **"Atrasada":** proposta de calcular a partir do prazo (limpeza não concluída antes da próxima entrada), em vez de salvar um quarto estado; o banco guarda os três estados do PDF. Decidir com o back-end.
 - **Sem internet no app da equipe:** guardar a mudança e sincronizar depois? Define o estado offline.
-- **Busca no celular:** precisa de um botão; hoje ela some.
 - **Hospedagem das fontes** e subconjuntos: definir na arquitetura do front-end.
 - **Teste com a equipe:** contraste ao sol e tamanho dos alvos num Android simples.
 
