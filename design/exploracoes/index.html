@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gemóvel · Direções visuais</title>
+  <meta name="description" content="Exploração de três direções visuais para a interface do Gemóvel. Protótipo descartável, serve só para escolher a direção.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Fraunces:ital,opsz,wght@1,9..144,300..600&family=Geist+Mono:wght@400..600&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400..700&family=Manrope:wght@300..800&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Filtros SVG de refração (vidro líquido) são criados aqui pelo shared.js -->
+  <svg class="defs" aria-hidden="true" focusable="false"><defs id="lens-defs"></defs></svg>
+
+  <header class="shell">
+    <a class="shell__brand" href="#lapidado">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M9.5 9.5L12 20.5L14.5 9.5M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></svg>
+      <span>Gemóvel</span><small>direções visuais</small>
+    </a>
+    <nav class="shell__nav" aria-label="Direções">
+      <span class="shell__pill" aria-hidden="true"></span>
+      <a href="#lapidado"><b>01</b><span>Lapidado</span></a>
+      <a href="#torre"><b>02</b><span>Torre de Controle</span></a>
+      <a href="#ceu"><b>03</b><span>Céu Vivo</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================================================== 01 · LAPIDADO -->
+    <section id="lapidado" class="dir dir--lap" aria-labelledby="lap-title">
+      <canvas class="dir__canvas" id="lap-canvas" aria-hidden="true"></canvas>
+      <div class="dir__veil" aria-hidden="true"></div>
+      <div class="dir__grid">
+        <div class="dir__spec">
+          <p class="dir__num">01 · Ousada</p>
+          <h2 class="dir__name" id="lap-title">Lapidado</h2>
+          <p class="dir__theme">refrativo · preciso · ateliê de lapidação</p>
+          <p class="dir__pitch">Tem uma gema escondida no nome: <b>GEM</b>óvel. Cada imóvel vira uma joia, e a equipe lapida cada uma entre um hóspede e outro. O vidro líquido deixa de ser enfeite e vira o material da marca: cristal.</p>
+          <ul class="dir__traits">
+            <li>Vidro líquido como material da marca, com refração real no Chrome e no Edge</li>
+            <li>Status como lapidação: pedra bruta → lapidando → lapidada. Forma e cor juntas, nunca só cor</li>
+            <li>Obsidiana (escuro) para o administrador, Quartzo (claro) para a equipe no sol</li>
+            <li>Serifa de joalheria + grotesca técnica + mono de medição</li>
+          </ul>
+          <div class="dir__palette">
+            <div class="swatch"><i style="--c:#07070b"></i><span>Obsidiana</span></div>
+            <div class="swatch"><i style="--c:#e9e5f7"></i><span>Quartzo</span></div>
+            <div class="swatch"><i style="--c:#2ee6a6"></i><span>Esmeralda</span></div>
+            <div class="swatch"><i style="--c:#ffb547"></i><span>Âmbar</span></div>
+            <div class="swatch"><i style="--c:#ff4d6d"></i><span>Rubi</span></div>
+            <div class="swatch"><i style="--c:#6b93ff"></i><span>Safira</span></div>
+            <div class="swatch"><i style="--c:conic-gradient(from 200deg,#9ff3ff,#c9b8ff,#ffb3e1,#ffe1a1,#9ff3ff)"></i><span>Brilho</span></div>
+          </div>
+          <div class="dir__type">
+            <span class="aa">Aa</span>
+            <p><b>Bodoni Moda</b> títulos e números de destaque<br><b>Geist</b> interface · <b>Geist Mono</b> dados e horários</p>
+          </div>
+          <dl class="dir__fit">
+            <dt>Melhor para</dt><dd>Identidade memorável, com tema claro para o uso diário da equipe.</dd>
+            <dt>Atenção</dt><dd>Exige disciplina de cor: as gemas são só para status. O 3D fica no login e em destaques.</dd>
+          </dl>
+        </div>
+
+        <div class="dir__stage">
+          <div class="artboard lap-art">
+            <article class="glass lap-today" data-lens data-enter data-depth="1">
+              <header class="lap-today__head mono"><span>QUI · 05 NOV</span><span class="lap-live"><i></i>ao vivo</span></header>
+              <div class="lap-today__hero">
+                <span class="lap-big">87<small>%</small></span>
+                <span class="lap-today__label">ocupação<br>nesta semana</span>
+              </div>
+              <ul class="lap-today__row">
+                <li><b>4</b><span>check-outs</span></li>
+                <li><b>3</b><span>check-ins</span></li>
+                <li><b>4</b><span>limpezas</span></li>
+                <li class="is-alert"><b>1</b><span>atrasada</span></li>
+              </ul>
+            </article>
+
+            <article class="glass lap-prop" data-lens data-enter data-depth="2" data-state="1">
+              <div class="lap-prop__top">
+                <div>
+                  <p class="mono lap-prop__code">IMÓVEL 014 · PINHEIROS, SP</p>
+                  <h3 class="lap-prop__name">Loft Pinheiros</h3>
+                </div>
+                <button class="lap-status" type="button" data-state="1" aria-label="Status da limpeza. Clique para avançar.">
+                  <svg class="lap-gem" viewBox="0 0 24 24" aria-hidden="true">
+                    <path class="gem-body" d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/>
+                    <path class="gem-facet" d="M3 9.5H21"/>
+                    <path class="gem-facet" d="M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/>
+                    <path class="gem-facet" d="M9.5 9.5L12 20.5L14.5 9.5"/>
+                  </svg>
+                  <span class="lap-status__text" aria-live="polite">Em andamento</span>
+                </button>
+              </div>
+              <div class="lap-window">
+                <div class="lap-window__labels mono"><span>CHECK-OUT 11:00</span><span>JANELA 4H</span><span>CHECK-IN 15:00</span></div>
+                <div class="lap-window__bar"><i></i></div>
+              </div>
+              <div class="lap-prop__foot">
+                <span class="lap-avatar" aria-hidden="true">CR</span>
+                <p><b>Cida Ramos</b> <span class="lap-prop__who">está limpando</span><br><span class="muted">próximo check-in: Mariana Costa · 3 noites</span></p>
+              </div>
+            </article>
+            <p class="hint lap-hint mono" data-enter>clique no status ↓</p>
+
+            <div class="phone lap-phone" data-enter data-depth="3">
+              <div class="phone__screen lap-quartzo">
+                <div class="phone__status mono"><span>12:20</span><span>5G ▮▮▮</span></div>
+                <p class="lap-q__hello">Olá, Cida</p>
+                <h4 class="lap-q__title">3 tarefas hoje</h4>
+                <article class="glass-light lap-q__task">
+                  <p class="mono lap-q__tag">LIMPEZA · EM ANDAMENTO</p>
+                  <h5>Loft Pinheiros</h5>
+                  <p class="lap-q__addr">R. dos Pinheiros, 870 · ap. 32</p>
+                  <div class="lap-q__meta mono"><span>ATÉ 15:00</span><span>RESTAM 2H40</span></div>
+                  <button class="lap-btn" type="button">Concluir limpeza</button>
+                </article>
+                <article class="glass-light lap-q__task lap-q__task--mini">
+                  <p class="mono lap-q__tag lap-q__tag--muted">LIMPEZA · 15:30</p>
+                  <h5>Cobertura Moema</h5>
+                </article>
+                <article class="glass-light lap-q__task lap-q__task--mini lap-q__task--done">
+                  <p class="mono lap-q__tag lap-q__tag--ok">CONCLUÍDA · 10:40</p>
+                  <h5>Casa Lapa</h5>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== 02 · TORRE DE CONTROLE -->
+    <section id="torre" class="dir dir--torre" aria-labelledby="torre-title">
+      <canvas class="dir__canvas" id="torre-canvas" aria-hidden="true"></canvas>
+      <div class="dir__veil" aria-hidden="true"></div>
+      <div class="dir__grid">
+        <div class="dir__spec">
+          <p class="dir__num">02 · Equilibrada</p>
+          <h2 class="dir__name" id="torre-title">Torre de<br>Controle</h2>
+          <p class="dir__theme">tático · vivo · central de operações</p>
+          <p class="dir__pitch">Uma central de operações para os seus imóveis. Tudo ao vivo: o mapa, a equipe em deslocamento, a linha do dia. A cor só aparece quando algo precisa de você.</p>
+          <ul class="dir__traits">
+            <li>Mapa vivo em canvas: imóveis, rotas da equipe e radar</li>
+            <li>Painéis de instrumento: linhas finas, cantoneiras, códigos</li>
+            <li>Monocromático, com um laranja de sinal só para o que é urgente</li>
+            <li>Rótulos que se "decodificam" ao aparecer</li>
+          </ul>
+          <div class="dir__palette">
+            <div class="swatch"><i style="--c:#0a0c0b"></i><span>Grafite</span></div>
+            <div class="swatch"><i style="--c:#151a18"></i><span>Painel</span></div>
+            <div class="swatch"><i style="--c:#8d9b94"></i><span>Névoa</span></div>
+            <div class="swatch"><i style="--c:#e9f0ec"></i><span>Branco</span></div>
+            <div class="swatch"><i style="--c:#ff6b2c"></i><span>Sinal</span></div>
+            <div class="swatch"><i style="--c:#5bd69a"></i><span>Feito</span></div>
+          </div>
+          <div class="dir__type">
+            <span class="aa">AA</span>
+            <p><b>Archivo Expanded</b> títulos e números<br><b>JetBrains Mono</b> códigos, horários e rótulos</p>
+          </div>
+          <dl class="dir__fit">
+            <dt>Melhor para</dt><dd>Quem gerencia muitos imóveis e quer enxergar tudo de uma vez.</dd>
+            <dt>Atenção</dt><dd>Pode soar frio para hospitalidade, e o excesso de mono cansa. A equipe pode achar intimidador.</dd>
+          </dl>
+        </div>
+
+        <div class="dir__stage">
+          <div class="artboard torre-art">
+            <div class="torre-panel torre-top" data-enter>
+              <span class="torre-wordmark">GEMÓVEL<em>/OPS</em></span>
+              <span class="mono torre-clock" id="torre-clock">05.11.2026 — 12:20:00</span>
+              <span class="mono torre-live"><i></i>AO VIVO</span>
+            </div>
+            <div class="torre-panel torre-stats brackets" data-enter>
+              <div class="torre-stat"><span class="mono" data-scramble>CHECK-OUT</span><b>04</b></div>
+              <div class="torre-stat"><span class="mono" data-scramble>CHECK-IN</span><b>03</b></div>
+              <div class="torre-stat"><span class="mono" data-scramble>LIMPEZAS</span><b>04</b></div>
+              <div class="torre-stat is-alert"><span class="mono" data-scramble>ATRASADAS</span><b>01</b></div>
+            </div>
+            <p class="hint torre-hint mono" data-enter>passe o mouse no mapa</p>
+            <div class="torre-lens glass-dark" data-lens data-bezel="16" data-blur="5" data-enter>
+              <p class="mono torre-lens__code"><span data-scramble>IMV-022</span><span class="torre-tag">ATRASADA 20 MIN</span></p>
+              <h3>Studio Vila Madalena</h3>
+              <p class="torre-lens__line mono">MANUTENÇÃO · TORNEIRA DO BANHEIRO</p>
+              <div class="torre-lens__eta"><span class="mono">RAFAEL S. A CAMINHO</span><b class="mono">ETA 12 MIN</b></div>
+              <div class="torre-lens__track"><i></i></div>
+            </div>
+            <div class="torre-panel torre-timeline brackets" data-enter>
+              <header class="mono"><span data-scramble>LINHA DO DIA</span><span>06:00 — 22:00</span></header>
+              <div class="torre-ruler mono"><span>06</span><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span><span>22</span></div>
+              <div class="torre-rows">
+                <div class="torre-row"><span class="mono">IMV-014 LOFT PINHEIROS</span><div class="torre-track"><i class="stay" style="--from:6;--to:11"></i><i class="win is-live" style="--from:11;--to:15"></i><i class="stay" style="--from:15;--to:22"></i></div></div>
+                <div class="torre-row"><span class="mono">IMV-019 LOFT V. MARIANA</span><div class="torre-track"><i class="stay" style="--from:6;--to:11"></i><i class="win" style="--from:11;--to:14"></i></div></div>
+                <div class="torre-row"><span class="mono">IMV-031 CASA LAPA</span><div class="torre-track"><i class="stay" style="--from:6;--to:10"></i><i class="win is-done" style="--from:10;--to:13"></i><i class="stay" style="--from:16;--to:22"></i></div></div>
+                <div class="torre-row is-alert"><span class="mono">IMV-022 STUDIO V. MADALENA</span><div class="torre-track"><i class="win is-late" style="--from:10;--to:12"></i></div></div>
+                <div class="torre-row"><span class="mono">IMV-045 COBERTURA MOEMA</span><div class="torre-track"><i class="stay" style="--from:6;--to:12"></i><i class="win" style="--from:12;--to:15.5"></i><i class="stay" style="--from:17;--to:22"></i></div></div>
+              </div>
+              <i class="torre-now" aria-hidden="true"><span class="mono">12:20</span></i>
+            </div>
+            <div class="phone torre-phone" data-enter>
+              <div class="phone__screen torre-screen">
+                <div class="phone__status mono"><span>12:20</span><span>5G ▮▮▮</span></div>
+                <p class="mono torre-s__who">CIDA RAMOS · TURNO 08–17</p>
+                <p class="mono torre-s__step">TAREFA 1 DE 3 · EM ANDAMENTO</p>
+                <h4 class="torre-s__title">LOFT<br>PINHEIROS</h4>
+                <p class="mono torre-s__meta">LIMPEZA · ATÉ 15:00</p>
+                <div class="torre-s__timer"><span class="mono">TEMPO</span><b class="mono" id="torre-timer">01:20:00</b></div>
+                <button class="torre-s__btn mono" type="button">CONCLUIR ▸</button>
+                <p class="mono torre-s__next-h">PRÓXIMAS</p>
+                <ul class="torre-s__next mono">
+                  <li><span>15:30</span>LIMPEZA · COBERTURA MOEMA</li>
+                  <li><span>AMANHÃ</span>LIMPEZA · APTO JARDINS</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== 03 · CÉU VIVO -->
+    <section id="ceu" class="dir dir--ceu" aria-labelledby="ceu-title">
+      <canvas class="dir__canvas" id="ceu-canvas" aria-hidden="true"></canvas>
+      <div class="dir__veil" aria-hidden="true"></div>
+      <div class="dir__grid">
+        <div class="dir__spec">
+          <p class="dir__num">03 · Segura</p>
+          <h2 class="dir__name" id="ceu-title">Céu <em>Vivo</em></h2>
+          <p class="dir__theme">sereno · espacial · céu em tempo real</p>
+          <p class="dir__pitch">A interface respira com o dia. O céu segue a hora real: a manhã dos check-outs, a tarde das limpezas, o fim de tarde dos check-ins. Os painéis flutuam como janelas de vidro.</p>
+          <ul class="dir__traits">
+            <li>Céu em canvas que segue a hora de verdade (arraste para testar)</li>
+            <li>Vidro adaptativo: texto e tinta mudam com a luz</li>
+            <li>Profundidade espacial, com painéis em camadas e paralaxe</li>
+            <li>Barra de abas com uma bolha líquida que se estica</li>
+          </ul>
+          <div class="dir__palette">
+            <div class="swatch"><i style="--c:linear-gradient(#3d4f9a,#ffbfa0)"></i><span>Aurora</span></div>
+            <div class="swatch"><i style="--c:linear-gradient(#3f8ef5,#d8ecff)"></i><span>Dia</span></div>
+            <div class="swatch"><i style="--c:linear-gradient(#4b5fc4,#ffb070)"></i><span>Dourado</span></div>
+            <div class="swatch"><i style="--c:linear-gradient(#0b1030,#2b3570)"></i><span>Noite</span></div>
+            <div class="swatch"><i style="--c:#ff7a2f"></i><span>Sol</span></div>
+            <div class="swatch"><i style="--c:rgba(255,255,255,.55)"></i><span>Vidro</span></div>
+          </div>
+          <div class="dir__type">
+            <span class="aa">Aa<em>a</em></span>
+            <p><b>Manrope</b> interface e títulos<br><b>Fraunces itálico</b> saudações e toques humanos</p>
+          </div>
+          <dl class="dir__fit">
+            <dt>Melhor para</dt><dd>Uso no celular durante o dia e equipes com pouca intimidade com tecnologia.</dd>
+            <dt>Atenção</dt><dd>É a mais próxima da estética da Apple, logo a menos autoral. O céu muda o contraste, então cada hora precisa de teste.</dd>
+          </dl>
+        </div>
+
+        <div class="dir__stage">
+          <div class="artboard ceu-art">
+            <article class="glass-sky ceu-window" data-lens data-enter data-depth="1">
+              <p class="ceu-date">Quinta, 5 de novembro</p>
+              <h3 class="ceu-hello"><em data-greet>Bom dia</em>.</h3>
+              <div class="ceu-pills"><span><b>4</b> saídas</span><span><b>3</b> chegadas</span><span><b>4</b> limpezas</span></div>
+              <ol class="ceu-agenda">
+                <li data-h="10"><time>10:00</time><span>Check-out · Casa Lapa</span></li>
+                <li data-h="11"><time>11:00</time><span>Check-out · Loft Pinheiros</span></li>
+                <li data-h="15"><time>15:00</time><span>Check-in · Casa da Praia</span></li>
+                <li data-h="17"><time>17:00</time><span>Check-in · Cobertura Moema</span></li>
+              </ol>
+            </article>
+
+            <article class="glass-sky ceu-prop" data-lens data-enter data-depth="2">
+              <div class="ceu-prop__img" aria-hidden="true">
+                <svg viewBox="0 0 270 150" preserveAspectRatio="xMidYMax slice">
+                  <circle class="ceu-orb" cx="66" cy="52" r="15"/>
+                  <path class="ceu-dune ceu-dune--back" d="M0 112C46 98 92 104 140 96C186 88 230 92 270 86V150H0Z"/>
+                  <g transform="translate(150 60)">
+                    <path class="ceu-house" d="M2 30L30 6L58 30V68H2Z"/>
+                    <path class="ceu-roof" d="M-4 33L30 3L64 33"/>
+                    <rect class="ceu-win" x="9" y="38" width="12" height="11" rx="2"/>
+                    <rect class="ceu-win" x="39" y="38" width="12" height="11" rx="2"/>
+                    <rect class="ceu-door" x="24" y="45" width="12" height="23" rx="2"/>
+                  </g>
+                  <path class="ceu-dune" d="M0 128C70 116 150 124 270 110V150H0Z"/>
+                </svg>
+              </div>
+              <div class="ceu-prop__body">
+                <h4>Casa da Praia</h4>
+                <p>Ubatuba · até 6 hóspedes</p>
+                <span class="ceu-badge" data-checkin="15"><i></i><span class="ceu-badge__text">Livre até 15:00</span></span>
+              </div>
+            </article>
+
+            <div class="glass-sky ceu-time" data-enter>
+              <div class="ceu-time__top"><span class="mono" id="ceu-time-label">12:20 · tarde</span><button type="button" id="ceu-now" class="ceu-now">Agora</button></div>
+              <input id="ceu-range" type="range" min="0" max="1439" step="1" value="740" aria-label="Arraste para mudar a hora do dia">
+              <div class="ceu-time__scale mono"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>24h</span></div>
+            </div>
+
+            <div class="phone ceu-phone" data-enter data-depth="3">
+              <div class="phone__screen ceu-screen">
+                <div class="phone__status mono"><span>12:20</span><span>5G ▮▮▮</span></div>
+                <h4 class="ceu-s__title">Hoje</h4>
+                <p class="ceu-s__sub"><em data-greet>Bom dia</em>, Cida. 3 tarefas.</p>
+                <article class="ceu-task">
+                  <div class="ceu-task__row"><span class="ceu-dot"></span><span>Em andamento</span><span class="ceu-task__time">até 15:00</span></div>
+                  <h5>Loft Pinheiros</h5>
+                  <p>Limpeza · R. dos Pinheiros, 870</p>
+                  <button type="button" class="ceu-btn">Concluir</button>
+                </article>
+                <article class="ceu-task">
+                  <div class="ceu-task__row"><span class="ceu-dot is-pending"></span><span>Pendente</span><span class="ceu-task__time">15:30</span></div>
+                  <h5>Cobertura Moema</h5>
+                </article>
+                <article class="ceu-task is-done">
+                  <div class="ceu-task__row"><span class="ceu-dot is-done"></span><span>Concluída</span><span class="ceu-task__time">10:40</span></div>
+                  <h5>Casa Lapa</h5>
+                </article>
+                <nav class="ceu-tabbar glass-sky" data-lens data-bezel="14" data-blur="4" aria-label="Navegação do app">
+                  <span class="ceu-blob" aria-hidden="true"></span>
+                  <button type="button" class="is-on">Hoje</button>
+                  <button type="button">Tarefas</button>
+                  <button type="button">Histórico</button>
+                  <button type="button">Perfil</button>
+                </nav>
+              </div>
+            </div>
+            <p class="hint ceu-hint mono" data-enter>toque nas abas ↑</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+  <script src="shared.js"></script>
+  <script src="torre.js"></script>
+  <script src="ceu.js"></script>
+  <script type="module" src="lapidado.js"></script>
+</body>
+</html>

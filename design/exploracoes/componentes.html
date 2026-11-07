@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="obsidiana" data-tier="padrao">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gemóvel · Componentes A</title>
+  <meta name="description" content="Folha de componentes do Gemóvel, lote A: ícones, botões, links, marcas, campos, lista suspensa, escolhas, seletor de datas, carregando, faixa de aviso e estado vazio, em todos os estados, nos temas Obsidiana e Quartzo.">
+  <script>try{var d=document.documentElement,t=localStorage.getItem('gem-theme'),r=localStorage.getItem('gem-tier');if(t==='quartzo')d.dataset.theme=t;if(r==='completo'||r==='padrao'||r==='leve')d.dataset.tier=r;if(localStorage.getItem('gem-motion')==='reduce')d.dataset.motion='reduce';}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Geist+Mono:wght@400..600&family=Geist:wght@300..700&display=swap">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="sistema.css">
+  <link rel="stylesheet" href="componentes.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="admin-data.js" defer></script>
+  <script src="componentes.js" defer></script>
+</head>
+<body>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="prism" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#a6f4ff"/>
+        <stop offset=".38" stop-color="#cdbcff"/>
+        <stop offset=".7" stop-color="#ffb8e3"/>
+        <stop offset="1" stop-color="#ffe2a6"/>
+      </linearGradient>
+    </defs>
+    <!-- Gemas de status: desenho próprio (as mesmas do sistema) -->
+    <symbol id="g-todo" viewBox="0 0 24 24"><path d="M7.2 6.2C9.3 4.4 14.1 3.9 16.6 5.4C19.2 6.9 20.6 10 19.2 13.4C17.8 16.9 14.3 19.6 11.2 19.2C7.7 18.7 4.6 15.8 4.5 12.2C4.4 9.7 5.6 7.6 7.2 6.2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="g-doing" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></g></symbol>
+    <symbol id="g-done" viewBox="0 0 24 24"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z" fill="currentColor" fill-opacity=".25" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4M9.5 9.5L12 20.5L14.5 9.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="g-late" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M7.2 6.2C9.3 4.4 14.1 3.9 16.6 5.4C19.2 6.9 20.6 10 19.2 13.4C17.8 16.9 14.3 19.6 11.2 19.2C7.7 18.7 4.6 15.8 4.5 12.2C4.4 9.7 5.6 7.6 7.2 6.2Z"/><path d="M12 8.6v3.6"/></g><circle cx="12" cy="15.1" r="1.1" fill="currentColor"/></symbol>
+    <!-- Lucide v1.61.0 (licença ISC, lucide.dev): só os ícones usados. Traço vem do <svg class="ico">. -->
+    <symbol id="l-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" vector-effect="non-scaling-stroke"/><path d="m12 5 7 7-7 7" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10" vector-effect="non-scaling-stroke"/><path d="M7 17 17 7" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-banknote" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2" vector-effect="non-scaling-stroke"/><circle cx="12" cy="12" r="2" vector-effect="non-scaling-stroke"/><path d="M6 12h.01M18 12h.01" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0" vector-effect="non-scaling-stroke"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-calendar-days" viewBox="0 0 24 24"><path d="M8 2v3" vector-effect="non-scaling-stroke"/><path d="M16 2v3" vector-effect="non-scaling-stroke"/><rect x="3" y="3" width="18" height="18" rx="2" vector-effect="non-scaling-stroke"/><path d="M3 9h18" vector-effect="non-scaling-stroke"/><path d="M8 13h.01" vector-effect="non-scaling-stroke"/><path d="M12 13h.01" vector-effect="non-scaling-stroke"/><path d="M16 13h.01" vector-effect="non-scaling-stroke"/><path d="M8 17h.01" vector-effect="non-scaling-stroke"/><path d="M12 17h.01" vector-effect="non-scaling-stroke"/><path d="M16 17h.01" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-calendar-plus" viewBox="0 0 24 24"><path d="M16 18h6" vector-effect="non-scaling-stroke"/><path d="M16 2v3" vector-effect="non-scaling-stroke"/><path d="M19 15v6" vector-effect="non-scaling-stroke"/><path d="M21 11.5V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h8.3" vector-effect="non-scaling-stroke"/><path d="M3 9h18" vector-effect="non-scaling-stroke"/><path d="M8 2v3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-camera" viewBox="0 0 24 24"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" vector-effect="non-scaling-stroke"/><circle cx="12" cy="13" r="3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" vector-effect="non-scaling-stroke"/><path d="M18 17V9" vector-effect="non-scaling-stroke"/><path d="M13 17V5" vector-effect="non-scaling-stroke"/><path d="M8 17v-3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" vector-effect="non-scaling-stroke"/><path d="m16 9-5.5 5.5L8 12" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" vector-effect="non-scaling-stroke"/><path d="M12 6v6l4 2" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" vector-effect="non-scaling-stroke"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-ellipsis" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" vector-effect="non-scaling-stroke"/><circle cx="19" cy="12" r="1" vector-effect="non-scaling-stroke"/><circle cx="5" cy="12" r="1" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-eye-off" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" vector-effect="non-scaling-stroke"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" vector-effect="non-scaling-stroke"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" vector-effect="non-scaling-stroke"/><path d="m2 2 20 20" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" vector-effect="non-scaling-stroke"/><circle cx="12" cy="12" r="3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-funnel" viewBox="0 0 24 24"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-house-plus" viewBox="0 0 24 24"><path d="M12.35 21H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 .71-1.53l7-6a2 2 0 0 1 2.58 0l7 6A2 2 0 0 1 21 10v2.35" vector-effect="non-scaling-stroke"/><path d="M14.8 12.4A1 1 0 0 0 14 12h-4a1 1 0 0 0-1 1v8" vector-effect="non-scaling-stroke"/><path d="M15 18h6" vector-effect="non-scaling-stroke"/><path d="M18 15v6" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" vector-effect="non-scaling-stroke"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" vector-effect="non-scaling-stroke"/><path d="M12 16v-4" vector-effect="non-scaling-stroke"/><path d="M12 8h.01" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" vector-effect="non-scaling-stroke"/><circle cx="16.5" cy="7.5" r=".5" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1" vector-effect="non-scaling-stroke"/><rect width="7" height="5" x="14" y="3" rx="1" vector-effect="non-scaling-stroke"/><rect width="7" height="9" x="14" y="12" rx="1" vector-effect="non-scaling-stroke"/><rect width="7" height="5" x="3" y="16" rx="1" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-list-checks" viewBox="0 0 24 24"><path d="M13 5h8" vector-effect="non-scaling-stroke"/><path d="M13 12h8" vector-effect="non-scaling-stroke"/><path d="M13 19h8" vector-effect="non-scaling-stroke"/><path d="m3 17 2 2 4-4" vector-effect="non-scaling-stroke"/><path d="m3 7 2 2 4-4" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" vector-effect="non-scaling-stroke"/><path d="M7 11V7a5 5 0 0 1 10 0v4" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5" vector-effect="non-scaling-stroke"/><path d="M21 12H9" vector-effect="non-scaling-stroke"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-mail" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" vector-effect="non-scaling-stroke"/><rect x="2" y="4" width="20" height="16" rx="2" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" vector-effect="non-scaling-stroke"/><circle cx="12" cy="10" r="3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-minus" viewBox="0 0 24 24"><path d="M5 12h14" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-octagon-alert" viewBox="0 0 24 24"><path d="M12 16h.01" vector-effect="non-scaling-stroke"/><path d="M12 8v4" vector-effect="non-scaling-stroke"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" vector-effect="non-scaling-stroke"/><path d="m15 5 4 4" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-plus" viewBox="0 0 24 24"><path d="M5 12h14" vector-effect="non-scaling-stroke"/><path d="M12 5v14" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" vector-effect="non-scaling-stroke"/><path d="M21 3v5h-5" vector-effect="non-scaling-stroke"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" vector-effect="non-scaling-stroke"/><path d="M8 16H3v5" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" vector-effect="non-scaling-stroke"/><path d="M3 3v5h5" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-search-x" viewBox="0 0 24 24"><path d="m13.5 8.5-5 5" vector-effect="non-scaling-stroke"/><path d="m8.5 8.5 5 5" vector-effect="non-scaling-stroke"/><circle cx="11" cy="11" r="8" vector-effect="non-scaling-stroke"/><path d="m21 21-4.3-4.3" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" vector-effect="non-scaling-stroke"/><circle cx="11" cy="11" r="8" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" vector-effect="non-scaling-stroke"/><path d="M20 2v4" vector-effect="non-scaling-stroke"/><path d="M22 4h-4" vector-effect="non-scaling-stroke"/><circle cx="4" cy="20" r="2" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" vector-effect="non-scaling-stroke"/><path d="M12 2v2" vector-effect="non-scaling-stroke"/><path d="M12 20v2" vector-effect="non-scaling-stroke"/><path d="m4.93 4.93 1.41 1.41" vector-effect="non-scaling-stroke"/><path d="m17.66 17.66 1.41 1.41" vector-effect="non-scaling-stroke"/><path d="M2 12h2" vector-effect="non-scaling-stroke"/><path d="M20 12h2" vector-effect="non-scaling-stroke"/><path d="m6.34 17.66-1.41 1.41" vector-effect="non-scaling-stroke"/><path d="m19.07 4.93-1.41 1.41" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" vector-effect="non-scaling-stroke"/><path d="M14 11v6" vector-effect="non-scaling-stroke"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" vector-effect="non-scaling-stroke"/><path d="M3 6h18" vector-effect="non-scaling-stroke"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" vector-effect="non-scaling-stroke"/><path d="M12 9v4" vector-effect="non-scaling-stroke"/><path d="M12 17h.01" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-user-round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5" vector-effect="non-scaling-stroke"/><path d="M20 21a8 8 0 0 0-16 0" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" vector-effect="non-scaling-stroke"/><path d="M16 3.128a4 4 0 0 1 0 7.744" vector-effect="non-scaling-stroke"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" vector-effect="non-scaling-stroke"/><circle cx="9" cy="7" r="4" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01" vector-effect="non-scaling-stroke"/><path d="M8.5 16.429a5 5 0 0 1 7 0" vector-effect="non-scaling-stroke"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69" vector-effect="non-scaling-stroke"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523" vector-effect="non-scaling-stroke"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643" vector-effect="non-scaling-stroke"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764" vector-effect="non-scaling-stroke"/><path d="m2 2 20 20" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" vector-effect="non-scaling-stroke"/></symbol>
+    <symbol id="l-x" viewBox="0 0 24 24"><path d="M18 6 6 18" vector-effect="non-scaling-stroke"/><path d="m6 6 12 12" vector-effect="non-scaling-stroke"/></symbol>
+  </svg>
+
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <div class="page-bg" aria-hidden="true"><div class="page-bg__facets"></div></div>
+
+  <header class="bar">
+    <a class="brand" href="sistema.html" title="Voltar à folha do sistema">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M9.5 9.5L12 20.5L14.5 9.5M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></svg>
+      <span>Gemóvel</span>
+      <span class="pill pill--ghost">Componentes · lote A</span>
+    </a>
+    <div class="bar__tools">
+      <div class="seg" role="radiogroup" aria-label="Tema" id="seg-theme">
+        <span class="seg__pill" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="true" data-value="obsidiana">Obsidiana</button>
+        <button type="button" role="radio" aria-checked="false" data-value="quartzo" tabindex="-1">Quartzo</button>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Nível de efeito" id="seg-tier">
+        <span class="seg__pill" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="false" data-value="completo" tabindex="-1">Completo</button>
+        <button type="button" role="radio" aria-checked="true" data-value="padrao">Padrão</button>
+        <button type="button" role="radio" aria-checked="false" data-value="leve" tabindex="-1">Leve</button>
+      </div>
+      <button class="toggle" type="button" id="motion-toggle" aria-pressed="false">Movimento reduzido</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Seções desta folha">
+      <span class="toc__pill" aria-hidden="true"></span>
+      <a href="#ler"><b>01</b>Como ler</a>
+      <a href="#icones"><b>02</b>Ícones</a>
+      <a href="#botoes"><b>03</b>Botões e links</a>
+      <a href="#marcas"><b>04</b>Marcas</a>
+      <a href="#campos"><b>05</b>Campos</a>
+      <a href="#lista"><b>06</b>Lista suspensa</a>
+      <a href="#escolhas"><b>07</b>Escolhas</a>
+      <a href="#datas"><b>08</b>Seletor de datas</a>
+      <a href="#carregando"><b>09</b>Carregando</a>
+      <a href="#faixa"><b>10</b>Faixa de aviso</a>
+      <a href="#vazio"><b>11</b>Estado vazio</a>
+      <a href="#juntos"><b>12</b>Juntos</a>
+    </nav>
+
+    <main id="conteudo">
+      <!-- ============ 01 · Como ler ============ -->
+      <section id="ler" class="sec hero" aria-labelledby="t-ler">
+        <p class="eyebrow">Componentes · lote A · parte 2 de 3</p>
+        <h1 id="t-ler" class="hero__title">Peças <em>base</em></h1>
+        <p class="hero__lead">Primitivos, campos, seletor de datas e retorno, em todos os estados. Cada peça parte do elemento nativo do navegador e ganha o acabamento Lapidado por cima: funciona no teclado e no leitor de tela antes de ganhar brilho. Troque tema, nível de efeito e movimento no topo; tudo aqui reage.</p>
+        <ul class="legend">
+          <li class="card glass"><b>Estados lado a lado</b><span>Hover, foco e pressionado aparecem forçados para comparar. Os de verdade também funcionam: passe o mouse ou use Tab.</span></li>
+          <li class="card glass"><b><i class="lozenge" aria-hidden="true"></i>Losango marca o ativo</b><span>Rádio escolhido, opção marcada na lista, hoje no calendário e o indicador de carregando usam o mesmo losango.</span></li>
+          <li class="card glass"><b>Situação</b><span><span class="pill">existe</span> já estava no protótipo · <span class="pill pill--stay">novo</span> desenhado nesta parte</span></li>
+          <li class="card glass"><b>App da equipe</b><span>Onde a peça tem versão para a equipe, ela aparece num celular Quartzo: controles de 48px e texto de 16px.</span></li>
+        </ul>
+      </section>
+
+      <!-- ============ 02 · Ícones ============ -->
+      <section id="icones" class="sec" aria-labelledby="t-icones">
+        <header class="sec__head">
+          <p class="eyebrow">02 · Ícone <span class="sit">existe → Lucide</span></p>
+          <h2 id="t-icones" class="sec__title">Ícones</h2>
+          <p class="sec__lead">Lucide (licença ISC) para os ícones gerais, com traço de 1,75px em qualquer tamanho. Gema e logo continuam com desenho próprio. O produto carrega só os ícones que usa: os 48 desta folha cabem em 14 KB.</p>
+        </header>
+        <div class="icon-top">
+          <article class="card glass comp">
+            <h3 class="card__title">Três tamanhos, o mesmo traço</h3>
+            <div class="sizes">
+              <figure><svg class="ico ico--sm" aria-hidden="true"><use href="#l-calendar-days"/></svg><figcaption><code>16</code><span>botão, campo, tabela</span></figcaption></figure>
+              <figure><svg class="ico ico--md" aria-hidden="true"><use href="#l-calendar-days"/></svg><figcaption><code>20</code><span>botão grande, navegação, aviso</span></figcaption></figure>
+              <figure><svg class="ico ico--lg" aria-hidden="true"><use href="#l-calendar-days"/></svg><figcaption><code>24</code><span>app da equipe, estado vazio</span></figcaption></figure>
+            </div>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Gema não é ícone</h3>
+            <div class="gem-vs">
+              <div class="is-doing"><svg class="gem-ico gem-ico--lg" aria-hidden="true"><use href="#g-doing"/></svg><b>Gema</b><span>estado da tarefa; desenho próprio; sempre com rótulo</span></div>
+              <div><svg class="ico ico--lg" aria-hidden="true"><use href="#l-triangle-alert"/></svg><b>Ícone</b><span>ação, assunto ou aviso do sistema</span></div>
+            </div>
+          </article>
+        </div>
+        <h3 class="sub">Dicionário · um sentido, um ícone · clique para copiar</h3>
+        <div class="icon-dict" id="icon-dict"></div>
+        <ul class="rules">
+          <li><b>Ícone ao lado de texto é enfeite:</b> leva <code>aria-hidden</code>, porque o texto já diz tudo.</li>
+          <li><b>Botão só de ícone</b> tem nome acessível e dica: <code>aria-label="Excluir reserva"</code>.</li>
+          <li><b>Um sentido, um ícone:</b> lua é sempre noites, relógio é sempre horário. Antes de trazer um ícone novo, procure aqui.</li>
+        </ul>
+      </section>
+
+      <!-- ============ 03 · Botões e links ============ -->
+      <section id="botoes" class="sec" aria-labelledby="t-botoes">
+        <header class="sec__head">
+          <p class="eyebrow">03 · Botão · Link</p>
+          <h2 id="t-botoes" class="sec__title">Botões e links</h2>
+          <p class="sec__lead">Botão faz uma ação aqui; link leva a outro lugar. Os dois têm os mesmos estados e o mesmo anel de foco.</p>
+        </header>
+
+        <article class="card glass comp" id="btn-card">
+          <div class="comp__head">
+            <h3 class="card__title">Botão</h3><span class="pill">existe</span>
+            <button class="toggle comp__tool" type="button" id="hit-toggle" aria-pressed="false">Mostrar área de toque</button>
+          </div>
+          <div class="matrix matrix--btn" role="table" aria-label="Botões por variante e estado">
+            <div role="row" class="matrix__head"><span role="columnheader"><span class="sr">Variante</span></span><span role="columnheader">Repouso</span><span role="columnheader">Hover</span><span role="columnheader">Foco</span><span role="columnheader">Pressionado</span><span role="columnheader">Desabilitado</span><span role="columnheader">Carregando</span></div>
+            <div role="row"><span role="rowheader">Primário</span>
+              <span role="cell"><button class="btn btn--primary" type="button">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary is-hover" type="button" tabindex="-1">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary is-focus" type="button" tabindex="-1">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary is-active" type="button" tabindex="-1">Salvar reserva</button></span>
+              <span role="cell" class="cell--why"><button class="btn btn--primary" type="button" disabled aria-describedby="why-1">Nova reserva</button><small id="why-1">Cadastre um imóvel primeiro.</small></span>
+              <span role="cell"><button class="btn btn--primary" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Salvando…</button></span>
+            </div>
+            <div role="row"><span role="rowheader">Secundário</span>
+              <span role="cell"><button class="btn btn--secondary" type="button">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary is-hover" type="button" tabindex="-1">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary is-focus" type="button" tabindex="-1">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary is-active" type="button" tabindex="-1">Ver agenda</button></span>
+              <span role="cell" class="cell--why"><button class="btn btn--secondary" type="button" disabled aria-describedby="why-2">Próximo mês</button><small id="why-2">Sem dados depois de abril.</small></span>
+              <span role="cell"><button class="btn btn--secondary" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Abrindo…</button></span>
+            </div>
+            <div role="row"><span role="rowheader">Fantasma</span>
+              <span role="cell"><button class="btn btn--ghost" type="button">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost is-hover" type="button" tabindex="-1">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost is-focus" type="button" tabindex="-1">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost is-active" type="button" tabindex="-1">Cancelar</button></span>
+              <span role="cell" class="cell--why"><button class="btn btn--ghost" type="button" disabled aria-describedby="why-3">Limpar filtros</button><small id="why-3">Nenhum filtro ligado.</small></span>
+              <span role="cell" class="cell--na">—</span>
+            </div>
+            <div role="row"><span role="rowheader">Perigo</span>
+              <span role="cell"><button class="btn btn--danger" type="button">Excluir reserva</button></span>
+              <span role="cell"><button class="btn btn--danger is-hover" type="button" tabindex="-1">Excluir reserva</button></span>
+              <span role="cell"><button class="btn btn--danger is-focus" type="button" tabindex="-1">Excluir reserva</button></span>
+              <span role="cell"><button class="btn btn--danger is-active" type="button" tabindex="-1">Excluir reserva</button></span>
+              <span role="cell" class="cell--why"><button class="btn btn--danger" type="button" disabled aria-describedby="why-4">Excluir imóvel</button><small id="why-4">Tem 3 reservas futuras.</small></span>
+              <span role="cell"><button class="btn btn--danger" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Excluindo…</button></span>
+            </div>
+          </div>
+          <div class="comp__row hit-zone">
+            <button class="btn btn--primary btn--sm" type="button">Pequeno</button>
+            <button class="btn btn--primary" type="button"><svg class="ico" aria-hidden="true"><use href="#l-plus"/></svg>Nova reserva</button>
+            <button class="btn btn--primary btn--lg" type="button"><svg class="ico" aria-hidden="true"><use href="#l-check"/></svg>Concluir limpeza</button>
+            <span class="comp__sep" aria-hidden="true"></span>
+            <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Editar reserva" title="Editar reserva"><svg class="ico" aria-hidden="true"><use href="#l-pencil"/></svg></button>
+            <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Excluir reserva" title="Excluir reserva"><svg class="ico" aria-hidden="true"><use href="#l-trash-2"/></svg></button>
+            <button class="btn btn--secondary btn--icon" type="button" aria-label="Mais ações" title="Mais ações"><svg class="ico" aria-hidden="true"><use href="#l-ellipsis"/></svg></button>
+          </div>
+          <dl class="spec">
+            <div><dt>Base</dt><dd><code>&lt;button&gt;</code>; o primário tem aro de prisma na própria borda (sem pseudo-elemento).</dd></div>
+            <div><dt>Regras</dt><dd>Uma ação primária por área. Desabilitado só com o motivo ao lado; Salvar nunca fica desabilitado, porque o formulário valida ao salvar. Carregando mantém a largura e troca o rótulo pelo gerúndio.</dd></div>
+            <div><dt>Toque</dt><dd>Área de toque de pelo menos 44 × 44px: o botão de ícone de 32px ganha uma margem invisível em volta.</dd></div>
+            <div><dt>Níveis</dt><dd>Completo: o aro gira. Padrão: aro parado. Leve: sem aro e sem brilho.</dd></div>
+          </dl>
+        </article>
+
+        <article class="card glass comp">
+          <div class="comp__head"><h3 class="card__title">Link</h3><span class="pill pill--stay">novo</span></div>
+          <div class="link-grid">
+            <div class="link-cell"><span class="state-tag">No meio do texto</span><p>A entrada é às 15:00. Antes de confirmar, confira as <a class="link" href="#botoes">regras da casa</a>.</p></div>
+            <div class="link-cell"><span class="state-tag">Ação de navegar</span><p class="comp__row comp__row--tight">
+              <a class="link link--go" href="#botoes">Ver todas as reservas<svg class="ico ico--sm" aria-hidden="true"><use href="#l-arrow-right"/></svg></a>
+              <a class="link link--go is-hover" href="#botoes" tabindex="-1">Hover<svg class="ico ico--sm" aria-hidden="true"><use href="#l-arrow-right"/></svg></a>
+              <a class="link link--go is-focus" href="#botoes" tabindex="-1">Foco<svg class="ico ico--sm" aria-hidden="true"><use href="#l-arrow-right"/></svg></a></p></div>
+            <div class="link-cell"><span class="state-tag">Parece link, mas é botão</span><p class="link-meta">Atualizado há 2 minutos · <button class="btn-link" type="button" id="refresh-now">Atualizar agora</button></p></div>
+          </div>
+          <dl class="spec">
+            <div><dt>Base</dt><dd><code>&lt;a href&gt;</code> para ir; <code>&lt;button&gt;</code> com cara de link quando a ação acontece aqui.</dd></div>
+            <div><dt>Sinal</dt><dd>Sublinhado sempre visível (a cor não trabalha sozinha). No hover, o traço engrossa; a seta da ação anda 2px.</dd></div>
+            <div><dt>Texto</dt><dd>Diz o destino: “regras da casa”, nunca “clique aqui”.</dd></div>
+          </dl>
+        </article>
+      </section>
+
+      <!-- ============ 04 · Marcas ============ -->
+      <section id="marcas" class="sec" aria-labelledby="t-marcas">
+        <header class="sec__head">
+          <p class="eyebrow">04 · Gema · Chip · Pílula · Atalho · Avatar · Medidor <span class="sit">existem</span></p>
+          <h2 id="t-marcas" class="sec__title">Marcas</h2>
+          <p class="sec__lead">Peças pequenas que dão nome e estado às coisas. Já existiam; aqui aparecem todas as variantes juntas.</p>
+        </header>
+        <div class="marks">
+          <article class="card glass comp">
+            <h3 class="card__title">Gema de status</h3>
+            <div class="gem-sizes">
+              <div class="is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg><svg class="gem-ico gem-ico--md" aria-hidden="true"><use href="#g-todo"/></svg><svg class="gem-ico gem-ico--lg" aria-hidden="true"><use href="#g-todo"/></svg><span>Pendente</span></div>
+              <div class="is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg><svg class="gem-ico gem-ico--md" aria-hidden="true"><use href="#g-doing"/></svg><svg class="gem-ico gem-ico--lg" aria-hidden="true"><use href="#g-doing"/></svg><span>Em andamento</span></div>
+              <div class="is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg><svg class="gem-ico gem-ico--md" aria-hidden="true"><use href="#g-done"/></svg><svg class="gem-ico gem-ico--lg" aria-hidden="true"><use href="#g-done"/></svg><span>Concluída</span></div>
+              <div class="is-late"><svg class="gem-ico" aria-hidden="true"><use href="#g-late"/></svg><svg class="gem-ico gem-ico--md" aria-hidden="true"><use href="#g-late"/></svg><svg class="gem-ico gem-ico--lg" aria-hidden="true"><use href="#g-late"/></svg><span>Atrasada</span></div>
+            </div>
+            <p class="note">16, 24 e 40px. A forma diz o estado; a gema nunca aparece sem o rótulo.</p>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Chip de status</h3>
+            <p class="mini-label">Tarefa</p>
+            <div class="chips">
+              <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+              <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Em andamento</span>
+              <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Concluída</span>
+              <span class="chip is-late"><svg class="gem-ico" aria-hidden="true"><use href="#g-late"/></svg>Atrasada</span>
+            </div>
+            <p class="mini-label">Imóvel</p>
+            <div class="chips">
+              <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Limpando</span>
+              <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Pronto</span>
+            </div>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Pílula e atalho</h3>
+            <div class="chips">
+              <span class="pill">Confirmada</span><span class="pill pill--stay">Em curso</span><span class="pill pill--count">3<span class="sr"> filtros ligados</span></span><span class="pill pill--ghost">v0</span>
+            </div>
+            <div class="chips">
+              <kbd class="kbd" data-kbd="K">Ctrl K</kbd><kbd class="kbd" data-kbd="Z">Ctrl Z</kbd><kbd class="kbd">Esc</kbd><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd>
+            </div>
+            <p class="note">O atalho troca Ctrl por ⌘ sozinho no Mac.</p>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Avatar</h3>
+            <div class="avatars">
+              <span class="avatar avatar--sm" role="img" aria-label="Cida Ramos">CR</span>
+              <span class="avatar" role="img" aria-label="Júlia Lima">JL</span>
+              <span class="avatar avatar--lg" role="img" aria-label="Marcos Teixeira">MT</span>
+              <span class="avatar-stack" role="img" aria-label="Cida Ramos, Júlia Lima e mais 2 pessoas"><span class="avatar avatar--sm">CR</span><span class="avatar avatar--sm">JL</span><span class="avatar avatar--sm avatar--more">+2</span></span>
+              <span class="avatar avatar--none" role="img" aria-label="Ninguém atribuído"><svg class="ico ico--sm" aria-hidden="true"><use href="#l-user-round"/></svg></span>
+            </div>
+            <p class="note">24, 34 e 40px. Sem foto, as iniciais sobre o prisma; sem pessoa, o contorno tracejado.</p>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Medidor</h3>
+            <div class="meters">
+              <div><span class="label-row"><span>Ocupação de novembro</span><b>78%</b></span><span class="meter" role="meter" aria-label="Ocupação de novembro" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78"><i style="width:78%"></i></span></div>
+              <div><span class="label-row"><span>Chalé da Serra</span><b>43%</b></span><span class="meter meter--thin" role="meter" aria-label="Ocupação do Chalé da Serra" aria-valuemin="0" aria-valuemax="100" aria-valuenow="43"><i style="width:43%"></i></span></div>
+              <div><span class="label-row"><span>Receita prevista</span><b>0 de R$ 18 mil</b></span><span class="meter" role="meter" aria-label="Receita realizada" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></span></div>
+            </div>
+            <p class="note">8px no painel, 4px dentro de listas. Sempre com o número escrito ao lado.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 05 · Campos ============ -->
+      <section id="campos" class="sec" aria-labelledby="t-campos">
+        <header class="sec__head">
+          <p class="eyebrow">05 · Campo</p>
+          <h2 id="t-campos" class="sec__title">Campos</h2>
+          <p class="sec__lead">Rótulo sempre visível em cima; dica ou erro embaixo. O erro diz o que aconteceu e como resolver, e fica ligado ao campo para o leitor de tela. Campo opcional leva a palavra “Opcional”; os outros são obrigatórios.</p>
+        </header>
+
+        <article class="card glass comp">
+          <div class="comp__head"><h3 class="card__title">Estados</h3><span class="pill">existe</span><span class="comp__note">faltavam hover, só leitura e o motivo do desabilitado</span></div>
+          <div class="field-states">
+            <div class="field"><span class="state-tag">Repouso</span><label class="field__label" for="fs-1">Hóspede</label><input class="input" id="fs-1" type="text" placeholder="Nome completo" aria-describedby="fs-1-h"><p class="field__hint" id="fs-1-h">Como está no documento.</p></div>
+            <div class="field"><span class="state-tag">Hover</span><label class="field__label" for="fs-2">Hóspede</label><input class="input is-hover" id="fs-2" type="text" placeholder="Nome completo" tabindex="-1"><p class="field__hint">Camada de hover, só com mouse.</p></div>
+            <div class="field"><span class="state-tag">Foco</span><label class="field__label" for="fs-3">Hóspede</label><input class="input is-focus" id="fs-3" type="text" value="Mariana Cos" tabindex="-1"><p class="field__hint">Anel de 2px na cor de foco.</p></div>
+            <div class="field"><span class="state-tag">Preenchido</span><label class="field__label" for="fs-4">Hóspede</label><input class="input" id="fs-4" type="text" value="Mariana Costa"><p class="field__hint">Como está no documento.</p></div>
+            <div class="field has-error"><span class="state-tag">Erro</span><label class="field__label" for="fs-5">Saída</label><input class="input" id="fs-5" type="text" value="03/11/2026" aria-invalid="true" aria-describedby="fs-5-e"><p class="field__error" id="fs-5-e"><svg class="ico" aria-hidden="true"><use href="#l-octagon-alert"/></svg>A saída precisa ser depois da entrada.</p></div>
+            <div class="field"><span class="state-tag">Desabilitado</span><label class="field__label" for="fs-6">Imóvel</label><input class="input" id="fs-6" type="text" value="Casa da Praia" disabled aria-describedby="fs-6-h"><p class="field__hint" id="fs-6-h">Para trocar o imóvel, crie outra reserva.</p></div>
+            <div class="field"><span class="state-tag">Só leitura</span><label class="field__label" for="fs-7">Diária do imóvel</label><input class="input" id="fs-7" type="text" value="R$ 520,00" readonly aria-describedby="fs-7-h"><p class="field__hint" id="fs-7-h">Vem do cadastro do imóvel.</p></div>
+            <div class="field"><span class="state-tag">Opcional</span><label class="field__label" for="fs-8">Apelido do imóvel <span class="field__opt">Opcional</span></label><input class="input" id="fs-8" type="text" placeholder="Ex.: Casa azul" aria-describedby="fs-8-h"><p class="field__hint" id="fs-8-h">Aparece só para a equipe.</p></div>
+          </div>
+        </article>
+
+        <article class="card glass comp">
+          <div class="comp__head"><h3 class="card__title">Tipos</h3><span class="pill pill--stay">novo</span><span class="comp__note">todos funcionam: digite, saia do campo, use as setas</span></div>
+          <form class="field-types" id="types-form" novalidate>
+            <div class="field"><label class="field__label" for="ft-name">Nome do imóvel</label><input class="input" id="ft-name" type="text" autocomplete="off" value="Casa da Praia" aria-describedby="ft-name-h"><p class="field__hint" id="ft-name-h">Aparece na agenda e nas tarefas.</p></div>
+            <div class="field"><label class="field__label" for="ft-mail">E-mail</label><input class="input" id="ft-mail" type="email" autocomplete="email" spellcheck="false" placeholder="nome@exemplo.com" aria-describedby="ft-mail-h" data-validate="email"><p class="field__hint" id="ft-mail-h">Para o hóspede receber a confirmação.</p></div>
+            <div class="field"><label class="field__label" for="ft-tel">Telefone</label><input class="input" id="ft-tel" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 98765-4321" aria-describedby="ft-tel-h" data-mask="tel"><p class="field__hint" id="ft-tel-h">Com DDD.</p></div>
+            <div class="field"><label class="field__label" for="ft-pass">Senha</label>
+              <div class="control"><input id="ft-pass" type="password" autocomplete="new-password" value="lapidado26" aria-describedby="ft-pass-h ft-pass-caps"><button class="control__btn" type="button" aria-pressed="false" aria-controls="ft-pass" data-reveal><svg class="ico ico--sm" aria-hidden="true"><use href="#l-eye"/></svg><span class="sr">Mostrar senha</span></button></div>
+              <p class="field__hint" id="ft-pass-h">Pelo menos 8 letras ou números.</p><p class="field__hint field__hint--warn" id="ft-pass-caps" hidden><svg class="ico ico--sm" aria-hidden="true"><use href="#l-triangle-alert"/></svg>Caps Lock ligado.</p></div>
+            <div class="field"><label class="field__label" for="ft-rate">Diária <span class="sr">em reais</span></label>
+              <div class="control control--money"><span class="control__affix" aria-hidden="true">R$</span><input id="ft-rate" type="text" inputmode="decimal" value="520,00" aria-describedby="ft-rate-h" data-money></div>
+              <p class="field__hint" id="ft-rate-h">Valor de uma noite.</p></div>
+            <div class="field"><label class="field__label" for="ft-guests">Hóspedes</label>
+              <div class="control control--stepper" data-stepper>
+                <button class="step" type="button" aria-label="Um hóspede a menos" aria-controls="ft-guests" data-step="-1"><svg class="ico ico--sm" aria-hidden="true"><use href="#l-minus"/></svg></button>
+                <input id="ft-guests" type="number" inputmode="numeric" min="1" max="6" value="2" aria-describedby="ft-guests-h">
+                <button class="step" type="button" aria-label="Um hóspede a mais" aria-controls="ft-guests" data-step="1"><svg class="ico ico--sm" aria-hidden="true"><use href="#l-plus"/></svg></button>
+              </div>
+              <p class="field__hint" id="ft-guests-h">Até 6 neste imóvel.</p></div>
+            <div class="field"><label class="field__label" for="ft-time">Entrada a partir de</label><input class="input input--time" id="ft-time" type="time" value="15:00" step="900" aria-describedby="ft-time-h"><p class="field__hint" id="ft-time-h">Padrão do imóvel.</p></div>
+            <div class="field field--wide"><label class="field__label" for="ft-notes">Observações <span class="field__opt">Opcional</span></label><textarea class="input textarea" id="ft-notes" maxlength="300" rows="3" aria-describedby="ft-notes-h ft-notes-c">Hóspede chega de carro; deixar o portão aberto.</textarea><div class="field__foot"><p class="field__hint" id="ft-notes-h">A equipe vê isto na tarefa de limpeza.</p><p class="field__count" id="ft-notes-c" data-count-for="ft-notes"></p></div></div>
+          </form>
+          <dl class="spec">
+            <div><dt>Base</dt><dd><code>&lt;input&gt;</code> do tipo certo (<code>email</code>, <code>tel</code>, <code>time</code>, <code>number</code>) com <code>autocomplete</code> e <code>inputmode</code>: o celular abre o teclado certo.</dd></div>
+            <div><dt>Validar</dt><dd>Ao sair do campo e ao salvar, nunca a cada tecla. Ao salvar com erro, um resumo no topo leva o foco ao primeiro campo errado.</dd></div>
+            <div><dt>Leitor de tela</dt><dd>Rótulo por <code>for</code>; dica e erro por <code>aria-describedby</code>; erro com <code>aria-invalid</code>. O botão do olho é <code>aria-pressed</code> e o − e o + não perdem o foco no limite.</dd></div>
+            <div><dt>Toque</dt><dd>Campo de 44px e texto de 16px (evita o zoom do iPhone). No app da equipe, 48px.</dd></div>
+          </dl>
+        </article>
+
+        <div class="split">
+          <figure class="device" data-theme="quartzo" data-density="equipe">
+            <form class="login" id="login" novalidate aria-labelledby="login-t">
+              <svg class="login__mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M9.5 9.5L12 20.5L14.5 9.5M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></svg>
+              <h3 class="login__title" id="login-t">Boas-vindas</h3>
+              <p class="login__lead">Entre para ver suas tarefas de hoje.</p>
+              <div class="banner banner--err" id="login-err" role="alert" hidden><svg class="ico banner__ico" aria-hidden="true"><use href="#l-octagon-alert"/></svg><div class="banner__body"><p class="banner__title">E-mail ou senha não conferem.</p><p class="banner__text">Confira os dois e tente de novo.</p></div></div>
+              <div class="field"><label class="field__label" for="lg-mail">E-mail</label><input class="input" id="lg-mail" type="email" autocomplete="username" spellcheck="false" aria-describedby="lg-mail-e" required><p class="field__error" id="lg-mail-e" hidden></p></div>
+              <div class="field"><label class="field__label" for="lg-pass">Senha</label>
+                <div class="control"><input id="lg-pass" type="password" autocomplete="current-password" aria-describedby="lg-pass-e lg-pass-caps" required><button class="control__btn" type="button" aria-pressed="false" aria-controls="lg-pass" data-reveal><svg class="ico" aria-hidden="true"><use href="#l-eye"/></svg><span class="sr">Mostrar senha</span></button></div>
+                <p class="field__error" id="lg-pass-e" hidden></p><p class="field__hint field__hint--warn" id="lg-pass-caps" hidden><svg class="ico ico--sm" aria-hidden="true"><use href="#l-triangle-alert"/></svg>Caps Lock ligado.</p></div>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Entrar</button>
+              <p class="login__help">Esqueceu a senha? Fale com quem administra.</p>
+            </form>
+            <figcaption>App da equipe · entrar · 48px · texto de 16px</figcaption>
+          </figure>
+          <div class="split__notes">
+            <h3 class="card__title">No app da equipe</h3>
+            <ul class="rules">
+              <li><b>Tamanho grande por padrão:</b> campos e botões de 48px, texto de 16px, rótulo de 14px.</li>
+              <li><b>O erro de entrar não diz qual dos dois está errado.</b> Assim ninguém descobre e-mails cadastrados por tentativa.</li>
+              <li><b>Gerenciador de senhas funciona:</b> <code>autocomplete="username"</code> e <code>"current-password"</code>.</li>
+              <li><b>Caps Lock</b> ligado vira aviso embaixo da senha, antes do erro acontecer.</li>
+              <li><b>Experimente:</b> toque em Entrar com os campos vazios, depois com qualquer e-mail e senha.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 · Lista suspensa ============ -->
+      <section id="lista" class="sec" aria-labelledby="t-lista">
+        <header class="sec__head">
+          <p class="eyebrow">06 · Lista suspensa</p>
+          <h2 id="t-lista" class="sec__title">Lista suspensa</h2>
+          <p class="sec__lead">Um <code>&lt;select&gt;</code> de verdade. No Chrome, no Edge e no Safari 27, a lista abre com o acabamento Lapidado e aceita avatar, gema e uma segunda linha. No Firefox aparece a lista do sistema, com o mesmo texto.</p>
+        </header>
+        <p class="support" id="sel-support"></p>
+        <div class="comp-grid" id="sel-demos">
+          <article class="card glass comp">
+            <div class="comp__head"><h3 class="card__title">Simples</h3><span class="pill">existe</span></div>
+            <div class="field"><label class="field__label" for="sel-prop">Imóvel</label>
+              <div class="select-box"><select class="select" id="sel-prop" aria-describedby="sel-prop-h"><button type="button"><selectedcontent></selectedcontent></button></select></div>
+              <p class="field__hint" id="sel-prop-h">A diária vem junto com o imóvel.</p></div>
+            <div class="sel-states">
+              <div class="field"><span class="state-tag">Foco</span><div class="select-box"><select class="select is-focus" tabindex="-1" aria-label="Imóvel (foco)"><option>Casa da Praia</option></select></div></div>
+              <div class="field has-error"><span class="state-tag">Erro</span><div class="select-box"><select class="select" tabindex="-1" aria-label="Imóvel (erro)" aria-invalid="true" aria-describedby="sel-e"><option>Escolha</option></select></div><p class="field__error" id="sel-e"><svg class="ico" aria-hidden="true"><use href="#l-octagon-alert"/></svg>Escolha o imóvel.</p></div>
+              <div class="field"><span class="state-tag">Desabilitado</span><div class="select-box"><select class="select" disabled aria-label="Imóvel (desabilitado)" aria-describedby="sel-d"><option>Casa da Praia</option></select></div><p class="field__hint" id="sel-d">Só muda em reserva nova.</p></div>
+            </div>
+          </article>
+          <article class="card glass comp">
+            <div class="comp__head"><h3 class="card__title">Pessoa e carga do dia</h3><span class="pill pill--stay">novo</span></div>
+            <div class="field"><label class="field__label" for="sel-resp">Quem vai limpar</label>
+              <div class="select-box"><select class="select select--rich" id="sel-resp" aria-describedby="sel-resp-h"><button type="button"><selectedcontent></selectedcontent></button></select></div>
+              <p class="field__hint" id="sel-resp-h">A carga de hoje ajuda a dividir o trabalho.</p></div>
+            <button class="toggle" type="button" id="sel-native" aria-pressed="false">Ver como no Firefox</button>
+            <p class="note">No modo do sistema, a opção vira só texto: “Cida Ramos · Limpeza · 2 tarefas hoje”. Por isso o texto de cada opção se sustenta sozinho.</p>
+          </article>
+        </div>
+        <dl class="spec">
+          <div><dt>Base</dt><dd><code>&lt;select&gt;</code> com <code>appearance: base-select</code> onde o navegador permite; nos outros, o mesmo <code>&lt;select&gt;</code> com a lista do sistema.</dd></div>
+          <div><dt>Teclado</dt><dd>Espaço ou Alt + ↓ abre; setas andam; uma letra pula para o nome; Enter escolhe; Esc fecha e devolve o foco.</dd></div>
+          <div><dt>Leitor de tela</dt><dd>Lê o texto da opção, igual nos dois modos. Avatar e gemas são enfeite.</dd></div>
+          <div><dt>Quando usar</dt><dd>De 4 a uns 30 opções. Até 3, rádio ou segmentado. Acima de 30, lista com busca (fica para depois).</dd></div>
+        </dl>
+      </section>
+
+      <!-- ============ 07 · Escolhas ============ -->
+      <section id="escolhas" class="sec" aria-labelledby="t-escolhas">
+        <header class="sec__head">
+          <p class="eyebrow">07 · Caixa de seleção · Rádio · Interruptor <span class="sit">novos</span></p>
+          <h2 id="t-escolhas" class="sec__title">Escolhas</h2>
+          <p class="sec__lead">A caixa de seleção marca várias e vale quando o formulário é salvo. O rádio escolhe uma. O interruptor liga ou desliga na hora, sem Salvar, e por isso oferece Desfazer.</p>
+        </header>
+
+        <article class="card glass comp">
+          <div class="comp__head"><h3 class="card__title">Estados</h3></div>
+          <div class="matrix matrix--choice" role="table" aria-label="Escolhas por estado">
+            <div role="row" class="matrix__head"><span role="columnheader"><span class="sr">Controle</span></span><span role="columnheader">Desligado</span><span role="columnheader">Ligado</span><span role="columnheader">Misto</span><span role="columnheader">Hover</span><span role="columnheader">Foco</span><span role="columnheader">Desabilitado</span></div>
+            <div role="row"><span role="rowheader">Caixa</span>
+              <span role="cell"><input class="check" type="checkbox" aria-label="Exemplo desligado"></span>
+              <span role="cell"><input class="check" type="checkbox" checked aria-label="Exemplo ligado"></span>
+              <span role="cell"><input class="check" type="checkbox" data-mixed aria-label="Exemplo misto"></span>
+              <span role="cell"><input class="check is-hover" type="checkbox" tabindex="-1" aria-label="Exemplo com hover"></span>
+              <span role="cell"><input class="check is-focus" type="checkbox" checked tabindex="-1" aria-label="Exemplo com foco"></span>
+              <span role="cell"><input class="check" type="checkbox" checked disabled aria-label="Exemplo desabilitado"></span>
+            </div>
+            <div role="row"><span role="rowheader">Rádio</span>
+              <span role="cell"><input class="radio" type="radio" name="rx-1" aria-label="Exemplo desligado"></span>
+              <span role="cell"><input class="radio" type="radio" name="rx-2" checked aria-label="Exemplo ligado"></span>
+              <span role="cell" class="cell--na">—</span>
+              <span role="cell"><input class="radio is-hover" type="radio" name="rx-3" tabindex="-1" aria-label="Exemplo com hover"></span>
+              <span role="cell"><input class="radio is-focus" type="radio" name="rx-4" checked tabindex="-1" aria-label="Exemplo com foco"></span>
+              <span role="cell"><input class="radio" type="radio" name="rx-5" checked disabled aria-label="Exemplo desabilitado"></span>
+            </div>
+            <div role="row"><span role="rowheader">Interruptor</span>
+              <span role="cell"><input class="switch" type="checkbox" role="switch" aria-label="Exemplo desligado"></span>
+              <span role="cell"><input class="switch" type="checkbox" role="switch" checked aria-label="Exemplo ligado"></span>
+              <span role="cell" class="cell--na">—</span>
+              <span role="cell"><input class="switch is-hover" type="checkbox" role="switch" tabindex="-1" aria-label="Exemplo com hover"></span>
+              <span role="cell"><input class="switch is-focus" type="checkbox" role="switch" checked tabindex="-1" aria-label="Exemplo com foco"></span>
+              <span role="cell"><input class="switch" type="checkbox" role="switch" disabled aria-label="Exemplo desabilitado"></span>
+            </div>
+          </div>
+        </article>
+
+        <div class="choice-grid">
+          <article class="card glass comp">
+            <h3 class="card__title">Caixa de seleção · filtro</h3>
+            <fieldset class="group" id="flt">
+              <legend>Imóveis na agenda</legend>
+              <label class="choice choice--parent"><input class="check" type="checkbox" id="flt-all"><span class="choice__text"><span class="choice__label">Todos os imóveis</span></span></label>
+              <div class="group__kids" id="flt-kids"></div>
+            </fieldset>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Rádio · uma escolha</h3>
+            <fieldset class="group">
+              <legend>Tipo de tarefa</legend>
+              <label class="choice"><input class="radio" type="radio" name="kind" value="limpeza" checked><span class="choice__text"><span class="choice__label">Limpeza</span><span class="choice__desc">Entre a saída e a próxima entrada.</span></span></label>
+              <label class="choice"><input class="radio" type="radio" name="kind" value="manutencao"><span class="choice__text"><span class="choice__label">Manutenção</span><span class="choice__desc">Conserto ou revisão; pode bloquear o imóvel.</span></span></label>
+            </fieldset>
+          </article>
+          <article class="card glass comp">
+            <h3 class="card__title">Interruptor · vale na hora</h3>
+            <div class="group">
+              <label class="choice choice--switch"><span class="choice__text"><span class="choice__label">Receber reservas</span><span class="choice__desc">Casa da Praia aparece livre na agenda.</span></span><input class="switch" type="checkbox" role="switch" id="sw-open" checked></label>
+              <label class="choice choice--switch"><span class="choice__text"><span class="choice__label">Mostrar centavos</span><span class="choice__desc">Nos valores das reservas.</span></span><input class="switch" type="checkbox" role="switch" id="sw-cents"></label>
+            </div>
+            <p class="note">Desligue “Receber reservas”: a mudança vale na hora e o aviso oferece Desfazer.</p>
+          </article>
+          <figure class="device device--compact" data-theme="quartzo" data-density="equipe">
+            <div class="settings">
+              <h3 class="settings__title">Ajustes</h3>
+              <fieldset class="group">
+                <legend>Efeitos visuais</legend>
+                <label class="choice"><input class="radio" type="radio" name="fx" checked><span class="choice__text"><span class="choice__label">Automático</span><span class="choice__desc">O app escolhe pelo celular.</span></span></label>
+                <label class="choice"><input class="radio" type="radio" name="fx"><span class="choice__text"><span class="choice__label">Completo</span></span></label>
+                <label class="choice"><input class="radio" type="radio" name="fx"><span class="choice__text"><span class="choice__label">Leve</span><span class="choice__desc">Gasta menos bateria.</span></span></label>
+              </fieldset>
+              <label class="choice choice--switch"><span class="choice__text"><span class="choice__label">Movimento reduzido</span></span><input class="switch" type="checkbox" role="switch"></label>
+            </div>
+            <figcaption>App da equipe · ajustes · 48px</figcaption>
+          </figure>
+        </div>
+        <dl class="spec">
+          <div><dt>Base</dt><dd><code>&lt;input type="checkbox"&gt;</code>, <code>radio</code> e <code>checkbox</code> com <code>role="switch"</code>, todos com <code>appearance: none</code>. Em alto contraste do Windows, voltam ao desenho do sistema.</dd></div>
+          <div><dt>Teclado</dt><dd>Espaço marca. No grupo de rádios, as setas trocam a escolha e o Tab sai do grupo.</dd></div>
+          <div><dt>Leitor de tela</dt><dd>Grupo com <code>&lt;fieldset&gt;</code> e <code>&lt;legend&gt;</code>. “Todos os imóveis, caixa de seleção, parcialmente marcada”.</dd></div>
+          <div><dt>Toque</dt><dd>A linha inteira é o alvo (pelo menos 40px; 48px na equipe), não só o quadradinho.</dd></div>
+        </dl>
+      </section>
+
+      <!-- ============ 08 · Seletor de datas ============ -->
+      <section id="datas" class="sec" aria-labelledby="t-datas">
+        <header class="sec__head">
+          <p class="eyebrow">08 · Seletor de datas <span class="sit">novo</span></p>
+          <h2 id="t-datas" class="sec__title">Seletor de datas</h2>
+          <p class="sec__lead">Entrada e saída num calendário que já mostra as noites ocupadas do imóvel: a reserva em conflito nem chega a ser escolhida. As barras seguem a agenda. Começam na entrada (15:00) e terminam na saída (11:00), então o dia da virada serve para sair e para entrar.</p>
+        </header>
+        <div class="dp-top">
+          <div class="field dp-top__prop"><label class="field__label" for="dp-prop">Imóvel</label><div class="select-box"><select class="select" id="dp-prop"><button type="button"><selectedcontent></selectedcontent></button></select></div></div>
+          <p class="dp-top__rate" id="dp-rate"></p>
+        </div>
+        <div class="dp-grid">
+          <article class="card glass comp">
+            <div class="comp__head"><h3 class="card__title">No computador</h3><span class="comp__note">também no tablet</span></div>
+            <button class="datefield" type="button" id="dp-field" aria-expanded="true" aria-controls="cal">
+              <span class="datefield__part"><span class="datefield__k">Entrada</span><span class="datefield__v" id="dp-in-v">Escolha</span></span>
+              <svg class="ico ico--sm datefield__arrow" aria-hidden="true"><use href="#l-arrow-right"/></svg>
+              <span class="datefield__part"><span class="datefield__k">Saída</span><span class="datefield__v" id="dp-out-v">—</span></span>
+              <svg class="ico datefield__ico" aria-hidden="true"><use href="#l-calendar-days"/></svg>
+            </button>
+            <div class="cal" id="cal">
+              <div class="cal__head">
+                <button class="btn btn--ghost btn--icon btn--sm" type="button" id="cal-prev" aria-label="Mês anterior" title="Mês anterior"><svg class="ico" aria-hidden="true"><use href="#l-chevron-left"/></svg></button>
+                <h4 class="cal__title" id="cal-title" aria-live="polite"></h4>
+                <button class="btn btn--ghost btn--icon btn--sm" type="button" id="cal-next" aria-label="Próximo mês" title="Próximo mês"><svg class="ico" aria-hidden="true"><use href="#l-chevron-right"/></svg></button>
+              </div>
+              <div class="cal__grid" role="grid" id="cal-grid" aria-labelledby="cal-title" aria-describedby="cal-help"></div>
+              <p class="cal__status" id="cal-status" role="status"></p>
+              <div class="cal__sum" id="cal-sum" hidden></div>
+              <div class="cal__foot">
+                <ul class="cal__legend" aria-label="Legenda do calendário">
+                  <li><i class="lg lg--occ" aria-hidden="true"></i>Reservado</li>
+                  <li><i class="lg lg--block" aria-hidden="true"></i>Bloqueado</li>
+                  <li><i class="lg lg--sel" aria-hidden="true"></i>Sua escolha</li>
+                  <li><i class="lg lg--today" aria-hidden="true"></i>Hoje</li>
+                </ul>
+                <button class="btn btn--ghost btn--sm" type="button" id="cal-clear">Limpar</button>
+              </div>
+              <p class="sr" id="cal-help">Setas andam pelos dias. Page Up e Page Down trocam o mês. Enter escolhe. Esc fecha.</p>
+            </div>
+          </article>
+          <article class="card glass comp">
+            <div class="comp__head"><h3 class="card__title">No celular</h3><span class="comp__note">seletor do sistema</span></div>
+            <p class="note note--flush">O seletor do sistema não mostra as noites ocupadas. Então as noites livres aparecem antes, prontas para tocar.</p>
+            <div class="slots-wrap"><p class="mini-label" id="slots-l">Noites livres nos próximos 45 dias</p><ul class="slots" id="slots" aria-labelledby="slots-l"></ul></div>
+            <div class="row2">
+              <div class="field"><label class="field__label" for="m-in">Entrada</label><input class="input" type="date" id="m-in" aria-describedby="m-msg"></div>
+              <div class="field"><label class="field__label" for="m-out">Saída</label><input class="input" type="date" id="m-out" aria-describedby="m-msg"></div>
+            </div>
+            <div class="dp-msg" id="m-msg" role="status"></div>
+          </article>
+        </div>
+        <div class="card glass table-wrap dp-keys" role="region" aria-label="Teclado no calendário" tabindex="0">
+          <table class="tbl">
+            <caption class="sr">Teclado no calendário</caption>
+            <thead><tr><th scope="col">Tecla</th><th scope="col">No calendário</th><th scope="col">Tecla</th><th scope="col">No calendário</th></tr></thead>
+            <tbody>
+              <tr><td><kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd></td><td>dia anterior ou seguinte</td><td><kbd class="kbd">Page Up</kbd> <kbd class="kbd">Page Down</kbd></td><td>mês anterior ou seguinte</td></tr>
+              <tr><td><kbd class="kbd">↑</kbd> <kbd class="kbd">↓</kbd></td><td>mesma data na semana anterior ou seguinte</td><td><kbd class="kbd">Shift</kbd> + <kbd class="kbd">Page Up</kbd></td><td>ano anterior (com Page Down, o seguinte)</td></tr>
+              <tr><td><kbd class="kbd">Home</kbd> <kbd class="kbd">End</kbd></td><td>início ou fim da semana</td><td><kbd class="kbd">Enter</kbd> <kbd class="kbd">Espaço</kbd></td><td>escolhe a entrada, depois a saída</td></tr>
+              <tr><td><kbd class="kbd">Tab</kbd></td><td>sai do calendário</td><td><kbd class="kbd">Esc</kbd></td><td>fecha e volta ao campo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ 09 · Carregando ============ -->
+      <section id="carregando" class="sec" aria-labelledby="t-carregando">
+        <header class="sec__head">
+          <p class="eyebrow">09 · Carregando · Esqueleto facetado</p>
+          <h2 id="t-carregando" class="sec__title">Carregando</h2>
+          <p class="sec__lead">Na primeira carga, o esqueleto desenha a página que vai chegar, com os mesmos cortes em ângulo, e uma luz atravessa as peças. Depois disso, os dados antigos ficam à vista e só um indicador pequeno avisa que está atualizando.</p>
+        </header>
+        <article class="card glass comp">
+          <div class="comp__head"><h3 class="card__title">Indicadores</h3></div>
+          <div class="loaders">
+            <div><span class="state-tag">No botão · existe</span><button class="btn btn--primary" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Salvando…</button></div>
+            <div><span class="state-tag">Na área · novo</span><p class="loader" role="status"><span class="spin spin--md" aria-hidden="true"></span>Carregando reservas…</p></div>
+            <div><span class="state-tag">Atualizando · novo</span><span class="pill pill--busy"><span class="spin" aria-hidden="true"></span>Atualizando…</span></div>
+          </div>
+        </article>
+        <div class="sk-grid">
+          <article class="card glass sk-card" aria-busy="true" aria-labelledby="sk-1">
+            <p class="sr" id="sk-1">Carregando a receita do mês</p>
+            <div class="sk-group" aria-hidden="true">
+              <i class="sk sk--line" style="--w:44%"></i>
+              <i class="sk sk--num" style="--w:68%"></i>
+              <i class="sk sk--line" style="--w:52%"></i>
+              <i class="sk sk--meter"></i>
+            </div>
+            <p class="sk-card__cap">KPI</p>
+          </article>
+          <article class="card glass sk-card" aria-busy="true" aria-labelledby="sk-2">
+            <p class="sr" id="sk-2">Carregando as chegadas de hoje</p>
+            <div class="sk-group sk-list" aria-hidden="true">
+              <div class="sk-row"><i class="sk sk--dot"></i><span><i class="sk sk--line" style="--w:62%"></i><i class="sk sk--line sk--thin" style="--w:40%"></i></span><i class="sk sk--tag"></i></div>
+              <div class="sk-row"><i class="sk sk--dot"></i><span><i class="sk sk--line" style="--w:48%"></i><i class="sk sk--line sk--thin" style="--w:56%"></i></span><i class="sk sk--tag"></i></div>
+              <div class="sk-row"><i class="sk sk--dot"></i><span><i class="sk sk--line" style="--w:70%"></i><i class="sk sk--line sk--thin" style="--w:34%"></i></span><i class="sk sk--tag"></i></div>
+            </div>
+            <p class="sk-card__cap">Linha de lista</p>
+          </article>
+          <article class="card glass sk-card sk-card--wide" aria-busy="true" aria-labelledby="sk-3">
+            <p class="sr" id="sk-3">Carregando a agenda</p>
+            <div class="sk-group sk-agenda" aria-hidden="true">
+              <div class="sk-lane"><i class="sk sk--line" style="--w:80%"></i><span class="sk-lane__track"><i class="sk sk--bar" style="--x:2%;--w:30%"></i><i class="sk sk--bar" style="--x:36%;--w:22%"></i><i class="sk sk--bar" style="--x:64%;--w:30%"></i></span></div>
+              <div class="sk-lane"><i class="sk sk--line" style="--w:64%"></i><span class="sk-lane__track"><i class="sk sk--bar" style="--x:10%;--w:40%"></i><i class="sk sk--bar" style="--x:56%;--w:18%"></i></span></div>
+              <div class="sk-lane"><i class="sk sk--line" style="--w:72%"></i><span class="sk-lane__track"><i class="sk sk--bar" style="--x:0%;--w:18%"></i><i class="sk sk--bar" style="--x:24%;--w:26%"></i><i class="sk sk--bar" style="--x:70%;--w:24%"></i></span></div>
+            </div>
+            <p class="sk-card__cap">Agenda · as barras já têm a ponta em ângulo da reserva</p>
+          </article>
+        </div>
+        <ul class="rules">
+          <li><b>Esqueleto só na primeira carga.</b> Ao atualizar, os dados antigos ficam e aparece “Atualizando…”.</li>
+          <li><b>Aparece depois de 300ms e fica pelo menos 500ms:</b> carga rápida não pisca na tela.</li>
+          <li><b>Mesma forma da tela final:</b> quando os dados chegam, nada pula de lugar.</li>
+          <li><b>Leitor de tela:</b> a área ganha <code>aria-busy="true"</code> e um texto escondido (“Carregando as chegadas de hoje”).</li>
+          <li><b>A luz é um laço funcional,</b> como o indicador de carregando: só existe enquanto carrega e para com movimento reduzido.</li>
+        </ul>
+      </section>
+
+      <!-- ============ 10 · Faixa de aviso ============ -->
+      <section id="faixa" class="sec" aria-labelledby="t-faixa">
+        <header class="sec__head">
+          <p class="eyebrow">10 · Faixa de aviso</p>
+          <h2 id="t-faixa" class="sec__title">Faixa de aviso</h2>
+          <p class="sec__lead">Fica na página até o problema ser resolvido ou a pessoa fechar. É diferente do aviso flutuante, que confirma uma ação e some sozinho.</p>
+        </header>
+        <div class="banner-grid">
+          <div class="banner banner--info"><svg class="ico banner__ico" aria-hidden="true"><use href="#l-info"/></svg><div class="banner__body"><p class="banner__title">Como a ocupação é contada</p><p class="banner__text">Só entram as noites disponíveis. Bloqueios de manutenção ficam de fora da conta.</p></div></div>
+          <div class="banner banner--ok"><svg class="ico banner__ico" aria-hidden="true"><use href="#l-circle-check"/></svg><div class="banner__body"><p class="banner__title">Reserva salva</p><p class="banner__text">A limpeza da saída foi criada para Cida, sáb, 7 nov, às 11:00.</p><p class="banner__actions"><a class="link link--go" href="#faixa">Ver tarefa<svg class="ico ico--sm" aria-hidden="true"><use href="#l-arrow-right"/></svg></a></p></div></div>
+          <div class="banner banner--warn" id="bn-warn"><svg class="ico banner__ico" aria-hidden="true"><use href="#l-triangle-alert"/></svg><div class="banner__body"><p class="banner__title">Chalé da Serra está sem diária</p><p class="banner__text">Sem ela, o valor das reservas novas fica em branco.</p><p class="banner__actions"><button class="btn btn--secondary btn--sm" type="button" data-toast="Abriria o cadastro do imóvel.">Definir diária</button></p></div><button class="btn btn--ghost btn--icon btn--sm banner__close" type="button" aria-label="Fechar aviso" title="Fechar aviso"><svg class="ico" aria-hidden="true"><use href="#l-x"/></svg></button></div>
+          <div class="banner banner--err" id="bn-err"><svg class="ico banner__ico" aria-hidden="true"><use href="#l-octagon-alert"/></svg><div class="banner__body"><p class="banner__title">Não deu para carregar as reservas</p><p class="banner__text">Confira a conexão e tente de novo. O que já estava na tela continua aqui.</p><p class="banner__actions"><button class="btn btn--secondary btn--sm" type="button" id="bn-retry"><svg class="ico" aria-hidden="true"><use href="#l-refresh-cw"/></svg>Tentar de novo</button></p></div></div>
+        </div>
+        <div class="offline-demo">
+          <figure class="screen" id="screen" data-theme="quartzo" data-density="equipe">
+            <div class="banner banner--fixed banner--warn" id="bn-off" hidden><svg class="ico banner__ico" aria-hidden="true"><use href="#l-wifi-off"/></svg><div class="banner__body"><p class="banner__title">Você está sem internet</p><p class="banner__text">O que aparece aqui pode estar desatualizado.</p></div></div>
+            <div class="screen__body">
+              <p class="screen__hello">Bom dia, Cida</p>
+              <div class="screen__row"><span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Em andamento</span><b>Casa da Praia</b></div>
+              <div class="screen__row"><span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span><b>Loft Pinheiros</b></div>
+            </div>
+            <figcaption>Faixa fixa no topo · aparece sozinha quando a conexão cai</figcaption>
+          </figure>
+          <div class="offline-demo__side">
+            <button class="toggle" type="button" id="off-toggle" aria-pressed="false">Simular sem internet</button>
+            <p class="note">A faixa fixa não tem botão de fechar: some quando a conexão volta. O que acontece com uma mudança feita sem internet (guardar e mandar depois?) fica para a seção do app da equipe.</p>
+          </div>
+        </div>
+        <div class="card glass table-wrap" role="region" aria-label="Faixa de aviso e aviso flutuante" tabindex="0">
+          <table class="tbl">
+            <caption class="sr">Faixa de aviso e aviso flutuante</caption>
+            <thead><tr><th scope="col"></th><th scope="col">Faixa de aviso</th><th scope="col">Aviso flutuante</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Para quê</th><td>algo que precisa de atenção ou de uma ação</td><td>confirmar o que acabou de acontecer</td></tr>
+              <tr><th scope="row">Onde</th><td>dentro da página, perto do que afeta</td><td>flutua embaixo, no centro</td></tr>
+              <tr><th scope="row">Quanto tempo</th><td>até resolver ou fechar</td><td>4s; 10s com Desfazer</td></tr>
+              <tr><th scope="row">Leitor de tela</th><td><code>role="alert"</code> se surge com erro; <code>role="status"</code> se surge sem urgência; nenhum se já estava lá</td><td><code>role="status"</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ 11 · Estado vazio ============ -->
+      <section id="vazio" class="sec" aria-labelledby="t-vazio">
+        <header class="sec__head">
+          <p class="eyebrow">11 · Estado vazio <span class="sit">novo</span></p>
+          <h2 id="t-vazio" class="sec__title">Estado vazio</h2>
+          <p class="sec__lead">Diz o que é e qual a primeira ação, nunca “Sem dados”. A arte é uma faceta com o ícone do assunto; o brilho de prisma na ponta é a única cor.</p>
+        </header>
+        <div class="empty-grid">
+          <article class="card glass empty">
+            <span class="state-tag">Primeiro uso</span>
+            <svg class="empty__art" viewBox="0 0 120 96" aria-hidden="true"><g class="empty__facets"><path d="M0 70L60 18L120 62"/><path d="M8 20L60 48L116 30"/></g><path class="empty__tile" d="M42 22H78L94 38V62L78 78H42L26 62V38Z"/><path class="empty__crown" d="M42 22H78L94 38H26Z"/><path class="empty__glint" d="M94 30l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><use href="#l-house-plus" x="46" y="34" width="28" height="28" class="empty__ico"/></svg>
+            <h3 class="empty__title">Nenhum imóvel cadastrado</h3>
+            <p class="empty__text">Cadastre o primeiro imóvel para começar a receber reservas e organizar as limpezas.</p>
+            <button class="btn btn--primary" type="button" data-toast="Abriria o cadastro do imóvel."><svg class="ico" aria-hidden="true"><use href="#l-plus"/></svg>Cadastrar imóvel</button>
+          </article>
+          <article class="card glass empty">
+            <span class="state-tag">Sem resultado</span>
+            <svg class="empty__art" viewBox="0 0 120 96" aria-hidden="true"><g class="empty__facets"><path d="M0 70L60 18L120 62"/><path d="M8 20L60 48L116 30"/></g><path class="empty__tile" d="M42 22H78L94 38V62L78 78H42L26 62V38Z"/><path class="empty__crown" d="M42 22H78L94 38H26Z"/><path class="empty__glint" d="M94 30l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><use href="#l-search-x" x="46" y="34" width="28" height="28" class="empty__ico"/></svg>
+            <h3 class="empty__title">Nenhuma reserva com esses filtros</h3>
+            <p class="empty__text">Chalé da Serra · dezembro. Trocar o mês ou o imóvel pode ajudar.</p>
+            <button class="btn btn--secondary" type="button" data-toast="Filtros limpos.">Limpar filtros</button>
+          </article>
+          <figure class="device device--compact" data-theme="quartzo" data-density="equipe">
+            <div class="empty empty--staff">
+              <svg class="empty__art" viewBox="0 0 120 96" aria-hidden="true"><g class="empty__facets"><path d="M0 70L60 18L120 62"/><path d="M8 20L60 48L116 30"/></g><path class="empty__tile" d="M42 22H78L94 38V62L78 78H42L26 62V38Z"/><path class="empty__crown" d="M42 22H78L94 38H26Z"/><path class="empty__glint" d="M94 30l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><use href="#l-sun" x="46" y="34" width="28" height="28" class="empty__ico"/></svg>
+              <h3 class="empty__title">Nenhuma tarefa para hoje</h3>
+              <p class="empty__text">Quando alguém passar uma tarefa para você, ela aparece aqui.</p>
+              <a class="link link--go" href="#vazio">Ver as 2 tarefas de amanhã<svg class="ico ico--sm" aria-hidden="true"><use href="#l-arrow-right"/></svg></a>
+            </div>
+            <figcaption>App da equipe · dia livre</figcaption>
+          </figure>
+          <article class="card glass empty-inline">
+            <span class="state-tag">Dentro de um bloco</span>
+            <h3 class="card__title">Chegadas de hoje</h3>
+            <p class="empty-line"><svg class="ico" aria-hidden="true"><use href="#l-calendar-days"/></svg><span>Nenhuma chegada hoje. A próxima é amanhã, às 15:00.</span></p>
+            <p class="note">Num bloco pequeno, uma linha basta: ícone, frase e, se houver, um link.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 12 · Juntos ============ -->
+      <section id="juntos" class="sec" aria-labelledby="t-juntos">
+        <header class="sec__head">
+          <p class="eyebrow">12 · Estados de dados</p>
+          <h2 id="t-juntos" class="sec__title">Juntos: do esqueleto ao vazio</h2>
+          <p class="sec__lead">Quando a tela fala com o servidor, estas peças trabalham juntas. Troque o estado: a mesma área carrega, mostra os dados, atualiza, falha e fica vazia. O esqueleto tem a forma das linhas, então nada pula quando os dados chegam; atualizar não tira nada da tela; a falha mantém o que já havia, com a hora.</p>
+        </header>
+        <article class="card glass ds" id="ds">
+          <div class="ds__head">
+            <div class="ds__titles"><h3 class="card__title">Chegadas de hoje</h3><p class="ds__sub" id="ds-sub"></p></div>
+            <div class="seg seg--sm" role="radiogroup" aria-label="Estado da área" id="seg-ds">
+              <span class="seg__pill" aria-hidden="true"></span>
+              <button type="button" role="radio" aria-checked="false" data-value="loading" tabindex="-1">Carregando</button>
+              <button type="button" role="radio" aria-checked="true" data-value="data">Com dados</button>
+              <button type="button" role="radio" aria-checked="false" data-value="refresh" tabindex="-1">Atualizando</button>
+              <button type="button" role="radio" aria-checked="false" data-value="error" tabindex="-1">Erro</button>
+              <button type="button" role="radio" aria-checked="false" data-value="empty" tabindex="-1">Vazio</button>
+            </div>
+          </div>
+          <div class="ds__body" id="ds-body"></div>
+        </article>
+      </section>
+
+      <footer class="foot">
+        <p><b>Gemóvel · Componentes, lote A</b> · rascunho para aprovação · parte 2 de 3.</p>
+        <p>Inventário e regras: <code>componentes.rascunho.md</code> · tokens: <code>tokens.css</code> · próximo: lote B (navegação, listas, cartões e sobrepostos).</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <p class="sr" aria-live="polite" id="live"></p>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="obsidiana" data-tier="padrao">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gemóvel · Sistema Lapidado</title>
+  <meta name="description" content="Folha visual do design system do Gemóvel (v0, valores provisórios): cores, status, tipografia, espaço, profundidade, movimento, componentes e voz, nos temas Obsidiana e Quartzo.">
+  <script>try{var d=document.documentElement,t=localStorage.getItem('gem-theme'),r=localStorage.getItem('gem-tier');if(t==='quartzo')d.dataset.theme=t;if(r==='completo'||r==='padrao'||r==='leve')d.dataset.tier=r;if(localStorage.getItem('gem-motion')==='reduce')d.dataset.motion='reduce';}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Geist+Mono:wght@400..600&family=Geist:wght@300..700&display=swap">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="sistema.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="sistema.js" defer></script>
+</head>
+<body>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <defs id="lens-defs">
+      <linearGradient id="prism" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#a6f4ff"/>
+        <stop offset=".38" stop-color="#cdbcff"/>
+        <stop offset=".7" stop-color="#ffb8e3"/>
+        <stop offset="1" stop-color="#ffe2a6"/>
+      </linearGradient>
+      <!-- Simulação de daltonismo (Machado et al. 2009, severidade total), em RGB linear -->
+      <filter id="cvd-deut" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.367322 0.860646 -0.227968 0 0  0.280085 0.672501 0.047413 0 0  -0.011820 0.042940 0.968881 0 0  0 0 0 1 0"/></filter>
+      <filter id="cvd-prot" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.152286 1.052583 -0.204868 0 0  0.114503 0.786281 0.099216 0 0  -0.003882 -0.048116 1.051998 0 0  0 0 0 1 0"/></filter>
+      <filter id="cvd-trit" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="1.255528 -0.076749 -0.178779 0 0  -0.078411 0.930809 0.147602 0 0  0.004733 0.691367 0.303900 0 0  0 0 0 1 0"/></filter>
+      <filter id="cvd-gray"><feColorMatrix type="saturate" values="0"/></filter>
+    </defs>
+    <!-- Gemas de status: forma diz o estado (as mesmas do protótipo) -->
+    <symbol id="g-todo" viewBox="0 0 24 24"><path d="M7.2 6.2C9.3 4.4 14.1 3.9 16.6 5.4C19.2 6.9 20.6 10 19.2 13.4C17.8 16.9 14.3 19.6 11.2 19.2C7.7 18.7 4.6 15.8 4.5 12.2C4.4 9.7 5.6 7.6 7.2 6.2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="g-doing" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></g></symbol>
+    <symbol id="g-done" viewBox="0 0 24 24"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z" fill="currentColor" fill-opacity=".25" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4M9.5 9.5L12 20.5L14.5 9.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="g-late" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M7.2 6.2C9.3 4.4 14.1 3.9 16.6 5.4C19.2 6.9 20.6 10 19.2 13.4C17.8 16.9 14.3 19.6 11.2 19.2C7.7 18.7 4.6 15.8 4.5 12.2C4.4 9.7 5.6 7.6 7.2 6.2Z"/><path d="M12 8.6v3.6"/></g><circle cx="12" cy="15.1" r="1.1" fill="currentColor"/></symbol>
+    <!-- Ícones gerais (traço 1,75, pontas redondas) -->
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-ok" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.3l2.6 2.6 5-5.4"/></g></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/></g><circle cx="12" cy="17" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3.5h7l5 5v7l-5 5h-7l-5-5v-7z"/><path d="M12 8v5"/></g><circle cx="12" cy="16.2" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/></g><circle cx="12" cy="7.8" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-up" viewBox="0 0 10 10"><path d="M5 1.5L9 8.5H1Z" fill="currentColor"/></symbol>
+    <symbol id="i-down" viewBox="0 0 10 10"><path d="M5 8.5L1 1.5H9Z" fill="currentColor"/></symbol>
+  </svg>
+
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <div class="page-bg" aria-hidden="true"><div class="page-bg__facets"></div></div>
+
+  <header class="bar">
+    <a class="brand" href="./" title="Voltar às direções visuais">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/><path d="M3 9.5H21M9.5 9.5L12 20.5L14.5 9.5M7 4L9.5 9.5L12 4L14.5 9.5L17 4"/></svg>
+      <span>Gemóvel</span>
+      <span class="pill pill--ghost">Sistema · v0</span>
+    </a>
+    <div class="bar__tools">
+      <div class="seg" role="radiogroup" aria-label="Tema" id="seg-theme">
+        <span class="seg__pill" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="true" data-value="obsidiana">Obsidiana</button>
+        <button type="button" role="radio" aria-checked="false" data-value="quartzo" tabindex="-1">Quartzo</button>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Nível de efeito" id="seg-tier">
+        <span class="seg__pill" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="false" data-value="completo" tabindex="-1">Completo</button>
+        <button type="button" role="radio" aria-checked="true" data-value="padrao">Padrão</button>
+        <button type="button" role="radio" aria-checked="false" data-value="leve" tabindex="-1">Leve</button>
+      </div>
+      <button class="toggle" type="button" id="motion-toggle" aria-pressed="false">Movimento reduzido</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Seções desta folha">
+      <span class="toc__pill" aria-hidden="true"></span>
+      <a href="#tema"><b>01</b>Tema</a>
+      <a href="#cores"><b>02</b>Cores</a>
+      <a href="#status"><b>03</b>Status</a>
+      <a href="#tipografia"><b>04</b>Tipografia</a>
+      <a href="#espaco"><b>05</b>Espaço e forma</a>
+      <a href="#profundidade"><b>06</b>Profundidade</a>
+      <a href="#movimento"><b>07</b>Movimento</a>
+      <a href="#componentes"><b>08</b>Componentes</a>
+      <a href="#voz"><b>09</b>Voz</a>
+    </nav>
+
+    <main id="conteudo">
+      <!-- ============ 01 · Tema ============ -->
+      <section id="tema" class="sec hero" aria-labelledby="t-tema">
+        <p class="eyebrow">Design system · v0 · valores provisórios</p>
+        <h1 id="t-tema" class="hero__title">Sistema <em>Lapidado</em></h1>
+        <p class="hero__statement" aria-label="Declaração de tema: lapidado, luminoso, instrumento de precisão">
+          <span>lapidado</span><i aria-hidden="true"></i><span>luminoso</span><i aria-hidden="true"></i><span>instrumento de precisão</span>
+        </p>
+        <p class="hero__lead">A operação é tratada como uma pedra sendo lapidada: o que chega bruto é trabalhado até ficar polido. Cortes em ângulo, luz nas bordas do vidro e números grandes e calmos dão personalidade sem atrapalhar o trabalho. O brilho fica guardado para o que importa: estado, dinheiro e o “agora”.</p>
+
+        <div class="duo">
+          <article class="preview" data-theme="obsidiana" aria-labelledby="pv-o">
+            <header class="preview__tag"><b id="pv-o">Obsidiana</b><span>admin · computador · escuro</span></header>
+            <div class="preview__body">
+              <div class="card glass kpi kpi--hero">
+                <h3 class="kpi__label">Receita do mês</h3>
+                <p class="kpi__value">R$ 48.920</p>
+                <p class="delta"><b><svg aria-hidden="true"><use href="#i-up"/></svg>12%</b> sobre outubro</p>
+                <span class="meter" role="img" aria-label="Realizado: 64% da receita prevista"><i style="width:64%"></i></span>
+              </div>
+              <div class="preview__lane" role="img" aria-label="Linha da agenda: Lucas saiu, Mariana está hospedada por 3 noites, a família Souza chega depois">
+                <div class="res-bar res-bar--past" style="left:0;width:26%"><span>Lucas</span></div>
+                <div class="res-bar res-bar--stay" style="left:24%;width:46%"><span>Mariana · 3 noites</span></div>
+                <div class="res-bar res-bar--future" style="left:68%;width:32%"><span>Família Souza</span></div>
+                <i class="now-line" style="left:62%"></i>
+              </div>
+              <div class="preview__row">
+                <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Limpando</span>
+                <span class="chip is-late"><svg class="gem-ico" aria-hidden="true"><use href="#g-late"/></svg>Atrasada</span>
+                <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Pronto</span>
+              </div>
+              <div class="preview__row">
+                <button class="btn btn--primary" type="button"><svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg>Nova reserva</button>
+                <button class="btn btn--secondary" type="button"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg>Agenda</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="preview" data-theme="quartzo" aria-labelledby="pv-q">
+            <header class="preview__tag"><b id="pv-q">Quartzo</b><span>equipe · celular · claro</span></header>
+            <div class="phone">
+              <p class="phone__date mono">qui, 5 nov · 3 tarefas</p>
+              <p class="phone__hello">Bom dia, Cida</p>
+              <div class="task card glass">
+                <div class="task__top">
+                  <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Em andamento</span>
+                  <span class="task__time mono">até 15:00</span>
+                </div>
+                <h3 class="task__title">Casa da Praia</h3>
+                <p class="task__meta">Limpeza · saída 11:00 → entrada 15:00</p>
+                <button class="btn btn--primary btn--lg btn--block" type="button"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Concluir limpeza</button>
+              </div>
+              <div class="task task--mini card glass">
+                <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+                <b>Loft Pinheiros</b><span class="mono">16:00</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 02 · Cores ============ -->
+      <section id="cores" class="sec" aria-labelledby="t-cores">
+        <header class="sec__head">
+          <p class="eyebrow">02 · Cores</p>
+          <h2 id="t-cores" class="sec__title">Cores</h2>
+          <p class="sec__lead">Primitivos com nomes de gemas → semânticos por tema → componentes. Os números abaixo são calculados ao vivo a partir de <code>tokens.css</code>, contra a superfície do tema atual. Clique numa amostra para copiar o token.</p>
+        </header>
+        <h3 class="sub">Neutros · matiz violeta</h3>
+        <div class="swatches" id="sw-neutral"></div>
+        <h3 class="sub">Gemas · estado e dado (reservadas)</h3>
+        <div class="gem-ramps" id="sw-gems"></div>
+        <h3 class="sub">Prisma · identidade, nunca significado</h3>
+        <div class="prism card glass">
+          <div class="prism__bar" aria-hidden="true"></div>
+          <ul class="prism__stops">
+            <li><code>prisma-ciano</code><span>#a6f4ff</span></li>
+            <li><code>prisma-lilas</code><span>#cdbcff</span></li>
+            <li><code>prisma-rosa</code><span>#ffb8e3</span></li>
+            <li><code>prisma-champanhe</code><span>#ffe2a6</span></li>
+          </ul>
+          <p class="note">Logo, aro do botão primário, avatar e brilho de borda. Nunca em texto, em status ou em gráfico.</p>
+        </div>
+        <h3 class="sub">Semânticos no tema atual</h3>
+        <div class="card glass table-wrap">
+          <table class="tbl" id="sem-table">
+            <caption class="sr">Tokens semânticos, o primitivo de cada um no tema atual e o contraste medido</caption>
+            <thead><tr><th scope="col">Token</th><th scope="col">Amostra</th><th scope="col">Vem de</th><th scope="col">Para quê</th><th scope="col" class="num">Contraste</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ 03 · Status ============ -->
+      <section id="status" class="sec" aria-labelledby="t-status">
+        <header class="sec__head">
+          <p class="eyebrow">03 · Status</p>
+          <h2 id="t-status" class="sec__title">A pedra conta o estado</h2>
+          <p class="sec__lead">Forma + rótulo + cor, sempre juntos. Simule os tipos de daltonismo: a cor muda, mas a forma continua dizendo o estado.</p>
+        </header>
+        <div class="card glass status-panel">
+          <div class="status-tools">
+            <span class="status-tools__label" id="cvd-label">Visão</span>
+            <div class="seg seg--sm" role="radiogroup" aria-labelledby="cvd-label" id="seg-cvd">
+              <span class="seg__pill" aria-hidden="true"></span>
+              <button type="button" role="radio" aria-checked="true" data-value="">Normal</button>
+              <button type="button" role="radio" aria-checked="false" data-value="cvd-deut" tabindex="-1">Deuteranopia</button>
+              <button type="button" role="radio" aria-checked="false" data-value="cvd-prot" tabindex="-1">Protanopia</button>
+              <button type="button" role="radio" aria-checked="false" data-value="cvd-trit" tabindex="-1">Tritanopia</button>
+              <button type="button" role="radio" aria-checked="false" data-value="cvd-gray" tabindex="-1">Cinza</button>
+            </div>
+          </div>
+          <div class="cvd-target" id="cvd-target">
+            <ol class="gem-row">
+              <li class="gem-card is-todo"><svg class="gem-ico gem-ico--xl" aria-hidden="true"><use href="#g-todo"/></svg><b>Pendente</b><span>pedra bruta</span><code>status-todo</code></li>
+              <li class="gem-card is-doing"><svg class="gem-ico gem-ico--xl" aria-hidden="true"><use href="#g-doing"/></svg><b>Em andamento</b><span>lapidando</span><code>status-doing</code></li>
+              <li class="gem-card is-done"><svg class="gem-ico gem-ico--xl" aria-hidden="true"><use href="#g-done"/></svg><b>Concluída</b><span>lapidada</span><code>status-done</code></li>
+              <li class="gem-card is-late"><svg class="gem-ico gem-ico--xl" aria-hidden="true"><use href="#g-late"/></svg><b>Atrasada</b><span>pedra bruta com alerta</span><code>status-late</code></li>
+            </ol>
+            <div class="pair-grid">
+              <div class="pair" data-theme="obsidiana">
+                <p class="pair__name">Obsidiana <span>rótulo na cor do status</span></p>
+                <div class="chips">
+                  <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+                  <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Em andamento</span>
+                  <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Concluída</span>
+                  <span class="chip is-late"><svg class="gem-ico" aria-hidden="true"><use href="#g-late"/></svg>Atrasada</span>
+                </div>
+                <div class="chips">
+                  <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+                  <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Limpando</span>
+                  <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Pronto</span>
+                </div>
+              </div>
+              <div class="pair" data-theme="quartzo">
+                <p class="pair__name">Quartzo <span>rótulo neutro, gema viva</span></p>
+                <div class="chips">
+                  <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+                  <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Em andamento</span>
+                  <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Concluída</span>
+                  <span class="chip is-late"><svg class="gem-ico" aria-hidden="true"><use href="#g-late"/></svg>Atrasada</span>
+                </div>
+                <div class="chips">
+                  <span class="chip is-todo"><svg class="gem-ico" aria-hidden="true"><use href="#g-todo"/></svg>Pendente</span>
+                  <span class="chip is-doing"><svg class="gem-ico" aria-hidden="true"><use href="#g-doing"/></svg>Limpando</span>
+                  <span class="chip is-done"><svg class="gem-ico" aria-hidden="true"><use href="#g-done"/></svg>Pronto</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <dl class="proof">
+            <div><dt>Obsidiana</dt><dd>ΔE 10,8 com daltonismo · 19,8 sem</dd></div>
+            <div><dt>Quartzo (gemas)</dt><dd>ΔE 9,6 com daltonismo · 16,7 sem</dd></div>
+            <div><dt>Meta</dt><dd>≥ 8 com daltonismo, ≥ 15 sem (validador de paletas, todos os pares)</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ============ 04 · Tipografia ============ -->
+      <section id="tipografia" class="sec" aria-labelledby="t-tipo">
+        <header class="sec__head">
+          <p class="eyebrow">04 · Tipografia</p>
+          <h2 id="t-tipo" class="sec__title">Três vozes, uma escala</h2>
+          <p class="sec__lead">Bodoni Moda é a voz da marca e só aparece a partir de 28px. Geist cuida da interface e dos números. Geist Mono marca horários, códigos e micro-rótulos. Nada abaixo de 11px.</p>
+        </header>
+        <div class="families">
+          <article class="card glass family"><p class="family__aa family__aa--display" aria-hidden="true">Aa</p><h3>Bodoni Moda</h3><p>Display · 500 · tamanho óptico fixo em 96 e 72</p><code>"Bodoni Moda", "Bodoni 72", Didot, "Bodoni MT", Georgia, serif</code></article>
+          <article class="card glass family"><p class="family__aa" aria-hidden="true">Aa</p><h3>Geist</h3><p>Interface e números · 400 · 500 · 600</p><code>Geist, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif</code></article>
+          <article class="card glass family"><p class="family__aa family__aa--mono" aria-hidden="true">Aa</p><h3>Geist Mono</h3><p>Horários, códigos, rótulos · 400 · 500</p><code>"Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace</code></article>
+        </div>
+        <div class="card glass scale">
+          <div class="scale__row"><code>display-lg</code><span class="scale__spec">42 / 1 · Bodoni 500 · opsz 96</span><p class="t-display-lg">Visão geral</p></div>
+          <div class="scale__row"><code>display-md</code><span class="scale__spec">32 / 1.05 · Bodoni 500 · opsz 72</span><p class="t-display-md">Mariana Costa</p></div>
+          <div class="scale__row"><code>display-sm</code><span class="scale__spec">28 / 1.05 · Bodoni 500 · opsz 72</span><p class="t-display-sm">Hoje</p></div>
+          <div class="scale__row"><code>num-xl</code><span class="scale__spec">52 / 1 · Geist 600</span><p class="t-num-xl">R$ 48.920</p></div>
+          <div class="scale__row"><code>num-lg</code><span class="scale__spec">32 / 1 · Geist 600</span><p class="t-num-lg">78%</p></div>
+          <div class="scale__row"><code>num-md</code><span class="scale__spec">28 / 1 · Geist 600</span><p class="t-num-md">R$ 1.350</p></div>
+          <div class="scale__row"><code>text-xl</code><span class="scale__spec">20 / 1.3 · Geist 600</span><p class="t-xl">R$ 12,3 mil em novembro</p></div>
+          <div class="scale__row"><code>text-lg</code><span class="scale__spec">18 / 1.35 · Geist 600</span><p class="t-lg">Casa da Praia</p></div>
+          <div class="scale__row"><code>text-md</code><span class="scale__spec">16 / 1.5 · Geist 400</span><p class="t-md">Limpeza da Casa da Praia antes da entrada das 15:00.</p></div>
+          <div class="scale__row"><code>text-base</code><span class="scale__spec">14 / 1.5 · Geist 400</span><p class="t-base">Três reservas começam hoje e duas limpezas estão em andamento.</p></div>
+          <div class="scale__row"><code>text-sm</code><span class="scale__spec">13 / 1.45 · Geist 400</span><p class="t-sm">Noites ocupadas ÷ noites disponíveis</p></div>
+          <div class="scale__row"><code>text-xs</code><span class="scale__spec">12 / 1.4 · Geist 400</span><p class="t-xs">Atualizado há 2 minutos</p></div>
+          <div class="scale__row"><code>text-2xs</code><span class="scale__spec">11 / 1.3 · Mono 500 · +0,12em</span><p class="t-2xs">Entrada 15:00 · saída 11:00</p></div>
+        </div>
+        <ul class="rules">
+          <li><b>Algarismos tabulares</b> em tabelas, agenda, eixos, horários e KPIs: <span class="tnum">11:00 · 15:00 · 21:30</span>.</li>
+          <li><b>Número que conta é sempre tabular:</b> com algarismos proporcionais, os dígitos mudam de largura e o valor treme enquanto sobe (veja “O dado cresce”, em Movimento).</li>
+          <li><b>Proporcionais</b> só dentro de texto corrido: <span class="pnum">faltam R$ 1.350 para fechar a meta de novembro</span>.</li>
+          <li><b>Bodoni com tamanho óptico fixo</b> (96 no maior, 72 nos outros): o automático usaria o corte de texto, mais grosso, e apagaria os filetes finos que dão o brilho de pedra lapidada.</li>
+          <li><b>Dinheiro</b> com <code>Intl</code> pt-BR: “R$ 12.340” nos KPIs, “R$ 12,3 mil” quando falta espaço, centavos só na gaveta.</li>
+        </ul>
+      </section>
+
+      <!-- ============ 05 · Espaço e forma ============ -->
+      <section id="espaco" class="sec" aria-labelledby="t-espaco">
+        <header class="sec__head">
+          <p class="eyebrow">05 · Espaço e forma</p>
+          <h2 id="t-espaco" class="sec__title">Base de 4px, cortes em ângulo</h2>
+          <p class="sec__lead">Todo espaço é múltiplo de 4. Os raios ficam em seis passos; as facetas cortam as pontas em ângulo, como uma pedra lapidada.</p>
+        </header>
+        <div class="space-grid">
+          <article class="card glass">
+            <h3 class="card__title">Espaço</h3>
+            <ul class="spaces" id="spaces"></ul>
+          </article>
+          <article class="card glass">
+            <h3 class="card__title">Raios</h3>
+            <ul class="radii">
+              <li><i style="border-radius:var(--radius-xs)"></i><code>radius-xs</code><span>6</span></li>
+              <li><i style="border-radius:var(--radius-sm)"></i><code>radius-sm</code><span>10</span></li>
+              <li><i style="border-radius:var(--radius-md)"></i><code>radius-md</code><span>12</span></li>
+              <li><i style="border-radius:var(--radius-lg)"></i><code>radius-lg</code><span>16</span></li>
+              <li><i style="border-radius:var(--radius-xl)"></i><code>radius-xl</code><span>24</span></li>
+              <li><i style="border-radius:var(--radius-full)"></i><code>radius-full</code><span>999</span></li>
+            </ul>
+            <h3 class="card__title card__title--gap">Facetas</h3>
+            <div class="facets">
+              <div class="facet facet--sm"><span>cut-sm · 4</span></div>
+              <div class="facet facet--md"><span>cut-md · 8</span></div>
+              <div class="res-bar res-bar--stay"><span>Mariana · 3 noites</span></div>
+            </div>
+          </article>
+          <article class="card glass">
+            <h3 class="card__title">Alturas de controle</h3>
+            <div class="controls">
+              <div><button class="btn btn--secondary btn--sm" type="button">Pequeno</button><code>control-sm · 32</code></div>
+              <div><button class="btn btn--secondary" type="button">Médio</button><code>control-md · 40</code></div>
+              <div><button class="btn btn--secondary btn--lg" type="button">Grande</button><code>control-lg · 48</code></div>
+            </div>
+            <p class="note">Com o dedo (ponteiro grosso), pequeno vira 40 e médio vira 44. O app da equipe usa o grande como padrão.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 06 · Profundidade ============ -->
+      <section id="profundidade" class="sec" aria-labelledby="t-prof">
+        <header class="sec__head">
+          <p class="eyebrow">06 · Profundidade</p>
+          <h2 id="t-prof" class="sec__title">Vidro com propósito</h2>
+          <p class="sec__lead">Quatro níveis. O vidro só aparece quando há conteúdo atrás. Troque o nível de efeito no topo para ver como o sistema se adapta a aparelhos mais simples.</p>
+        </header>
+        <div class="stage card">
+          <div class="stage__art" aria-hidden="true">
+            <span class="stage__word">Gemóvel</span>
+            <i class="stage__bar stage__bar--a"></i><i class="stage__bar stage__bar--b"></i><i class="stage__bar stage__bar--c"></i>
+            <i class="stage__glow stage__glow--a"></i><i class="stage__glow stage__glow--b"></i>
+          </div>
+          <div class="elev elev--0"><b>0 · Plano</b><span>linhas, tabelas</span></div>
+          <div class="elev elev--1 glass"><b>1 · Vidro</b><span>cartões, lateral, topo fosco</span></div>
+          <div class="elev elev--2"><b>2 · Flutuante</b><span>dica, aviso, menu</span></div>
+          <div class="elev elev--3"><b>3 · Sobreposto</b><span>gaveta, diálogo, folha</span></div>
+          <div class="lens-demo" data-lens data-bezel="12" data-blur="0" data-scale="14" tabindex="0" role="img" aria-label="Lente de vidro de exemplo. Arraste com o mouse ou use as setas."><span>lente</span></div>
+        </div>
+        <p class="note lens-note" id="lens-note"></p>
+        <div class="depth-grid">
+          <article class="card glass">
+            <h3 class="card__title">Camadas</h3>
+            <ol class="zs">
+              <li><code>z-skip</code><span>100</span><em>pular para o conteúdo</em></li>
+              <li><code>z-toast</code><span>90</span><em>aviso</em></li>
+              <li><code>z-tooltip</code><span>80</span><em>dica flutuante</em></li>
+              <li><code>z-drawer</code><span>60</span><em>gaveta, diálogo</em></li>
+              <li><code>z-scrim</code><span>55</span><em>véu</em></li>
+              <li><code>z-nav</code><span>40</span><em>barra inferior</em></li>
+              <li><code>z-header</code><span>20</span><em>topo fixo</em></li>
+              <li><code>z-sticky</code><span>4</span><em>coluna presa da agenda</em></li>
+              <li><code>z-now</code><span>3</span><em>linha do “agora”</em></li>
+              <li><code>z-gem</code><span>2</span><em>gemas da agenda</em></li>
+              <li><code>z-base</code><span>0</span><em>conteúdo</em></li>
+              <li><code>z-bg</code><span>−1</span><em>fundo</em></li>
+            </ol>
+          </article>
+          <article class="card glass">
+            <h3 class="card__title">Níveis de efeito</h3>
+            <p class="detected" id="tier-detected">Detectando…</p>
+            <div class="tiers">
+              <div class="tier" data-for="completo"><b>Completo</b><span>Chromium no computador</span><ul><li class="on">vidro</li><li class="on">lente</li><li class="on">fundo animado</li><li class="on">laços</li></ul></div>
+              <div class="tier" data-for="padrao"><b>Padrão</b><span>outros navegadores</span><ul><li class="on">vidro</li><li>lente</li><li>fundo animado</li><li class="on">só “ao vivo”</li></ul></div>
+              <div class="tier" data-for="leve"><b>Leve</b><span>celular simples, economia de dados</span><ul><li>vidro (sólido)</li><li>lente</li><li>fundo animado</li><li>laços</li></ul></div>
+            </div>
+            <p class="note">O app da equipe começa no Leve. Movimento reduzido desliga o deslocamento em qualquer nível; transparência reduzida desliga o vidro.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 07 · Movimento ============ -->
+      <section id="movimento" class="sec" aria-labelledby="t-mov">
+        <header class="sec__head">
+          <p class="eyebrow">07 · Movimento</p>
+          <h2 id="t-mov" class="sec__title">Rápido, preciso, com propósito</h2>
+          <p class="sec__lead">Cinco durações, três curvas para o dia a dia e duas exceções com regra. Com movimento reduzido, tudo aparece direto no estado final.</p>
+          <button class="btn btn--secondary btn--sm sec__action" type="button" id="play-all"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg>Reproduzir tudo</button>
+        </header>
+        <div class="motion-grid">
+          <article class="card glass m-card">
+            <div class="m-card__head"><h3 class="card__title">Durações</h3><button class="btn btn--ghost btn--sm" type="button" data-play="durs"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg>Reproduzir</button></div>
+            <ul class="durs" id="durs">
+              <li data-ms="160"><code>dur-fast</code><span>160ms · hover, toque</span><div class="track"><i class="runner"></i></div></li>
+              <li data-ms="240"><code>dur-base</code><span>240ms · saídas, véu</span><div class="track"><i class="runner"></i></div></li>
+              <li data-ms="400"><code>dur-moderate</code><span>400ms · aviso entrando</span><div class="track"><i class="runner"></i></div></li>
+              <li data-ms="600"><code>dur-slow</code><span>600ms · gaveta, pílula</span><div class="track"><i class="runner"></i></div></li>
+              <li data-ms="900"><code>dur-cinematic</code><span>900ms · dados crescendo</span><div class="track"><i class="runner"></i></div></li>
+            </ul>
+          </article>
+          <article class="card glass m-card">
+            <div class="m-card__head"><h3 class="card__title">Curvas</h3><button class="btn btn--ghost btn--sm" type="button" data-play="eases"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg>Reproduzir</button></div>
+            <ul class="eases" id="eases">
+              <li data-css="cubic-bezier(.2,.7,.2,1)"><svg class="curve" viewBox="0 0 100 80" aria-hidden="true"></svg><div><code>ease-standard</code><span>interface em geral · GSAP power3.out</span><div class="track"><i class="runner"></i></div></div></li>
+              <li data-css="cubic-bezier(.16,1,.3,1)"><svg class="curve" viewBox="0 0 100 80" aria-hidden="true"></svg><div><code>ease-entrance</code><span>entradas, gaveta, pílula · expo.out</span><div class="track"><i class="runner"></i></div></div></li>
+              <li data-css="cubic-bezier(.32,0,.67,0)"><svg class="curve" viewBox="0 0 100 80" aria-hidden="true"></svg><div><code>ease-exit</code><span>saídas · power2.in</span><div class="track"><i class="runner"></i></div></div></li>
+              <li data-gsap="back.out(2)"><svg class="curve" viewBox="0 0 100 80" aria-hidden="true"></svg><div><code>ease-pop</code><span>só gemas surgindo (≤24px)</span><div class="track"><i class="runner"></i></div></div></li>
+              <li data-gsap="elastic.out(1, .3)" data-shake><svg class="curve" viewBox="0 0 100 80" aria-hidden="true"></svg><div><code>ease-shake</code><span>só ação inválida (tremor)</span><div class="track"><i class="runner"></i></div></div></li>
+            </ul>
+          </article>
+        </div>
+        <div class="sig-grid">
+          <figure class="card glass sig" id="sig-facet">
+            <div class="sig__stage sig__stage--lane">
+              <div class="res-bar res-bar--past" style="left:2%;width:22%"><span>Lucas</span></div>
+              <div class="res-bar res-bar--stay" style="left:22%;width:48%"><span>Mariana · 3 noites</span></div>
+              <div class="res-bar res-bar--future" style="left:68%;width:28%"><span>Souza</span></div>
+              <i class="now-line" style="left:41%"></i>
+            </div>
+            <figcaption><b>Corte de faceta</b><span>clip-path com ponta em ângulo · 600ms · expo.out</span><button class="btn btn--ghost btn--sm" type="button" data-play="facet">Reproduzir</button></figcaption>
+          </figure>
+          <figure class="card glass sig" id="sig-pill">
+            <div class="sig__stage">
+              <div class="mini-nav" role="group" aria-label="Exemplo de navegação">
+                <span class="mini-nav__pill" aria-hidden="true"></span>
+                <button type="button" aria-current="true">Visão geral</button>
+                <button type="button">Agenda</button>
+                <button type="button">Equipe</button>
+              </div>
+            </div>
+            <figcaption><b>Deslize da pílula</b><span>vidro desliza até o ativo · 600ms · expo.out</span><button class="btn btn--ghost btn--sm" type="button" data-play="pill">Reproduzir</button></figcaption>
+          </figure>
+          <figure class="card glass sig" id="sig-cascade">
+            <div class="sig__stage cascade">
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <figcaption><b>Cascata</b><span>sobe 14px, 45ms entre blocos · 650ms · power3.out</span><button class="btn btn--ghost btn--sm" type="button" data-play="cascade">Reproduzir</button></figcaption>
+          </figure>
+          <figure class="card glass sig" id="sig-grow">
+            <div class="sig__stage grow">
+              <p class="grow__num" id="grow-num">R$ 48.920</p>
+              <div class="grow__bars" aria-hidden="true"><i style="--h:.42"></i><i style="--h:.58"></i><i style="--h:.51"></i><i style="--h:.74"></i><i style="--h:.66"></i><i style="--h:.92"></i></div>
+            </div>
+            <figcaption><b>O dado cresce</b><span>da linha de base, números contam · 900ms · power3.out</span><button class="btn btn--ghost btn--sm" type="button" data-play="grow">Reproduzir</button></figcaption>
+          </figure>
+          <figure class="card glass sig" id="sig-toast">
+            <div class="sig__stage sig__stage--center">
+              <button class="btn btn--danger" type="button" id="toast-demo"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Excluir reserva (exemplo)</button>
+            </div>
+            <figcaption><b>Desfazer em vez de confirmar</b><span>aviso sobe 12px · 400ms · 10s para desfazer · ⌘/Ctrl Z</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ 08 · Componentes ============ -->
+      <section id="componentes" class="sec" aria-labelledby="t-comp">
+        <header class="sec__head">
+          <p class="eyebrow">08 · Componentes</p>
+          <h2 id="t-comp" class="sec__title">Peças base</h2>
+          <p class="sec__lead">Estados forçados para comparar lado a lado. Tudo usa só tokens semânticos; troque o tema para ver os dois.</p>
+        </header>
+
+        <article class="card glass comp">
+          <h3 class="card__title">Botões</h3>
+          <div class="btn-matrix" role="table" aria-label="Botões por variante e estado">
+            <div role="row" class="btn-matrix__head"><span role="columnheader"></span><span role="columnheader">Normal</span><span role="columnheader">Hover</span><span role="columnheader">Foco</span><span role="columnheader">Desabilitado</span><span role="columnheader">Carregando</span></div>
+            <div role="row"><span role="rowheader">Primário</span>
+              <span role="cell"><button class="btn btn--primary" type="button">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary is-hover" type="button" tabindex="-1">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary is-focus" type="button" tabindex="-1">Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary" type="button" disabled>Salvar reserva</button></span>
+              <span role="cell"><button class="btn btn--primary" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Salvando…</button></span>
+            </div>
+            <div role="row"><span role="rowheader">Secundário</span>
+              <span role="cell"><button class="btn btn--secondary" type="button">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary is-hover" type="button" tabindex="-1">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary is-focus" type="button" tabindex="-1">Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary" type="button" disabled>Ver agenda</button></span>
+              <span role="cell"><button class="btn btn--secondary" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Abrindo…</button></span>
+            </div>
+            <div role="row"><span role="rowheader">Fantasma</span>
+              <span role="cell"><button class="btn btn--ghost" type="button">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost is-hover" type="button" tabindex="-1">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost is-focus" type="button" tabindex="-1">Cancelar</button></span>
+              <span role="cell"><button class="btn btn--ghost" type="button" disabled>Cancelar</button></span>
+              <span role="cell"></span>
+            </div>
+            <div role="row"><span role="rowheader">Perigo</span>
+              <span role="cell"><button class="btn btn--danger" type="button">Excluir</button></span>
+              <span role="cell"><button class="btn btn--danger is-hover" type="button" tabindex="-1">Excluir</button></span>
+              <span role="cell"><button class="btn btn--danger is-focus" type="button" tabindex="-1">Excluir</button></span>
+              <span role="cell"><button class="btn btn--danger" type="button" disabled>Excluir</button></span>
+              <span role="cell"><button class="btn btn--danger" type="button" aria-busy="true" tabindex="-1"><span class="spin" aria-hidden="true"></span>Excluindo…</button></span>
+            </div>
+          </div>
+          <div class="comp__row">
+            <button class="btn btn--primary btn--sm" type="button">Pequeno</button>
+            <button class="btn btn--primary" type="button">Médio</button>
+            <button class="btn btn--primary btn--lg" type="button"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Concluir limpeza</button>
+            <button class="btn btn--secondary btn--icon" type="button" aria-label="Buscar"><svg class="ico" aria-hidden="true"><use href="#i-search"/></svg></button>
+          </div>
+        </article>
+
+        <div class="comp-grid">
+          <article class="card glass comp">
+            <h3 class="card__title">Campos</h3>
+            <div class="fields">
+              <label class="field"><span class="field__label">Imóvel</span><input class="input" type="text" placeholder="Ex.: Casa da Praia"><span class="field__hint">Digite para buscar</span></label>
+              <label class="field"><span class="field__label">Hóspede</span><input class="input is-focus" type="text" value="Mariana Costa" tabindex="-1"><span class="field__hint">Foco: anel de 2px</span></label>
+              <label class="field has-error"><span class="field__label">Saída</span><input class="input" type="text" value="03/11/2026" aria-invalid="true" aria-describedby="err-out"><span class="field__error" id="err-out"><svg class="ico" aria-hidden="true"><use href="#i-stop"/></svg>A saída precisa ser depois da entrada.</span></label>
+              <label class="field"><span class="field__label">Diária</span><input class="input" type="text" value="R$ 450,00" disabled><span class="field__hint">Vem do imóvel</span></label>
+            </div>
+            <p class="calc">R$ 450 × 3 noites = <b>R$ 1.350</b></p>
+          </article>
+
+          <article class="card glass comp">
+            <h3 class="card__title">Etiquetas e retorno</h3>
+            <div class="comp__row">
+              <span class="pill">Confirmada</span><span class="pill pill--stay">Em curso</span><span class="pill">Bloqueio</span>
+              <kbd class="kbd" data-kbd="K">Ctrl K</kbd>
+              <span class="avatar" aria-label="Cida Ramos" role="img">CR</span>
+            </div>
+            <div class="comp__row comp__row--stack">
+              <span class="label-row"><span>Ocupação</span><b>78%</b></span>
+              <span class="meter" role="meter" aria-label="Ocupação do mês" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78"><i style="width:78%"></i></span>
+            </div>
+            <div class="comp__row">
+              <p class="delta"><b><svg aria-hidden="true"><use href="#i-up"/></svg>12%</b> receita sobre outubro</p>
+              <p class="delta is-down"><b><svg aria-hidden="true"><use href="#i-down"/></svg>4 p.p.</b> ocupação</p>
+            </div>
+            <ul class="alerts">
+              <li class="alert alert--success"><svg class="ico" aria-hidden="true"><use href="#i-ok"/></svg><span>Reserva salva.</span></li>
+              <li class="alert alert--warning"><svg class="ico" aria-hidden="true"><use href="#i-warn"/></svg><span>Este imóvel está sem diária definida.</span></li>
+              <li class="alert alert--danger"><svg class="ico" aria-hidden="true"><use href="#i-stop"/></svg><span>Essas datas batem com a reserva de Mariana (5–8 nov).</span></li>
+              <li class="alert alert--info"><svg class="ico" aria-hidden="true"><use href="#i-info"/></svg><span>A ocupação conta só as noites disponíveis.</span></li>
+            </ul>
+            <p class="note">Aviso usa ícone próprio, nunca a gema: a forma separa “estado da tarefa” de “aviso do sistema”.</p>
+          </article>
+
+          <article class="card glass comp">
+            <h3 class="card__title">Sobrepostos</h3>
+            <div class="overlays">
+              <div class="tip-static" role="img" aria-label="Exemplo de dica flutuante">
+                <p class="tip__title">Novembro</p>
+                <p class="tip__value">R$ 48.920</p>
+                <p class="tip__row"><i style="background:var(--data-realized)"></i>Realizado<b>R$ 31.400</b></p>
+                <p class="tip__row"><i style="background:var(--data-projected, var(--data-realized))"></i>Previsto<b>R$ 17.520</b></p>
+              </div>
+              <div class="toast-static" role="img" aria-label="Exemplo de aviso com desfazer">
+                <span>Reserva excluída.</span><span class="toast__btn">Desfazer <kbd class="kbd-in" data-kbd="Z">Ctrl Z</kbd></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card glass comp kpi-demo">
+            <h3 class="card__title">KPI</h3>
+            <div class="kpi kpi--hero kpi--flat">
+              <h4 class="kpi__label">Receita do mês</h4>
+              <p class="kpi__value">R$ 48.920</p>
+              <p class="delta"><b><svg aria-hidden="true"><use href="#i-up"/></svg>12%</b> sobre outubro · parcial</p>
+              <p class="kpi__cap">Entradas no mês · média de 3,4 noites</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 09 · Voz ============ -->
+      <section id="voz" class="sec" aria-labelledby="t-voz">
+        <header class="sec__head">
+          <p class="eyebrow">09 · Voz e tom</p>
+          <h2 id="t-voz" class="sec__title">Clara, calma, prática</h2>
+          <p class="sec__lead">Fala como uma colega experiente: direta, gentil e sem jargão. As palavras seguem o PDF do projeto.</p>
+        </header>
+        <div class="voice-grid">
+          <div class="card glass table-wrap">
+            <table class="tbl">
+              <caption class="sr">Termos a usar e a evitar</caption>
+              <thead><tr><th scope="col">Use</th><th scope="col">Evite</th></tr></thead>
+              <tbody>
+                <tr><td>reserva</td><td>alocação, booking</td></tr>
+                <tr><td>imóvel</td><td>propriedade, unidade</td></tr>
+                <tr><td>entrada · saída</td><td>check-in, check-out</td></tr>
+                <tr><td>hóspede</td><td>cliente, locatário</td></tr>
+                <tr><td>diária (preço) · noites (contagem)</td><td>tarifa · “3 diárias”</td></tr>
+                <tr><td>receita</td><td>faturamento</td></tr>
+                <tr><td>equipe; a pessoa pelo nome</td><td>funcionário, colaborador</td></tr>
+                <tr><td>pendente · em andamento · concluída · atrasada</td><td>a fazer · fazendo · feito</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="copy-pairs">
+            <li><span class="copy copy--yes"><b>Use</b><span>Salvar reserva</span></span><span class="copy copy--no"><b>Evite</b><s>OK</s></span></li>
+            <li><span class="copy copy--yes"><b>Use</b><span>A saída precisa ser depois da entrada.</span></span><span class="copy copy--no"><b>Evite</b><s>Data inválida.</s></span></li>
+            <li><span class="copy copy--yes"><b>Use</b><span>Nenhuma reserva neste mês. Arraste numa linha da agenda ou use Nova reserva.</span></span><span class="copy copy--no"><b>Evite</b><s>Sem dados.</s></span></li>
+            <li><span class="copy copy--yes"><b>Use</b><span>Boas-vindas, Cida.</span></span><span class="copy copy--no"><b>Evite</b><s>Bem-vinda, Cida.</s></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <p><b>Gemóvel · Sistema Lapidado</b> · v0 · valores provisórios.</p>
+        <p>Texto completo: <code>DESIGN.md</code>, na raiz do projeto · tokens: <code>tokens.css</code></p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+  <p class="sr" aria-live="polite" id="live"></p>
+</body>
+</html>
