@@ -1,0 +1,34 @@
+"""Configuração do banco, lida do arquivo backend/.env (veja o .env.example)."""
+
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+PASTA_BACKEND = Path(__file__).resolve().parent
+
+# Valor inválido vira ERRO, em vez de ser trocado em silêncio (o XAMPP vem sem o modo estrito).
+MODO_ESTRITO = "STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+
+
+def carregar_config() -> dict:
+    """Devolve a configuração de conexão no formato do mysql-connector.
+
+    Sem o .env, valem os padrões do XAMPP (root, sem senha, 127.0.0.1:3306).
+    """
+    load_dotenv(PASTA_BACKEND / ".env")
+    return {
+        "host": os.getenv("DB_HOST", "127.0.0.1"),
+        "port": int(os.getenv("DB_PORTA", "3306")),
+        "user": os.getenv("DB_USUARIO", "root"),
+        "password": os.getenv("DB_SENHA", ""),
+        "database": os.getenv("DB_NOME", "gemovel"),
+        # O conector pede por padrão uma collation que o MariaDB 10.4 não conhece;
+        # fixar esta faz os acentos voltarem intactos.
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
+        "sql_mode": MODO_ESTRITO,
+        # A extensão em C do conector 9.x não conecta no MariaDB do XAMPP (as contas usam
+        # mysql_native_password e o erro nem chega ao Python); a versão em Python puro conecta.
+        "use_pure": True,
+    }
