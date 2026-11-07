@@ -1,0 +1,70 @@
+classDiagram
+    direction LR
+
+    class Conexao {
+        -pool: MySQLConnectionPool
+        +Conexao(config: dict)
+        +obter() PooledMySQLConnection
+        +testar() dict
+    }
+    class DAOBase {
+        <<abstract>>
+        #conexao: Conexao
+        #_executar(sql: str, parametros: tuple) int
+        #_consultar(sql: str, parametros: tuple) list~dict~
+        #_para_objeto(linha: dict) object*
+    }
+    class UsuarioDAO {
+        +buscar_por_email(email: str) Usuario
+        +buscar_por_id(id: int) Usuario
+        +inserir(usuario: Usuario) int
+        +atualizar(usuario: Usuario) None
+        +desativar(id: int) None
+    }
+    class FuncionarioDAO {
+        +listar_por_administrador(administrador_id: int) list~Funcionario~
+        +inserir(funcionario: Funcionario) int
+    }
+    class ImovelDAO {
+        +listar_por_administrador(administrador_id: int) list~Imovel~
+        +buscar_por_id(id: int) Imovel
+        +inserir(imovel: Imovel) int
+        +atualizar(imovel: Imovel) None
+        +desativar(id: int) None
+    }
+    class HospedeDAO {
+        +buscar(administrador_id: int, termo: str) list~Hospede~
+        +inserir(hospede: Hospede) int
+        +atualizar(hospede: Hospede) None
+    }
+    class ReservaDAO {
+        +listar_por_periodo(administrador_id: int, inicio: date, fim: date) list~Reserva~
+        +existe_conflito(imovel_id: int, entrada: date, saida: date, ignorar_id: int) bool
+        +inserir(reserva: Reserva) int
+        +atualizar(reserva: Reserva) None
+        +cancelar(id: int) None
+    }
+    class BloqueioDAO {
+        +listar_por_imovel(imovel_id: int) list~Bloqueio~
+        +inserir(bloqueio: Bloqueio) int
+        +remover(id: int) None
+    }
+    class TarefaDAO {
+        +listar_do_funcionario(funcionario_id: int, dia: date) list~Tarefa~
+        +listar_abertas(administrador_id: int) list~Tarefa~
+        +inserir(tarefa: Tarefa) int
+        +salvar_status(tarefa: Tarefa, registro: HistoricoTarefa) None
+    }
+    class HistoricoTarefaDAO {
+        +listar_recentes(administrador_id: int, limite: int) list~HistoricoTarefa~
+    }
+
+    DAOBase <|-- UsuarioDAO
+    UsuarioDAO <|-- FuncionarioDAO
+    DAOBase <|-- ImovelDAO
+    DAOBase <|-- HospedeDAO
+    DAOBase <|-- ReservaDAO
+    DAOBase <|-- BloqueioDAO
+    DAOBase <|-- TarefaDAO
+    DAOBase <|-- HistoricoTarefaDAO
+    DAOBase --> Conexao : usa

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Exportar diagrama</title>
+<!--
+  Desenha um dos diagramas Mermaid desta pasta, para exportar em PNG e SVG.
+  Uso, com o servidor da pasta do projeto ligado: exportar.html?d=modelo-logico
+  Diagramas: modelo-logico, classes-dominio, classes-dao.
+  Quando termina, marca <body data-pronto> (e data-erro, se algo falhou).
+-->
+<style>
+  html, body { margin: 0; background: #ffffff; }
+  #saida svg { display: block; }
+  #erro { margin: 0; padding: 16px; font: 16px "Segoe UI", sans-serif; color: #a8133a; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="saida"></div>
+<pre id="erro" hidden></pre>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+<script>
+  const DIAGRAMAS = ['modelo-logico', 'classes-dominio', 'classes-dao'];
+  // Tema claro (Quartzo) do DESIGN.md: neutros com tom violeta.
+  const COR = { linha: '#4f4b5e', caixa: '#e9e5f7', faixa: '#f2f0fa', texto: '#13121b', fundo: '#ffffff' };
+  const FONTE = '"Segoe UI", system-ui, sans-serif';
+
+  async function desenhar() {
+    const nome = new URLSearchParams(location.search).get('d');
+    if (!DIAGRAMAS.includes(nome)) {
+      throw new Error('Use ?d= com um destes nomes: ' + DIAGRAMAS.join(', '));
+    }
+    const resposta = await fetch(nome + '.mmd', { cache: 'no-store' });
+    if (!resposta.ok) throw new Error('Não achei ' + nome + '.mmd (HTTP ' + resposta.status + ')');
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'strict',
+      htmlLabels: false, // texto em SVG puro, para o arquivo abrir fora do navegador
+      fontFamily: FONTE,
+      er: { useMaxWidth: false },
+      class: { useMaxWidth: false, htmlLabels: false },
+      flowchart: { htmlLabels: false }, // no Mermaid 11.4.1, os rótulos das linhas leem esta opção
+      themeVariables: {
+        fontFamily: FONTE,
+        fontSize: '15px',
+        background: COR.fundo,
+        primaryColor: COR.caixa,
+        mainBkg: COR.caixa,
+        secondaryColor: COR.faixa,
+        tertiaryColor: COR.fundo,
+        primaryBorderColor: COR.linha,
+        nodeBorder: COR.linha,
+        lineColor: COR.linha,
+        primaryTextColor: COR.texto,
+        textColor: COR.texto,
+        attributeBackgroundColorOdd: COR.fundo,
+        attributeBackgroundColorEven: COR.faixa,
+        edgeLabelBackground: COR.fundo,
+      },
+    });
+
+    const { svg } = await mermaid.render('diagrama', await resposta.text());
+    const saida = document.getElementById('saida');
+    saida.innerHTML = svg;
+    const desenho = saida.querySelector('svg');
+    desenho.style.backgroundColor = COR.fundo; // fundo branco também fora daqui
+    // Rótulos das linhas por cima das caixas: sem isso, algumas multiplicidades (0..*) ficam meio escondidas.
+    desenho.querySelectorAll('g.edgeLabels').forEach((grupo) => grupo.parentNode.appendChild(grupo));
+  }
+
+  desenhar()
+    .catch((erro) => {
+      const caixa = document.getElementById('erro');
+      caixa.textContent = String((erro && erro.message) || erro);
+      caixa.hidden = false;
+      document.body.dataset.erro = '';
+    })
+    .finally(() => { document.body.dataset.pronto = ''; });
+</script>
+</body>
+</html>

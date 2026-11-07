@@ -1,0 +1,143 @@
+classDiagram
+    direction TB
+
+    class Usuario {
+        <<abstract>>
+        -id: int
+        -nome: str
+        -email: str
+        -senha_hash: str
+        -telefone: str
+        -ativo: bool
+        +definir_senha(senha: str) None
+        +verificar_senha(senha: str) bool
+        +perfil() str*
+    }
+    class Administrador {
+        +perfil() str
+    }
+    class Funcionario {
+        -administrador_id: int
+        -funcao: Funcao
+        +perfil() str
+        +pode_executar(tarefa: Tarefa) bool
+    }
+    class Imovel {
+        -id: int
+        -administrador_id: int
+        -nome: str
+        -logradouro: str
+        -numero: str
+        -complemento: str
+        -bairro: str
+        -cidade: str
+        -uf: str
+        -cep: str
+        -capacidade: int
+        -valor_diaria: Decimal
+        -horario_entrada: time
+        -horario_saida: time
+        -observacoes: str
+        -ativo: bool
+        +endereco_completo() str
+        +calcular_valor(entrada: date, saida: date) Decimal
+        +comporta(num_hospedes: int) bool
+    }
+    class Hospede {
+        -id: int
+        -administrador_id: int
+        -nome: str
+        -telefone: str
+        -email: str
+        -documento: str
+        -observacoes: str
+    }
+    class Reserva {
+        -id: int
+        -imovel_id: int
+        -hospede_id: int
+        -data_entrada: date
+        -data_saida: date
+        -num_hospedes: int
+        -valor_diaria: Decimal
+        -valor_total: Decimal
+        -status: StatusReserva
+        -observacoes: str
+        +noites() int
+        +calcular_total() Decimal
+        +conflita_com(entrada: date, saida: date) bool
+        +situacao(hoje: date) str
+        +cancelar() None
+        +criar_limpeza_de_saida(imovel: Imovel) Tarefa
+    }
+    class Bloqueio {
+        -id: int
+        -imovel_id: int
+        -data_inicio: date
+        -data_fim: date
+        -motivo: str
+        +conflita_com(entrada: date, saida: date) bool
+    }
+    class Tarefa {
+        -id: int
+        -imovel_id: int
+        -reserva_id: int
+        -funcionario_id: int
+        -tipo: TipoTarefa
+        -titulo: str
+        -descricao: str
+        -agendada_para: datetime
+        -prazo: datetime
+        -status: StatusTarefa
+        -iniciada_em: datetime
+        -concluida_em: datetime
+        +atribuir(funcionario: Funcionario) None
+        +iniciar(por: Usuario) HistoricoTarefa
+        +concluir(por: Usuario, observacao: str) HistoricoTarefa
+        +reabrir(por: Administrador) HistoricoTarefa
+        +esta_atrasada(agora: datetime) bool
+    }
+    class HistoricoTarefa {
+        -id: int
+        -tarefa_id: int
+        -usuario_id: int
+        -status_anterior: StatusTarefa
+        -status_novo: StatusTarefa
+        -observacao: str
+        -registrado_em: datetime
+    }
+    class Funcao {
+        <<enumeration>>
+        LIMPEZA
+        MANUTENCAO
+    }
+    class TipoTarefa {
+        <<enumeration>>
+        LIMPEZA
+        MANUTENCAO
+    }
+    class StatusTarefa {
+        <<enumeration>>
+        PENDENTE
+        EM_ANDAMENTO
+        CONCLUIDA
+    }
+    class StatusReserva {
+        <<enumeration>>
+        CONFIRMADA
+        CANCELADA
+    }
+
+    Usuario <|-- Administrador
+    Usuario <|-- Funcionario
+    Administrador "1" --> "0..*" Imovel : gerencia
+    Administrador "1" --> "0..*" Funcionario : emprega
+    Administrador "1" --> "0..*" Hospede : atende
+    Imovel "1" --> "0..*" Reserva : recebe
+    Hospede "1" --> "0..*" Reserva : faz
+    Imovel "1" *-- "0..*" Bloqueio : tem
+    Imovel "1" --> "0..*" Tarefa : tem
+    Reserva "0..1" --> "0..*" Tarefa : gera
+    Funcionario "0..1" --> "0..*" Tarefa : executa
+    Tarefa "1" *-- "0..*" HistoricoTarefa : registra
+    Usuario "1" --> "0..*" HistoricoTarefa : altera

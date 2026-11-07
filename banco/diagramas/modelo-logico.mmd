@@ -1,0 +1,103 @@
+erDiagram
+    USUARIO {
+        INT id PK
+        VARCHAR(120) nome
+        VARCHAR(160) email UK
+        VARCHAR(255) senha_hash
+        VARCHAR(20) telefone "opcional"
+        ENUM perfil "administrador | funcionario"
+        TINYINT(1) ativo
+        DATETIME criado_em
+    }
+    FUNCIONARIO {
+        INT usuario_id PK, FK
+        INT administrador_id FK
+        ENUM funcao "limpeza | manutencao"
+    }
+    IMOVEL {
+        INT id PK
+        INT administrador_id FK
+        VARCHAR(100) nome
+        VARCHAR(150) logradouro
+        VARCHAR(10) numero
+        VARCHAR(60) complemento "opcional"
+        VARCHAR(80) bairro
+        VARCHAR(80) cidade
+        CHAR(2) uf
+        CHAR(9) cep "opcional"
+        TINYINT capacidade "1 ou mais"
+        DECIMAL valor_diaria "10,2 · maior que 0"
+        TIME horario_entrada "padrão 15:00"
+        TIME horario_saida "padrão 11:00"
+        TEXT observacoes "opcional"
+        TINYINT(1) ativo
+        DATETIME criado_em
+    }
+    HOSPEDE {
+        INT id PK
+        INT administrador_id FK
+        VARCHAR(120) nome
+        VARCHAR(20) telefone "opcional"
+        VARCHAR(160) email "opcional"
+        VARCHAR(20) documento "opcional"
+        TEXT observacoes "opcional"
+        DATETIME criado_em
+    }
+    RESERVA {
+        INT id PK
+        INT imovel_id FK
+        INT hospede_id FK
+        DATE data_entrada
+        DATE data_saida "depois da entrada"
+        TINYINT num_hospedes "1 ou mais"
+        DECIMAL valor_diaria "10,2 · maior que 0"
+        DECIMAL valor_total "10,2 · editável"
+        ENUM status "confirmada | cancelada"
+        TEXT observacoes "opcional"
+        DATETIME criado_em
+    }
+    BLOQUEIO {
+        INT id PK
+        INT imovel_id FK
+        DATE data_inicio
+        DATE data_fim "depois do início"
+        VARCHAR(120) motivo
+        DATETIME criado_em
+    }
+    TAREFA {
+        INT id PK
+        INT imovel_id FK
+        INT reserva_id FK "opcional"
+        INT funcionario_id FK "opcional"
+        ENUM tipo "limpeza | manutencao"
+        VARCHAR(120) titulo
+        TEXT descricao "opcional"
+        DATETIME agendada_para
+        DATETIME prazo "opcional"
+        ENUM status "pendente | em_andamento | concluida"
+        DATETIME iniciada_em "opcional"
+        DATETIME concluida_em "só quando concluída"
+        DATETIME criada_em
+    }
+    HISTORICO_TAREFA {
+        INT id PK
+        INT tarefa_id FK
+        INT usuario_id FK
+        ENUM status_anterior "vazio na criação"
+        ENUM status_novo
+        VARCHAR(255) observacao "opcional"
+        DATETIME registrado_em
+    }
+
+    USUARIO ||--o| FUNCIONARIO : "é"
+    USUARIO ||..o{ FUNCIONARIO : "emprega"
+    USUARIO ||..o{ IMOVEL : "gerencia"
+    USUARIO ||..o{ HOSPEDE : "atende"
+    USUARIO ||..o{ HISTORICO_TAREFA : "altera"
+    IMOVEL ||..o{ RESERVA : "recebe"
+    HOSPEDE ||..o{ RESERVA : "faz"
+    IMOVEL ||..o{ BLOQUEIO : "tem"
+    IMOVEL ||..o{ TAREFA : "tem"
+    RESERVA |o..o{ TAREFA : "gera"
+    FUNCIONARIO |o..o{ TAREFA : "executa"
+    TAREFA ||..o{ HISTORICO_TAREFA : "registra"
