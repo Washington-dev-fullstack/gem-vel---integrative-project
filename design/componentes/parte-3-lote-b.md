@@ -1,10 +1,10 @@
 # Gemóvel — Componentes, lote B (rascunho)
 
-> Parte 3 da seção de componentes. O lote A virou uma página que mostra os componentes funcionando (`componentes.html`). O lote B, a pedido de vocês, para economizar, fica só neste documento. Ele só vale depois de aprovado. No fim está o que muda na Seção 4 do `DESIGN.md`; só gravo com o sim de vocês.
+> Parte 3 da seção de componentes. O lote A virou uma página que mostra os componentes funcionando (`design/exploracoes/componentes.html`). O lote B, a pedido de vocês, para economizar, fica só neste documento. Ele só vale depois de aprovado. No fim está o que muda na Seção 4 do `DESIGN.md`; só gravo com o sim de vocês.
 
 - **Base:**
   - `DESIGN.md` v0;
-  - a Parte 1 (`componentes.rascunho.md`), aprovada;
+  - a Parte 1 (`parte-1-regras-e-inventario.md`, nesta pasta), aprovada;
   - a folha do lote A, aprovada.
 - **Regras comuns:** estão na Parte 1, §2, e valem para tudo aqui: estados, tamanhos, acessibilidade, movimento, temas e níveis de efeito. Cada ficha só traz o que é próprio do componente.
 - **Tokens:**

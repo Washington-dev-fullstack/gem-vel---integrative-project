@@ -35,7 +35,7 @@ Cada componente nasce do elemento nativo do navegador (`<button>`, `<a>`, `<inpu
 | Biblioteca pronta (shadcn/Radix, Web Awesome, Material) | começa rápido, mas traz o visual e o peso de outro sistema e prende a um framework antes da hora |
 | Tudo sob medida em JavaScript | controle total, mas mais código, mais risco de acessibilidade e mais peso no celular |
 
-**Folha viva:** `componentes.html`, na Parte 2 (lote A). Mostra cada componente em todos os estados, nos dois temas e nos três níveis de efeito, como `sistema.html` faz com cores e tipos. A Parte 3 (lote B) virou documento, para economizar: `componentes-lote-b.md`.
+**Folha viva:** `design/exploracoes/componentes.html`, na Parte 2 (lote A). Mostra cada componente em todos os estados, nos dois temas e nos três níveis de efeito, como `sistema.html` faz com cores e tipos. A Parte 3 (lote B) virou documento, para economizar: `parte-3-lote-b.md`, nesta pasta.
 
 ---
 
@@ -231,7 +231,7 @@ Vieram da pesquisa com apps de limpeza para temporada (Turno, Breezeway). Ficam 
 ## 5. Próximas partes
 
 1. **Parte 2 — folha, lote A:** primitivos, campos, lista suspensa, seletor de datas, escolhas, esqueleto, faixa de aviso e estado vazio.
-2. **Parte 3 — lote B, em documento (`componentes-lote-b.md`):** navegação, cabeçalho, abas, menu, busca, filtros, tabela, linha de lista, cartões, atividade recente, avanço de estado, gaveta, diálogo, dica e aviso.
+2. **Parte 3 — lote B, em documento (`parte-3-lote-b.md`):** navegação, cabeçalho, abas, menu, busca, filtros, tabela, linha de lista, cartões, atividade recente, avanço de estado, gaveta, diálogo, dica e aviso.
 3. **Fecho:** proposta de texto para a Seção 4 do `DESIGN.md`. Só gravo com o seu sim.
 
 Esta parte também responde a duas perguntas em aberto do `DESIGN.md` (Seção 9):

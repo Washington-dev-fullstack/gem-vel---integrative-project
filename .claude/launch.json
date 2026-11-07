@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "gemovel",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-c",
+        "import http.server as h; H=type('H',(h.SimpleHTTPRequestHandler,),{'end_headers':lambda s:(s.send_header('Cache-Control','no-store'),h.SimpleHTTPRequestHandler.end_headers(s))}); h.ThreadingHTTPServer(('127.0.0.1',5500),H).serve_forever()"
+      ],
+      "port": 5500
+    },
+    {
+      "name": "gemovel-api",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "backend/app.py"
+      ],
+      "port": 5000
+    }
+  ]
+}
