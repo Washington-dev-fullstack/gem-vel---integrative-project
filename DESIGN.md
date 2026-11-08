@@ -2,10 +2,10 @@
 
 > Plataforma web para gestão de imóveis de temporada. Quem administra (no computador) cuida de imóveis, reservas, equipe e dos números do mês; a equipe de limpeza e manutenção (no celular, muitas vezes simples) vê e atualiza as próprias tarefas.
 
-- **Situação:** v0.2, aprovada em 7 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
+- **Situação:** v0.3, aprovada em 8 nov 2026. Maturidade **L1**: este arquivo é a fonte da verdade para desenhar e construir a interface. Quando um valor mudar aqui, mude também nos tokens, e vice-versa.
 - **Valores:** todos provisórios; podem mudar quando as telas reais forem construídas e testadas com a equipe. Saíram dos protótipos descartáveis em `design/exploracoes/` (pôster Lapidado em `index.html`; painel e agenda em `admin.html`) e foram consolidados aqui. O que mudou na consolidação está no Apêndice A.
 - **Tokens em código:** `design/exploracoes/tokens.css` (provisório). Folha visual, com o contraste medido ao vivo: `design/exploracoes/sistema.html`.
-- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura. v0.1 (7 nov 2026): componentes dos lotes A e B especificados e aprovados (Seção 4); no celular, tocar abre o detalhe e a busca vira um botão (Seção 8); ícones e busca no celular saem das perguntas em aberto (Seção 9). v0.2 (7 nov 2026): telas web do admin aprovadas (`design/telas/web-admin.md`): o modelo das listas e detalhes, as variantes da Busca, do Seletor de período e do Campo, e um estado a menos para desenhar (Seção 4); "Atrasada" sai das perguntas em aberto, resolvida pela regra R7 do banco (Seção 9).
+- **Histórico:** v0 (5 nov 2026): primeira versão, consolidada dos protótipos e testada na folha visual nos dois temas, nos três níveis de efeito e de 375 a 1440px de largura. v0.1 (7 nov 2026): componentes dos lotes A e B especificados e aprovados (Seção 4); no celular, tocar abre o detalhe e a busca vira um botão (Seção 8); ícones e busca no celular saem das perguntas em aberto (Seção 9). v0.2 (7 nov 2026): telas web do admin aprovadas (`design/telas/web-admin.md`): o modelo das listas e detalhes, as variantes da Busca, do Seletor de período e do Campo, e um estado a menos para desenhar (Seção 4); "Atrasada" sai das perguntas em aberto, resolvida pela regra R7 do banco (Seção 9). v0.3 (8 nov 2026): arquitetura do front-end aprovada (`docs/superpowers/specs/2026-11-08-front-end-design.md`): as fontes ficam no próprio servidor, em `.woff2` com o subconjunto latino (Seção 3), e a hospedagem sai das perguntas em aberto (Seção 9).
 
 ---
 
@@ -192,6 +192,7 @@ WCAG 2.x, medido contra o pior ponto do vidro composto sobre o fundo.
 - **Bodoni:** só em títulos de 28px ou mais. Nunca em números, tabelas, rótulos ou botões. Itálico 400 só para uma palavra de ênfase.
 - **Mono:** para horários ("15:00"), códigos e micro-rótulos em caixa alta. Nunca em parágrafos.
 - **App da equipe:** carrega Geist (400–600) e uma única instância de Bodoni (500, latino). No nível Leve, aceita a serifada do sistema.
+- **Hospedagem:** os arquivos `.woff2` ficam no próprio servidor, só com o subconjunto latino (cobre os acentos do português), com `font-display: swap`. Nada vem do Google Fonts: a interface funciona sem internet.
 
 ---
 
@@ -449,7 +450,6 @@ Lote B, por peça: navegação `--nav-w`, `--nav-rail-w`, `--nav-item-h`, `--nav
 **Perguntas em aberto (pergunte em vez de supor):**
 - **Tema claro do admin:** não planejado agora. Os tokens permitem; os valores de dados claros precisam ser validados antes.
 - **Sem internet no app da equipe:** guardar a mudança e sincronizar depois? Define o estado offline.
-- **Hospedagem das fontes** e subconjuntos: definir na arquitetura do front-end.
 - **Teste com a equipe:** contraste ao sol e tamanho dos alvos num Android simples.
 
 ---
