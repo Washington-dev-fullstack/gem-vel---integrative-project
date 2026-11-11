@@ -35,3 +35,16 @@ def codigo_imovel(id):
 
 def codigo_reserva(id):
     return f"RSV-{id:04d}"
+
+
+def usuario_json(usuario):
+    """A pessoa logada: a função aparece só para quem é da equipe."""
+    dados = {"id": usuario.id, "nome": usuario.nome, "email": usuario.email, "perfil": usuario.perfil()}
+    if usuario.perfil() == "funcionario":
+        dados["funcao"] = usuario.funcao
+    return dados
+
+
+def funcionario_json(funcionario):
+    return {"id": funcionario.id, "nome": funcionario.nome, "email": funcionario.email,
+            "telefone": funcionario.telefone, "funcao": funcionario.funcao, "ativo": funcionario.ativo}

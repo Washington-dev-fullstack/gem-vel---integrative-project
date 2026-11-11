@@ -1,6 +1,9 @@
 """Apoio aos testes que usam o banco de verdade: as contas de exemplo, consultas diretas
 e a limpeza do que cada teste grava (assim as contagens dos dados de exemplo continuam exatas)."""
 
+import unittest
+
+from app import criar_app
 from config import carregar_config
 from gemovel.conexao import Conexao
 
@@ -50,3 +53,31 @@ def apagar_depois(caso, tabela, id):
             executar(sql, (id,))
 
     caso.addCleanup(apagar)
+
+
+# Mensagem do corpo de erro de cada status, quando o teste não diz outra.
+_MENSAGEM_PADRAO = {400: "O pedido não veio em JSON.", 401: "Entre de novo para continuar.",
+                    403: "Esta área é de outro perfil.", 404: "Não encontrado.",
+                    422: "Confira os campos destacados."}
+
+
+class CasoApi(unittest.TestCase):
+    """Teste das rotas: um app com a chave de teste e um cliente ainda sem login."""
+
+    def setUp(self):
+        self.app = criar_app(segredo=SEGREDO_DE_TESTE)
+        self.cliente = self.app.test_client()
+
+    def entrar(self, email, cliente=None):
+        """Faz o login de `email` com a senha dos dados de exemplo (no `cliente` ou no self.cliente)."""
+        cliente = cliente if cliente is not None else self.cliente
+        resposta = cliente.post("/api/sessao", json={"email": email, "senha": SENHA_DE_TESTE})
+        self.assertEqual(resposta.status_code, 200, resposta.get_data(as_text=True))
+        return resposta
+
+    def confere_erro(self, resposta, status, campos=None, mensagem=None):
+        """Confere o status e o corpo {"erro": {"mensagem", "campos"}} da resposta."""
+        self.assertEqual(resposta.status_code, status, resposta.get_data(as_text=True))
+        esperado = {"mensagem": mensagem if mensagem is not None else _MENSAGEM_PADRAO[status],
+                    "campos": campos or {}}
+        self.assertEqual(resposta.get_json(), {"erro": esperado})
