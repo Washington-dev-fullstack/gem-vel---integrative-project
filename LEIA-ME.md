@@ -74,6 +74,14 @@ backend/.venv/Scripts/python -m pip install -r backend/requirements.txt
 
 Depois copie `backend/.env.example` para `backend/.env` (no PowerShell: `Copy-Item backend/.env.example backend/.env`; no Git Bash: `cp backend/.env.example backend/.env`). O `.env` guarda o usuário e a senha do banco e já vem com os padrões do XAMPP. Ele não vai para o controle de versão.
 
+Por fim, gere a chave que assina o cookie de login e cole o resultado depois de `SEGREDO_SESSAO=`, no `backend/.env`:
+
+```bash
+backend/.venv/Scripts/python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+Sem a chave, a API usa uma chave temporária, e todo mundo sai quando ela reinicia.
+
 ### 5. Conferir a conexão do Python
 
 ```bash
@@ -86,7 +94,7 @@ Mostra a versão do MySQL e quantas linhas cada tabela tem. Para rodar os testes
 backend/.venv/Scripts/python -m unittest discover -s backend/testes -t backend -v
 ```
 
-Precisa terminar com `Ran 11 tests` e `OK`. **Os testes esperam os dados de exemplo:** rode o `01` e o `02` antes.
+Precisa terminar com `Ran 123 tests` e `OK`. **Os testes esperam os dados de exemplo:** rode o `01` e o `02` antes.
 
 ### 6. Ligar a API
 
@@ -96,9 +104,25 @@ backend/.venv/Scripts/python backend/app.py
 
 Abra http://localhost:5000/api/saude. Com o banco ligado, a resposta traz `"status": "ok"` e as contagens das tabelas. Com o MySQL desligado, a resposta é o erro 503 com a frase "Não foi possível conectar ao banco. O MySQL do XAMPP está ligado?". Para parar a API, use Ctrl+C.
 
+As outras rotas pedem login. O `POST /api/sessao`, com o e-mail e a senha em JSON (`{"email": ..., "senha": ...}`), guarda a sessão num cookie, e os pedidos seguintes levam o cookie junto. O que cada rota recebe e devolve está na seção 5 da especificação, `docs/superpowers/specs/2026-11-08-api-etapa-2-design.md`. Em resumo:
+
+| Rota | Quem usa | Para quê |
+|---|---|---|
+| `POST`, `GET` e `DELETE /api/sessao` | todos | entrar, ver quem está logado e sair |
+| `GET` e `POST /api/funcionarios` | administrador | a equipe |
+| `GET` e `POST /api/imoveis`; `GET /api/imoveis/<id>` | administrador | os imóveis |
+| `GET` e `POST /api/imoveis/<id>/bloqueios` | administrador | as datas bloqueadas de um imóvel |
+| `GET /api/hospedes?busca=` e `POST /api/hospedes` | administrador | a busca (por nome ou telefone) e o cadastro de hóspedes |
+| `GET /api/reservas?de=&ate=` e `POST /api/reservas` | administrador | as reservas do período e o cadastro, que já cria a limpeza da saída |
+| `GET` e `POST /api/tarefas` | administrador | as tarefas abertas e o cadastro |
+| `GET /api/atividade?limite=` | administrador | as últimas mudanças de estado das tarefas |
+| `GET /api/minhas-tarefas?dia=` | funcionário | as tarefas da pessoa no dia e as que ficaram abertas |
+
+Os erros vêm sempre no mesmo formato: `{"erro": {"mensagem": ..., "campos": {...}}}`, com a frase para mostrar na tela e, quando é o caso, a frase de cada campo.
+
 ## Contas de teste
 
-Todas usam a senha **`Gemovel@2026`**. O login entra na Etapa 2; por enquanto, o banco guarda só o hash da senha (nunca a senha em si).
+Todas usam a senha **`Gemovel@2026`**. O login funciona pela API (`POST /api/sessao`, no passo 6); o banco guarda só o hash da senha (nunca a senha em si).
 
 | E-mail | Nome | Perfil |
 |---|---|---|

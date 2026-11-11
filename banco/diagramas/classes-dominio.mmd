@@ -66,7 +66,7 @@ classDiagram
         +noites() int
         +calcular_total() Decimal
         +conflita_com(entrada: date, saida: date) bool
-        +situacao(hoje: date) str
+        +situacao(agora: datetime, imovel: Imovel) str
         +cancelar() None
         +criar_limpeza_de_saida(imovel: Imovel) Tarefa
     }

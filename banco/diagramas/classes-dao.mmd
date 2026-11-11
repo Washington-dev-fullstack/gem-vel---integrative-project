@@ -5,11 +5,17 @@ classDiagram
         -pool: MySQLConnectionPool
         +Conexao(config: dict)
         +obter() PooledMySQLConnection
+        +transacao() Transacao
         +testar() dict
+    }
+    class Transacao {
+        +executar(sql: str, parametros: tuple) int
+        +consultar(sql: str, parametros: tuple) list~dict~
     }
     class DAOBase {
         <<abstract>>
         #conexao: Conexao
+        #transacao: Transacao
         #_executar(sql: str, parametros: tuple) int
         #_consultar(sql: str, parametros: tuple) list~dict~
         #_para_objeto(linha: dict) object*
@@ -27,18 +33,21 @@ classDiagram
     }
     class ImovelDAO {
         +listar_por_administrador(administrador_id: int) list~Imovel~
-        +buscar_por_id(id: int) Imovel
+        +buscar_por_id(id: int, travar: bool) Imovel
         +inserir(imovel: Imovel) int
         +atualizar(imovel: Imovel) None
         +desativar(id: int) None
     }
     class HospedeDAO {
         +buscar(administrador_id: int, termo: str) list~Hospede~
+        +buscar_por_id(id: int) Hospede
         +inserir(hospede: Hospede) int
         +atualizar(hospede: Hospede) None
     }
     class ReservaDAO {
         +listar_por_periodo(administrador_id: int, inicio: date, fim: date) list~Reserva~
+        +buscar_por_id(id: int) Reserva
+        +buscar_conflito(imovel_id: int, entrada: date, saida: date, ignorar_id: int) object
         +existe_conflito(imovel_id: int, entrada: date, saida: date, ignorar_id: int) bool
         +inserir(reserva: Reserva) int
         +atualizar(reserva: Reserva) None
@@ -46,13 +55,15 @@ classDiagram
     }
     class BloqueioDAO {
         +listar_por_imovel(imovel_id: int) list~Bloqueio~
+        +buscar_por_id(id: int) Bloqueio
         +inserir(bloqueio: Bloqueio) int
         +remover(id: int) None
     }
     class TarefaDAO {
         +listar_do_funcionario(funcionario_id: int, dia: date) list~Tarefa~
         +listar_abertas(administrador_id: int) list~Tarefa~
-        +inserir(tarefa: Tarefa) int
+        +buscar_por_id(id: int) Tarefa
+        +inserir(tarefa: Tarefa, criada_por: Usuario) int
         +salvar_status(tarefa: Tarefa, registro: HistoricoTarefa) None
     }
     class HistoricoTarefaDAO {
@@ -68,3 +79,5 @@ classDiagram
     DAOBase <|-- TarefaDAO
     DAOBase <|-- HistoricoTarefaDAO
     DAOBase --> Conexao : usa
+    Conexao --> Transacao : cria
+    DAOBase --> Transacao : usa

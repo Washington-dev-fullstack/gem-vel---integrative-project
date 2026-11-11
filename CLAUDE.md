@@ -8,7 +8,7 @@ Gemóvel: gestão de imóveis de aluguel por temporada (imóveis, reservas, hós
 
 Entregas da escola (cronograma em `docs/escola/`):
 - **Etapa 1, 09/11/2026 (pronta):** diagramas UML, tabelas criadas e conexão do Python com o banco.
-- **Etapa 2, 13/11:** classes, DAOs e rotas Flask, com cadastrar e listar funcionando.
+- **Etapa 2, 13/11 (pronta):** classes, DAOs e rotas Flask, com cadastrar e listar funcionando.
 - **Entrega final, 17/11:** front-end em HTML, CSS e JS chamando as rotas do Flask via Fetch.
 
 ## Comandos
@@ -26,7 +26,7 @@ Os testes usam o banco de verdade e esperam as contagens exatas dos dados de exe
 ## Arquitetura
 
 - **Banco** (`banco/`, MariaDB 10.4 do XAMPP; o SQL também precisa rodar no MySQL): 8 tabelas. `funcionario` estende `usuario` (herança 1:1), e cada administrador é dono dos próprios imóveis, hóspedes e reservas por `administrador_id`. A limpeza entre estadias é uma `tarefa` ligada à `reserva`; `historico_tarefa` registra cada mudança de estado. Imóvel e usuário são desativados (`ativo = 0`), nunca apagados. O modelo lógico e os diagramas de classes estão em `banco/diagramas/` (a fonte é o `.mmd`); a especificação, em `docs/superpowers/specs/`.
-- **Back-end** (`backend/`): `config.py` lê `backend/.env` (modelo em `.env.example`) e monta a configuração do conector, com `sql_mode` estrito em toda conexão, inclusive as reaproveitadas pelo pool, e `use_pure=True`, que é obrigatório. `gemovel/conexao.py` guarda um pool criado no primeiro uso; com o pool cheio, o pedido espera uma conexão livre, e as falhas viram `BancoIndisponivel`, com uma mensagem que diz o que conferir. `app.py` tem a fábrica `criar_app()`; `/api/saude` responde 503 quando o banco não responde. A Etapa 2 acrescenta as classes de domínio e os DAOs, com SQL escrito à mão, seguindo os diagramas de classes.
+- **Back-end** (`backend/`): `config.py` lê `backend/.env` (modelo em `.env.example`) e monta a configuração do conector, com `sql_mode` estrito em toda conexão, inclusive as reaproveitadas pelo pool, e `use_pure=True`, que é obrigatório. `gemovel/conexao.py` guarda um pool criado no primeiro uso (com o pool cheio, o pedido espera uma conexão livre; as falhas viram `BancoIndisponivel`, com uma mensagem que diz o que conferir) e abre transações com `transacao()`. O resto segue os diagramas de classes, em três camadas: `gemovel/dominio` (as regras, sem Flask nem MySQL; os erros juntam uma frase por campo), `gemovel/dao` (SQL escrito à mão; o DAO roda na transação que recebe ou abre uma curta) e `gemovel/rotas` (um Blueprint por assunto, com `exige_login(*perfis)`, o `Leitor`, que confere só o formato do corpo, e as funções `*_json` de `formato_json.py`). Todo erro sai como `{"erro": {"mensagem", "campos"}}`: 422 validação, 409 conflito, 404, 401, 403, 400 sem JSON e 503 sem banco. A sessão é o cookie do Flask assinado com a `SEGREDO_SESSAO` do `.env` e guarda só o `usuario_id`; escrita só aceita JSON. `app.py` tem a fábrica `criar_app(config=None, segredo=None)`, e os testes passam a config e o segredo deles. A especificação da API está em `docs/superpowers/specs/2026-11-08-api-etapa-2-design.md`.
 - **Interface:** `DESIGN.md` (sistema Lapidado) é a fonte da verdade: tema Obsidiana (escuro) no admin, Quartzo (claro) no app da equipe, efeitos por nível (`data-tier`). Os componentes aprovados estão em `design/componentes/`, e as telas aprovadas, em `design/telas/`. `design/exploracoes/` é protótipo descartável, não código do produto; os tokens provisórios ficam em `design/exploracoes/tokens.css`.
 
 ## Combinados
