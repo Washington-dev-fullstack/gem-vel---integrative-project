@@ -4,7 +4,7 @@
 
 - **Entrega:** final, 17/11/2026: "sistema integrado com front-end (HTML/CSS/JS) consumindo as rotas Flask via Fetch, funcionando de ponta a ponta, pronto para apresentação."
 - **Base:**
-  - o `DESIGN.md` v0.3;
+  - o `DESIGN.md` v0.4 (com o passe premium do Apêndice B);
   - os componentes aprovados (`design/componentes/`);
   - as telas web do admin (`design/telas/web-admin.md`);
   - a API (`2026-11-08-api-etapa-2-design.md`), mais as rotas da entrega final.
@@ -45,6 +45,7 @@ frontend/
       nucleo/               api.js · html.js · url.js · formatos.js · nivel.js
       componentes/          shell.js · gaveta.js · formulario.js · aviso.js · faixa.js · menu.js
                             busca.js · seletor-datas.js · seletor-periodo.js · estados.js
+                            tambor.js · luz.js
       telas/                um arquivo por tela
     fontes/                 os arquivos .woff2
     icones.svg              os ícones Lucide usados, as gemas e o logo
@@ -99,7 +100,7 @@ backend/gemovel/rotas/paginas.py   as rotas das páginas
   - vidro só em `completo` e `padrao`; `leve` é sólido;
   - `prefers-reduced-motion: reduce` tira todo deslocamento;
   - `prefers-reduced-transparency: reduce` tira o vidro.
-- **Troca de página:** `@view-transition { navigation: auto; }`, dentro de `@media (prefers-reduced-motion: no-preference)`.
+- **Troca de página:** `@view-transition { navigation: auto; }`, dentro de `@media (prefers-reduced-motion: no-preference)`. A lateral e o topo levam `view-transition-name` e não piscam; só o conteúdo esmaece, em 200ms.
 
 ## 5. Fontes e ícones
 
@@ -149,6 +150,8 @@ backend/gemovel/rotas/paginas.py   as rotas das páginas
 | `seletor-datas.js` | — | calendário com as noites ocupadas |
 | `seletor-periodo.js` | — | navegação por mês ou por dia |
 | `estados.js` | — | esqueleto, vazio e erro de uma área da tela |
+| `tambor.js` | — | o tambor de dígitos dos KPIs e contadores (DESIGN.md §10, item 7): monta as colunas de 0 a 9, desliza até o valor e deixa só o valor final para o leitor de tela |
+| `luz.js` | — | a luz que segue o ponteiro nos cartões (item 11), só com mouse e nos níveis `completo` e `padrao` |
 
 - **Telas** (`telas/`): um módulo por tela, sempre nesta ordem:
   1. lê a URL;
@@ -169,7 +172,8 @@ backend/gemovel/rotas/paginas.py   as rotas das páginas
 
   No app da equipe, o nível vai no máximo até `padrao`. Para conferir, `?nivel=completo|padrao|leve` força o nível naquela aba.
 - **GSAP:** carrega só por `carregarGsap()`, nos níveis `completo` e `padrao`, e nunca com movimento reduzido. As durações e as curvas vêm dos tokens de movimento do DESIGN.md (a coluna GSAP).
-- **Fundo em canvas:** só em `completo`. Os laços infinitos seguem a tabela de níveis.
+- **Fundo animado:** só na tela Entrar (as gemas, o brilho no nome e a faixa corrida), como na tabela de níveis do DESIGN.md; no painel, o fundo é parado. Os laços infinitos seguem a mesma tabela.
+- **Primeira visita:** a abertura coreografada (cascata e gráficos crescendo) roda só na primeira tela da sessão, marcada no `sessionStorage`; depois, a tela aparece pronta.
 - **Movimento reduzido:** tudo aparece no estado final, com os números já contados e os gráficos já desenhados.
 - **Gráficos da Visão geral:** SVG desenhado à mão, como no protótipo, sem biblioteca.
 

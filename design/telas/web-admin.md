@@ -36,38 +36,39 @@
 - **Depois de salvar:** a gaveta fecha, a lista se atualiza com o item no lugar da ordem, e um aviso confirma com um atalho: "Reserva RSV-0017 criada · Ver na agenda".
 - **Excluir, cancelar e desativar:** sem pergunta. Aviso com "Desfazer" por 10s; o pedido só vai ao servidor quando o aviso acaba (decisão do lote B).
 - **Formatos:** dinheiro `R$ 1.350,00`; data "sex, 6 nov", com o ano só quando não é o ano corrente; horário "15:00"; números tabulares, alinhados à direita.
-- **Códigos:** IMV com 3 dígitos e RSV com 4, a partir do id (IMV-001, RSV-0012). Servem para conferir e buscar; nada exige saber um código, porque a busca acha por nome, telefone ou e-mail.
+- **Códigos:** IMV com 3 dígitos e RSV com 4, a partir do id (IMV-001, RSV-0012). Servem para conferir e buscar; nada exige saber um código, porque a busca acha por nome ou telefone.
 - **Texto sem gênero:** o sistema não sabe o gênero de ninguém, então o texto não concorda com a pessoa: "Acesso de Cida desativado", e não "Cida desativada".
 - **Dono dos dados:** cada administrador só vê o que é dele (regra R6). Nenhuma tela mostra isso.
 
 ## 3. Entrar
 
-**Para quê:** entrar com e-mail e senha. Cada perfil cai na sua tela (padrão Entrar).
+**Para quê:** entrar com e-mail e senha. Cada perfil cai na sua tela (padrão Entrar). É também o momento da marca (`DESIGN.md` v0.4, Modelos).
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                          ◆ Gemóvel                           │
-│                                                              │
-│              ┌──────────────────────────────────┐            │
-│              │ Entrar                           │            │
-│              │                                  │            │
-│              │ E-mail                           │            │
-│              │ [ nome@exemplo.com             ] │            │
-│              │ Senha                            │            │
-│              │ [ ••••••••             Mostrar ] │            │
-│              │                                  │            │
-│              │ [            Entrar            ] │            │
-│              │                                  │            │
-│              │ Esqueceu a senha? Peça para quem │            │
-│              │ administra o Gemóvel redefinir.  │            │
-│              └──────────────────────────────────┘            │
-└──────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────┬──────────────────────────────┐
+│ [GESTÃO DE TEMPORADA]        ◇       │                              │
+│                                 ◆    │  Entrar                      │
+│ Gemóvel                              │                              │
+│                     ◇                │  E-mail                      │
+│        ◆                             │  [ nome@exemplo.com        ] │
+│                              ◇       │  Senha                       │
+│                                      │  [ ••••••••        Mostrar ] │
+│                                      │                              │
+│                                      │  [          Entrar         ] │
+│                                      │                              │
+│ ENTRADA 15:00 · SAÍDA 11:00 · LIMPE  │  Esqueceu a senha? Peça para │
+│                                      │  quem administra redefinir.  │
+└──────────────────────────────────────┴──────────────────────────────┘
 ```
 
-- **Visual:** tema Obsidiana; Cartão de vidro (elevação 1) com 400px, sólido no nível Leve; título "Entrar" em `display-md`.
+- **Visual:** tema Obsidiana, tela dividida em duas metades (cerca de 58% e 42%).
+  - **Palco da marca**, à esquerda: a etiqueta "Gestão de temporada" (`text-2xs`, caixa alta, numa caixa de superfície inversa) sobre "Gemóvel" em `display-xl`, que é o título da página; gemas facetadas de vários tamanhos, com o prisma, flutuando e seguindo o ponteiro com paralaxe; um brilho que atravessa o nome uma vez ao abrir; embaixo, uma faixa corrida fina em Geist Mono: "Entrada 15:00 · Saída 11:00 · Limpeza entre estadias · Reservas sem conflito". Fora o nome, o palco é decorativo (`aria-hidden`).
+  - **Formulário**, à direita: painel sólido (elevação 1) de até 400px, centrado na metade; "Entrar" em `display-md`.
+  - **Por nível:** o Completo tem tudo; o Padrão tem a paralaxe e o brilho, com as gemas e a faixa paradas; o Leve e o movimento reduzido deixam tudo parado.
+  - **Até 1020px:** o palco vira uma faixa de 160px no alto, só com a etiqueta e o nome em 64px; o formulário vem embaixo, centrado.
 - **Campos:** e-mail (`type=email`, `autocomplete=username`) e senha (`autocomplete=current-password`, com Mostrar/Ocultar). Enter envia.
 - **Botão:** primário, na largura toda; "Entrando…" enquanto espera.
-- **Erros** (Faixa de aviso dentro do cartão; o foco vai para ela):
+- **Erros** (Faixa de aviso dentro do painel; o foco vai para ela):
   - e-mail ou senha errados: "E-mail ou senha não conferem." Não diz qual dos dois.
   - conta desativada, só depois da senha certa: "Este acesso foi desativado. Fale com quem administra o Gemóvel."
   - servidor fora do ar: "Não deu para entrar agora. Confira a internet e tente de novo."
@@ -146,7 +147,7 @@ OBSERVAÇÕES  Total editado: 10% de desconto pelas
 |---|---|---|
 | Imóvel | Lista suspensa rica: nome, diária e capacidade | só imóveis ativos |
 | Entrada e saída | Seletor de datas | mostra as noites já ocupadas e as bloqueadas do imóvel; resumo "4 noites · entrada 15:00, saída 11:00", com os horários do imóvel |
-| Hóspede | Busca no formulário (lacuna 1) | acha por nome, telefone ou e-mail; a última opção, "Cadastrar "Ana Souza"", abre ali mesmo nome, telefone, e-mail e documento (os três últimos opcionais) |
+| Hóspede | Busca no formulário (lacuna 1) | acha por nome ou telefone; a última opção, "Cadastrar "Ana Souza"", abre ali mesmo nome, telefone, e-mail e documento (os três últimos opcionais) |
 | Hóspedes | Campo número com − e + | de 1 até a capacidade (R3): "O Apto Jardins recebe até 4 hóspedes." |
 | Valor total | Campo moeda | começa em diária × noites, com a conta à vista (R2); se mudar, aparece "Voltar ao cálculo". A diária do imóvel fica guardada na reserva |
 | Observações | Área de texto | opcional |
