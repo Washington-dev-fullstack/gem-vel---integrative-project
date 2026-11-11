@@ -2,6 +2,7 @@
 e a limpeza do que cada teste grava (assim as contagens dos dados de exemplo continuam exatas)."""
 
 import unittest
+from datetime import date, timedelta
 
 from app import criar_app
 from config import carregar_config
@@ -53,6 +54,42 @@ def apagar_depois(caso, tabela, id):
             executar(sql, (id,))
 
     caso.addCleanup(apagar)
+
+
+DIA = timedelta(days=1)
+
+
+def linha(sql, parametros=()):
+    """A primeira linha de uma consulta."""
+    return consultar(sql, parametros)[0]
+
+
+def datas_livres(imovel_id, noites=2):
+    """Entrada e saída sem reserva nem bloqueio no imóvel: 30 dias depois da última saída ou do
+    último fim de bloqueio dele (ou 30 dias depois de hoje, se for mais tarde)."""
+    datas = linha("SELECT (SELECT MAX(data_saida) FROM reserva WHERE imovel_id = %s) AS reserva, "
+                  "(SELECT MAX(data_fim) FROM bloqueio WHERE imovel_id = %s) AS bloqueio", (imovel_id, imovel_id))
+    entrada = max([d for d in datas.values() if d is not None] + [date.today()]) + 30 * DIA
+    return entrada, entrada + noites * DIA
+
+
+def apagar_reservas_depois(caso, imovel_id, entrada):
+    """No fim do teste, apaga as reservas do imóvel que começam em `entrada`, e as tarefas delas."""
+    def apagar():
+        executar("DELETE FROM tarefa WHERE reserva_id IN "
+                 "(SELECT id FROM reserva WHERE imovel_id = %s AND data_entrada = %s)", (imovel_id, entrada))
+        executar("DELETE FROM reserva WHERE imovel_id = %s AND data_entrada = %s", (imovel_id, entrada))
+
+    caso.addCleanup(apagar)
+
+
+def imovel_temporario(caso, ativo):
+    """Um imóvel da Marina para o teste, apagado no fim dele."""
+    id = executar("INSERT INTO imovel (administrador_id, nome, logradouro, numero, bairro, cidade, uf, valor_diaria, "
+                  "ativo) VALUES (1, 'Imóvel Temporário', 'Rua Teste', '1', 'Centro', 'São Paulo', 'SP', 100, %s)",
+                  (ativo,))
+    apagar_depois(caso, "imovel", id)
+    return id
 
 
 # Mensagem do corpo de erro de cada status, quando o teste não diz outra.

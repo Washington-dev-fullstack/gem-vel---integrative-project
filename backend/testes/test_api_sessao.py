@@ -68,8 +68,7 @@ class TestSessao(CasoApi):
                     if regra.rule != "/api/sessao":
                         self.confere_erro(outro.open(url, method=metodo, json={}), 403)
                 conferidas.add((regra.rule, metodo))
-        self.assertLessEqual({("/api/sessao", "GET"), ("/api/funcionarios", "GET"),
-                              ("/api/funcionarios", "POST")}, conferidas)
+        self.assertEqual(len(conferidas), 16)  # as 19 rotas menos as 3 que não pedem login
 
     def test_sair_limpa_a_sessao(self):
         self.entrar("marina@gemovel.test")

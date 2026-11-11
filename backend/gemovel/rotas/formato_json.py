@@ -7,6 +7,10 @@ from enum import Enum
 
 from flask.json.provider import DefaultJSONProvider
 
+from gemovel.dominio.reserva import Reserva
+
+MESES = ("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")
+
 
 class ProvedorJson(DefaultJSONProvider):
     """Acentos legíveis, campos na ordem em que foram montados e os formatos da spec §6."""
@@ -93,3 +97,44 @@ def atividade_json(historico):
             "observacao": historico.observacao, "usuario": _pessoa_resumo(historico.usuario),
             "tarefa": {"id": tarefa.id, "titulo": tarefa.titulo},
             "imovel": {"id": tarefa.imovel.id, "nome": tarefa.imovel.nome}}
+
+
+def reserva_json(reserva, agora):
+    return {"id": reserva.id, "codigo": codigo_reserva(reserva.id), "imovel": imovel_resumo(reserva.imovel),
+            "hospede": _pessoa_resumo(reserva.hospede), "data_entrada": reserva.data_entrada,
+            "data_saida": reserva.data_saida, "noites": reserva.noites(), "num_hospedes": reserva.num_hospedes,
+            "valor_diaria": reserva.valor_diaria, "valor_total": reserva.valor_total, "status": reserva.status,
+            "situacao": reserva.situacao(agora, reserva.imovel), "observacoes": reserva.observacoes}
+
+
+def bloqueio_json(bloqueio):
+    return {"id": bloqueio.id, "imovel_id": bloqueio.imovel_id, "data_inicio": bloqueio.data_inicio,
+            "data_fim": bloqueio.data_fim, "motivo": bloqueio.motivo}
+
+
+def periodo(inicio, fim):
+    """O período nas frases (spec §7): "4 a 7 nov", "30 out a 2 nov" ou "28 dez 2026 a 2 jan 2027"."""
+    def dia_e_mes(data):
+        return f"{data.day} {MESES[data.month - 1]}"
+
+    if inicio.year != fim.year:
+        return f"{dia_e_mes(inicio)} {inicio.year} a {dia_e_mes(fim)} {fim.year}"
+    if inicio.month != fim.month:
+        return f"{dia_e_mes(inicio)} a {dia_e_mes(fim)}"
+    return f"{inicio.day} a {dia_e_mes(fim)}"
+
+
+def frase_conflito(conflito, criando):
+    """A frase do 409 (spec §7) para a reserva ou o bloqueio que já ocupa as datas;
+    `criando` diz o que se tentava gravar: "reserva" ou "bloqueio"."""
+    if isinstance(conflito, Reserva):
+        reserva = (f"{codigo_reserva(conflito.id)} ({conflito.hospede.nome}, "
+                   f"{periodo(conflito.data_entrada, conflito.data_saida)})")
+        if criando == "reserva":
+            return f"Conflita com {reserva}. Escolha outras datas."
+        return f"Já há a reserva {reserva} nessas datas."
+    motivo = conflito.motivo[:1].lower() + conflito.motivo[1:]  # no meio da frase, com minúscula
+    bloqueio = f"{periodo(conflito.data_inicio, conflito.data_fim)} ({motivo})"
+    if criando == "reserva":
+        return f"O imóvel está bloqueado de {bloqueio}."
+    return f"Já há um bloqueio de {bloqueio} nessas datas."
