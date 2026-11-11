@@ -48,3 +48,22 @@ def usuario_json(usuario):
 def funcionario_json(funcionario):
     return {"id": funcionario.id, "nome": funcionario.nome, "email": funcionario.email,
             "telefone": funcionario.telefone, "funcao": funcionario.funcao, "ativo": funcionario.ativo}
+
+
+def imovel_json(imovel):
+    return {"id": imovel.id, "codigo": codigo_imovel(imovel.id), "administrador_id": imovel.administrador_id,
+            "nome": imovel.nome, "endereco": imovel.endereco_completo(), "logradouro": imovel.logradouro,
+            "numero": imovel.numero, "complemento": imovel.complemento, "bairro": imovel.bairro,
+            "cidade": imovel.cidade, "uf": imovel.uf, "cep": imovel.cep, "capacidade": imovel.capacidade,
+            "valor_diaria": imovel.valor_diaria, "horario_entrada": imovel.horario_entrada,
+            "horario_saida": imovel.horario_saida, "observacoes": imovel.observacoes, "ativo": imovel.ativo}
+
+
+def imovel_resumo(imovel):
+    """O imóvel dentro de outro objeto (reserva, tarefa): só o que identifica."""
+    return {"id": imovel.id, "codigo": codigo_imovel(imovel.id), "nome": imovel.nome}
+
+
+def hospede_json(hospede):
+    return {"id": hospede.id, "nome": hospede.nome, "telefone": hospede.telefone, "email": hospede.email,
+            "documento": hospede.documento, "observacoes": hospede.observacoes}

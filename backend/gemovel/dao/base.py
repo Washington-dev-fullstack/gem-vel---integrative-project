@@ -3,6 +3,15 @@ do banco em objetos do domínio."""
 
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
+from datetime import time
+
+
+def hora(valor):
+    """O conector entrega a coluna TIME como timedelta; o domínio usa time."""
+    if valor is None:
+        return None
+    segundos = int(valor.total_seconds())
+    return time(segundos // 3600, segundos % 3600 // 60, segundos % 60)
 
 
 class DAOBase(ABC):
