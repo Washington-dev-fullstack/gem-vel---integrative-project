@@ -67,3 +67,29 @@ def imovel_resumo(imovel):
 def hospede_json(hospede):
     return {"id": hospede.id, "nome": hospede.nome, "telefone": hospede.telefone, "email": hospede.email,
             "documento": hospede.documento, "observacoes": hospede.observacoes}
+
+
+def _pessoa_resumo(pessoa):
+    return None if pessoa is None else {"id": pessoa.id, "nome": pessoa.nome}
+
+
+def tarefa_json(tarefa, agora, com_endereco=False):
+    """A tarefa; com_endereco acrescenta ao imóvel o endereço e as observações (app da equipe)."""
+    imovel = imovel_resumo(tarefa.imovel)
+    if com_endereco:
+        imovel.update(endereco=tarefa.imovel.endereco_completo(), observacoes=tarefa.imovel.observacoes)
+    return {"id": tarefa.id, "tipo": tarefa.tipo, "titulo": tarefa.titulo, "descricao": tarefa.descricao,
+            "imovel": imovel, "reserva_id": tarefa.reserva_id, "responsavel": _pessoa_resumo(tarefa.funcionario),
+            "agendada_para": tarefa.agendada_para, "prazo": tarefa.prazo, "status": tarefa.status,
+            "atrasada": tarefa.esta_atrasada(agora), "iniciada_em": tarefa.iniciada_em,
+            "concluida_em": tarefa.concluida_em}
+
+
+def atividade_json(historico):
+    """Uma linha da atividade recente: quem mudou qual tarefa, de qual imóvel, e para qual estado."""
+    tarefa = historico.tarefa
+    return {"id": historico.id, "registrado_em": historico.registrado_em,
+            "status_anterior": historico.status_anterior, "status_novo": historico.status_novo,
+            "observacao": historico.observacao, "usuario": _pessoa_resumo(historico.usuario),
+            "tarefa": {"id": tarefa.id, "titulo": tarefa.titulo},
+            "imovel": {"id": tarefa.imovel.id, "nome": tarefa.imovel.nome}}

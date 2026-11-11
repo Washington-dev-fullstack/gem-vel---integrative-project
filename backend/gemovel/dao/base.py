@@ -14,6 +14,18 @@ def hora(valor):
     return time(segundos // 3600, segundos % 3600 // 60, segundos % 60)
 
 
+def colunas(apelido, nomes, prefixo=""):
+    """As colunas de uma tabela da junção, com o prefixo no nome: colunas("i", ("id", "nome"), "i_")
+    devolve "i.id AS i_id, i.nome AS i_nome". Os prefixos: imóvel i_, hóspede h_, responsável r_,
+    quem mudou u_ e tarefa t_."""
+    return ", ".join(f"{apelido}.{nome} AS {prefixo}{nome}" for nome in nomes)
+
+
+def sem_prefixo(linha, prefixo):
+    """As colunas da linha que começam com `prefixo`, já sem ele."""
+    return {chave[len(prefixo):]: valor for chave, valor in linha.items() if chave.startswith(prefixo)}
+
+
 class DAOBase(ABC):
     """Um DAO roda dentro da transação que recebe (quando a rota junta vários passos numa
     transação só) ou abre uma transação curta a cada chamada."""
