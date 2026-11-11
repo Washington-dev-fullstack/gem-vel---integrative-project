@@ -2,6 +2,7 @@
 e levanta um ErroValidacao só, com a primeira mensagem de cada campo."""
 
 import re
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 
 from gemovel.erros import ErroValidacao
 
@@ -10,6 +11,7 @@ TEXTO_LONGO = 2000
 
 PREENCHA = "Preencha este campo."
 _EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+CENTAVO = Decimal("0.01")
 
 
 def limpar(valor):
@@ -18,6 +20,21 @@ def limpar(valor):
         valor = valor.strip()
         return valor or None
     return valor
+
+
+def dinheiro(v, campo, valor):
+    """Converte o valor em Decimal com duas casas. Ausente dá "Preencha este campo."."""
+    if valor is None:
+        v.erro(campo, PREENCHA)
+        return None
+    try:
+        quantia = valor if isinstance(valor, Decimal) else Decimal(str(valor))
+    except (InvalidOperation, ValueError):
+        quantia = None
+    if quantia is None or isinstance(valor, bool) or not quantia.is_finite():
+        v.erro(campo, "Valor inválido.")
+        return None
+    return quantia.quantize(CENTAVO, rounding=ROUND_HALF_UP)
 
 
 class Validador:
