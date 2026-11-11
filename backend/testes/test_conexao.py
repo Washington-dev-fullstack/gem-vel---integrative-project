@@ -6,13 +6,7 @@ from werkzeug.security import check_password_hash
 
 from config import carregar_config
 from gemovel.conexao import BancoIndisponivel, Conexao
-
-# Senha de teste das contas de exemplo (a mesma do LEIA-ME.md). No banco fica só o hash.
-SENHA_DE_TESTE = "Gemovel@2026"
-
-# Quantas linhas cada tabela tem depois do banco/02_dados_exemplo.sql.
-ESPERADO = {"usuario": 6, "funcionario": 4, "imovel": 9, "hospede": 15,
-            "reserva": 16, "bloqueio": 2, "tarefa": 18, "historico_tarefa": 28}
+from testes.apoio import ESPERADO, SENHA_DE_TESTE, apagar_depois
 
 # Uma porta onde não há MySQL nenhum: simula o XAMPP desligado.
 PORTA_SEM_BANCO = 3999
@@ -94,6 +88,28 @@ class TestConexao(unittest.TestCase):
         with self.assertRaises(BancoIndisponivel) as contexto:
             Conexao({**carregar_config(), "password": "senha-errada"}).testar()
         self.assertIn("backend/.env", str(contexto.exception))
+
+    def test_transacao_grava_tudo_no_fim(self):
+        with self.conexao.transacao() as t:
+            novo = t.executar("INSERT INTO hospede (administrador_id, nome) VALUES (%s, %s)",
+                              (2, "Teste Transação"))
+        apagar_depois(self, "hospede", novo)
+        self.assertEqual(consultar_um(self.conexao, "SELECT nome FROM hospede WHERE id = %s", (novo,)),
+                         "Teste Transação")
+
+    def test_transacao_desfaz_tudo_se_der_erro(self):
+        with self.assertRaises(RuntimeError):
+            with self.conexao.transacao() as t:
+                t.executar("INSERT INTO hospede (administrador_id, nome) VALUES (%s, %s)",
+                           (2, "Teste Desfeito"))
+                raise RuntimeError
+        self.assertEqual(consultar_um(self.conexao, "SELECT COUNT(*) FROM hospede WHERE nome = %s",
+                                      ("Teste Desfeito",)), 0)
+
+    def test_consultar_devolve_dicionarios(self):
+        with self.conexao.transacao() as t:
+            linhas = t.consultar("SELECT id, nome FROM imovel WHERE id = %s", (8,))
+        self.assertEqual(linhas, [{"id": 8, "nome": "Chalé da Serra"}])
 
 
 if __name__ == "__main__":

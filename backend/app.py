@@ -1,32 +1,31 @@
-"""API do Gemóvel (Flask).
+"""API do Gemóvel (Flask): só a fábrica do app. As rotas ficam em gemovel/rotas/.
 
-Etapa 1: só a rota de saúde, que confere a conexão com o banco.
 Para rodar, da raiz do projeto: backend/.venv/Scripts/python backend/app.py
-e abrir http://localhost:5000/api/saude
+e abrir http://127.0.0.1:5000/api/saude
 """
 
-from flask import Flask, jsonify
+from flask import Flask
 
-from config import carregar_config
-from gemovel.conexao import BancoIndisponivel, Conexao
+from config import carregar_config, carregar_segredo_sessao
+from gemovel.conexao import Conexao
+from gemovel.rotas import registrar
+from gemovel.rotas.formato_json import ProvedorJson
 
 
-def criar_app(config: dict | None = None) -> Flask:
-    """Cria o app. `config` é a configuração do banco; se vier None, usa o backend/.env."""
+def criar_app(config: dict | None = None, segredo: str | None = None) -> Flask:
+    """Cria o app. `config` é a configuração do banco (None: lê o backend/.env), e `segredo`
+    é a chave que assina o cookie de login (None: lê a SEGREDO_SESSAO do backend/.env)."""
     config = config if config is not None else carregar_config()
+    segredo = segredo or carregar_segredo_sessao()
     app = Flask(__name__)
-    app.json.ensure_ascii = False  # acentos legíveis no JSON
-    conexao = Conexao(config)
-
-    @app.get("/api/saude")
-    def saude():
-        try:
-            resultado = conexao.testar()
-        except BancoIndisponivel as erro:
-            return jsonify(status="erro", mensagem=str(erro)), 503
-        return jsonify(status="ok", banco=config["database"],
-                       versao=resultado["versao"], tabelas=resultado["tabelas"])
-
+    app.json = ProvedorJson(app)
+    app.secret_key = segredo
+    # HttpOnly: o JavaScript da página não lê o cookie. Lax: outro site não manda o cookie
+    # num POST; junto com as escritas só em JSON, isso protege contra CSRF.
+    app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
+    app.extensions["gemovel.conexao"] = Conexao(config)
+    app.extensions["gemovel.config"] = config
+    registrar(app)
     return app
 
 

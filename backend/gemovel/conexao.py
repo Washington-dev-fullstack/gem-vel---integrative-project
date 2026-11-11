@@ -80,6 +80,24 @@ class Conexao:
         finally:
             self._livres.release()
 
+    @contextmanager
+    def transacao(self):
+        """Bloco `with` que entrega uma Transacao numa conexão só. No fim do bloco grava
+        tudo (commit); se algo falhar, desfaz tudo (rollback) e o erro segue adiante."""
+        with self.obter() as cnx:
+            with _conexao_perdida():
+                cnx.start_transaction()
+            try:
+                yield Transacao(cnx)
+                with _conexao_perdida():
+                    cnx.commit()
+            except BaseException:
+                try:
+                    cnx.rollback()
+                except mysql.connector.Error:
+                    pass  # a conexão caiu: o MySQL já desfez a transação
+                raise
+
     def testar(self) -> dict:
         """Devolve a versão do MySQL e quantas linhas cada tabela tem."""
         try:
@@ -95,3 +113,42 @@ class Conexao:
         except mysql.connector.Error as erro:
             raise BancoIndisponivel(_mensagem(erro, self._config)) from erro
         return {"versao": versao, "tabelas": tabelas}
+
+
+@contextmanager
+def _conexao_perdida():
+    """A conexão que cai no meio do caminho vira BancoIndisponivel, como a que nem abriu."""
+    try:
+        yield
+    except (mysql.connector.InterfaceError, mysql.connector.OperationalError) as erro:
+        raise BancoIndisponivel(MENSAGEM_DESLIGADO) from erro
+
+
+class Transacao:
+    """Uma transação aberta numa conexão só. Quem cria é o Conexao.transacao()."""
+
+    def __init__(self, cnx):
+        self._cnx = cnx
+
+    def executar(self, sql: str, parametros=()) -> int:
+        """Roda um comando. Devolve o id gerado por um INSERT ou, nos outros comandos,
+        quantas linhas mudaram."""
+        with _conexao_perdida():
+            cursor = self._cnx.cursor()
+            try:
+                cursor.execute(sql, parametros)
+                if sql.lstrip().upper().startswith("INSERT"):
+                    return cursor.lastrowid
+                return cursor.rowcount
+            finally:
+                cursor.close()
+
+    def consultar(self, sql: str, parametros=()) -> list[dict]:
+        """Roda uma consulta e devolve as linhas como dicionários."""
+        with _conexao_perdida():
+            cursor = self._cnx.cursor(dictionary=True)
+            try:
+                cursor.execute(sql, parametros)
+                return cursor.fetchall()
+            finally:
+                cursor.close()

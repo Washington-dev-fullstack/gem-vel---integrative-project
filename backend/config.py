@@ -1,6 +1,8 @@
-"""Configuração do banco, lida do arquivo backend/.env (veja o .env.example)."""
+"""Configuração do banco e chave da sessão, lidas do arquivo backend/.env (veja o .env.example)."""
 
 import os
+import secrets
+import warnings
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -32,3 +34,17 @@ def carregar_config() -> dict:
         # mysql_native_password e o erro nem chega ao Python); a versão em Python puro conecta.
         "use_pure": True,
     }
+
+
+def carregar_segredo_sessao() -> str:
+    """Devolve a chave que assina o cookie de login (SEGREDO_SESSAO no .env).
+
+    Sem ela, gera uma chave temporária e avisa: funciona, mas todo mundo sai quando o Flask reinicia.
+    """
+    load_dotenv(PASTA_BACKEND / ".env")
+    segredo = os.getenv("SEGREDO_SESSAO", "").strip()
+    if not segredo:
+        warnings.warn("SEGREDO_SESSAO não está no backend/.env: usando uma chave temporária, "
+                      "e todo mundo sai quando o Flask reiniciar.", UserWarning, stacklevel=2)
+        return secrets.token_hex(32)
+    return segredo
