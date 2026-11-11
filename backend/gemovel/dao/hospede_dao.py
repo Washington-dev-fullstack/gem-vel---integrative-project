@@ -1,5 +1,7 @@
 """DAO dos hóspedes. A busca do formulário de reserva procura no nome e no telefone."""
 
+import re
+
 from gemovel.dao.base import DAOBase
 from gemovel.dominio.hospede import Hospede
 
@@ -9,6 +11,11 @@ _SELECT = "SELECT " + ", ".join(COLUNAS_HOSPEDE) + " FROM hospede"
 
 # Com termo, a busca para aqui: é a lista de sugestões do formulário.
 LIMITE_DA_BUSCA = 20
+
+# O telefone sem a máscara "(11) 99110-1001", para comparar só os dígitos (REPLACE roda no MariaDB e no MySQL).
+_TELEFONE_SO_DIGITOS = "REPLACE(REPLACE(REPLACE(REPLACE(telefone, '(', ''), ')', ''), '-', ''), ' ', '')"
+# Só o termo feito de dígitos e dos sinais dessa máscara é um telefone: "Helena 1" não busca o dígito 1.
+_PARECE_TELEFONE = re.compile(r"[0-9() -]+")
 
 
 def hospede_da_linha(linha):
@@ -26,12 +33,18 @@ class HospedeDAO(DAOBase):
 
     def buscar(self, administrador_id, termo=None):
         """Os hóspedes do administrador por nome. Com `termo`, só os que têm o termo no nome
-        ou no telefone (sem diferença de acento nem de maiúscula, pela collation do banco)."""
+        ou no telefone (sem diferença de acento nem de maiúscula, pela collation do banco). O termo
+        que parece telefone também é comparado só pelos dígitos: "11991101001" acha "(11) 99110-1001"."""
         sql, parametros = _SELECT + " WHERE administrador_id = %s", [administrador_id]
         if termo:
             padrao = f"%{_escapar_like(termo)}%"
-            sql += " AND (nome LIKE %s OR telefone LIKE %s)"
+            condicoes = ["nome LIKE %s", "telefone LIKE %s"]
             parametros += [padrao, padrao]
+            digitos = re.sub(r"[^0-9]", "", termo)
+            if digitos and _PARECE_TELEFONE.fullmatch(termo):
+                condicoes.append(_TELEFONE_SO_DIGITOS + " LIKE %s")
+                parametros.append(f"%{digitos}%")
+            sql += " AND (" + " OR ".join(condicoes) + ")"
         sql += " ORDER BY nome, id"
         if termo:
             sql += f" LIMIT {LIMITE_DA_BUSCA}"

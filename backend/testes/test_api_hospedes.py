@@ -25,6 +25,16 @@ class TestHospedes(CasoApi):
     def test_busca_por_telefone(self):
         self.assertEqual(self.nomes("/api/hospedes?busca=99110"), ["Helena Duarte"])
 
+    def test_busca_por_telefone_sem_a_mascara(self):
+        # O cadastro guarda "(11) 99110-1001"; quem busca pode digitar só os números ou outro espaçamento.
+        for termo in ("11991101001", "11%2099110"):
+            with self.subTest(termo=termo):
+                self.assertEqual(self.nomes(f"/api/hospedes?busca={termo}"), ["Helena Duarte"])
+
+    def test_busca_com_letras_nao_compara_so_os_digitos(self):
+        # "Helena 1" não vira uma busca pelo dígito 1, que traria quase todo mundo.
+        self.assertEqual(self.nomes("/api/hospedes?busca=Helena%201"), [])
+
     def test_busca_com_porcento_ou_sublinhado_nao_traz_todos(self):
         for termo in ("%25", "_"):
             self.assertEqual(self.nomes(f"/api/hospedes?busca={termo}"), [])
