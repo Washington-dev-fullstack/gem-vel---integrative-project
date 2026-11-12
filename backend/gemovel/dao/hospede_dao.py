@@ -9,6 +9,12 @@ COLUNAS_HOSPEDE = ("id", "administrador_id", "nome", "telefone", "email", "docum
 
 _SELECT = "SELECT " + ", ".join(COLUNAS_HOSPEDE) + " FROM hospede"
 
+# Com os totais da lista: quantas reservas o hóspede tem (as canceladas também) e a entrada da mais recente.
+_SELECT_COM_TOTAIS = ("SELECT " + ", ".join(COLUNAS_HOSPEDE)
+                      + ", (SELECT COUNT(*) FROM reserva WHERE reserva.hospede_id = hospede.id) AS num_reservas"
+                      ", (SELECT MAX(data_entrada) FROM reserva WHERE reserva.hospede_id = hospede.id) AS ultima_reserva"
+                      " FROM hospede")
+
 # Com termo, a busca para aqui: é a lista de sugestões do formulário.
 LIMITE_DA_BUSCA = 20
 
@@ -34,8 +40,9 @@ class HospedeDAO(DAOBase):
     def buscar(self, administrador_id, termo=None):
         """Os hóspedes do administrador por nome. Com `termo`, só os que têm o termo no nome
         ou no telefone (sem diferença de acento nem de maiúscula, pela collation do banco). O termo
-        que parece telefone também é comparado só pelos dígitos: "11991101001" acha "(11) 99110-1001"."""
-        sql, parametros = _SELECT + " WHERE administrador_id = %s", [administrador_id]
+        que parece telefone também é comparado só pelos dígitos: "11991101001" acha "(11) 99110-1001".
+        Cada um vem com os totais das reservas: pares (hospede, {"num_reservas", "ultima_reserva"})."""
+        sql, parametros = _SELECT_COM_TOTAIS + " WHERE administrador_id = %s", [administrador_id]
         if termo:
             padrao = f"%{_escapar_like(termo)}%"
             condicoes = ["nome LIKE %s", "telefone LIKE %s"]
@@ -48,7 +55,9 @@ class HospedeDAO(DAOBase):
         sql += " ORDER BY nome, id"
         if termo:
             sql += f" LIMIT {LIMITE_DA_BUSCA}"
-        return [self._para_objeto(linha) for linha in self._consultar(sql, tuple(parametros))]
+        return [(self._para_objeto(linha),
+                 {"num_reservas": linha["num_reservas"], "ultima_reserva": linha["ultima_reserva"]})
+                for linha in self._consultar(sql, tuple(parametros))]
 
     def buscar_por_id(self, id):
         linhas = self._consultar(_SELECT + " WHERE id = %s", (id,))
@@ -61,3 +70,13 @@ class HospedeDAO(DAOBase):
             "VALUES (%s, %s, %s, %s, %s, %s)",
             (hospede.administrador_id, hospede.nome, hospede.telefone, hospede.email, hospede.documento,
              hospede.observacoes))
+
+    def atualizar(self, hospede):
+        """Grava os dados do hóspede (o dono não muda)."""
+        self._executar("UPDATE hospede SET nome = %s, telefone = %s, email = %s, documento = %s, observacoes = %s "
+                       "WHERE id = %s", (hospede.nome, hospede.telefone, hospede.email, hospede.documento,
+                                         hospede.observacoes, hospede.id))
+
+    def excluir(self, id):
+        """Apaga o hóspede. O banco recusa apagar quem tem reservas (ON DELETE RESTRICT): a rota confere antes."""
+        self._executar("DELETE FROM hospede WHERE id = %s", (id,))

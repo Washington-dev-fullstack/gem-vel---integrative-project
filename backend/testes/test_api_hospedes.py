@@ -2,7 +2,7 @@
 
 import unittest
 
-from testes.apoio import CasoApi, apagar_depois, executar
+from testes.apoio import CasoApi, apagar_depois, consultar, executar, linha
 
 
 class TestHospedes(CasoApi):
@@ -66,6 +66,57 @@ class TestHospedes(CasoApi):
         self.confere_erro(self.cliente.post("/api/hospedes", json={"nome": "X", "email": "x@"}), 422,
                           {"email": "E-mail inválido."})
 
+
+    def criar(self, **dados):
+        """Cria um hóspede da Marina (apagado no fim do teste) e devolve o JSON dele."""
+        r = self.cliente.post("/api/hospedes", json={"nome": "Hóspede Teste", **dados})
+        self.assertEqual(r.status_code, 201, r.get_json())
+        apagar_depois(self, "hospede", r.json["id"])
+        return r.json
+
+    def test_lista_de_hospedes_traz_reservas_e_a_ultima(self):
+        esperado = linha("SELECT COUNT(*) AS num, MAX(data_entrada) AS ultima FROM reserva WHERE hospede_id = 12")
+        sem_reserva = self.criar()["id"]
+        por_id = {h["id"]: h for h in self.cliente.get("/api/hospedes").json["hospedes"]}
+        self.assertEqual((por_id[12]["num_reservas"], por_id[12]["ultima_reserva"]),
+                         (esperado["num"], esperado["ultima"].isoformat()))
+        self.assertEqual((por_id[sem_reserva]["num_reservas"], por_id[sem_reserva]["ultima_reserva"]), (0, None))
+
+    def test_um_hospede_com_as_reservas(self):
+        r = self.cliente.get("/api/hospedes/12")
+        self.assertEqual(r.status_code, 200, r.get_json())
+        ids = [x["id"] for x in consultar("SELECT id FROM reserva WHERE hospede_id = 12 "
+                                          "ORDER BY data_entrada DESC, id DESC")]
+        self.assertEqual((r.json["nome"], [x["id"] for x in r.json["reservas"]]), ("Carla Nogueira", ids))
+        self.assertEqual(list(r.json["reservas"][0]),
+                         ["id", "codigo", "imovel", "data_entrada", "data_saida", "status", "situacao"])
+
+    def test_hospede_de_outro_admin_da_404(self):
+        criado = self.criar()
+        paulo = self.app.test_client()
+        self.entrar("paulo@gemovel.test", paulo)
+        self.confere_erro(paulo.get(f"/api/hospedes/{criado['id']}"), 404)
+        self.confere_erro(paulo.patch(f"/api/hospedes/{criado['id']}", json={"nome": "Outro"}), 404)
+        self.confere_erro(paulo.delete(f"/api/hospedes/{criado['id']}"), 404)
+        self.assertEqual(self.cliente.get(f"/api/hospedes/{criado['id']}").json["nome"], "Hóspede Teste")
+
+    def test_editar_hospede(self):
+        criado = self.criar(email="antes@example.com")
+        r = self.cliente.patch(f"/api/hospedes/{criado['id']}", json={"nome": "Hóspede Editado",
+                                                                      "telefone": "(11) 90000-1111"})
+        self.assertEqual(r.status_code, 200, r.get_json())
+        self.assertEqual(r.json, {"id": criado["id"], "nome": "Hóspede Editado", "telefone": "(11) 90000-1111",
+                                  "email": None, "documento": None, "observacoes": None})
+
+    def test_excluir_hospede_sem_reservas(self):
+        criado = self.criar()
+        r = self.cliente.delete(f"/api/hospedes/{criado['id']}")
+        self.assertEqual((r.status_code, r.get_data(as_text=True)), (204, ""))
+        self.confere_erro(self.cliente.get(f"/api/hospedes/{criado['id']}"), 404)
+
+    def test_excluir_hospede_com_reservas_da_409(self):
+        self.confere_erro(self.cliente.delete("/api/hospedes/12"), 409,
+                          mensagem="Este hóspede tem reservas e não pode ser excluído.")
 
 if __name__ == "__main__":
     unittest.main()

@@ -70,6 +70,24 @@ class TarefaDAO(DAOBase):
         return self._listar("i.administrador_id = %s AND t.status IN ('pendente', 'em_andamento')",
                             (administrador_id,))
 
+    def buscar_limpeza_da_reserva(self, reserva_id):
+        """A limpeza da saída da reserva (R4), em qualquer estado, ou None."""
+        linhas = self._consultar(_SELECT_TAREFA + " WHERE t.reserva_id = %s AND t.tipo = 'limpeza' ORDER BY t.id LIMIT 1",
+                                 (reserva_id,))
+        return self._para_objeto(linhas[0]) if linhas else None
+
+    def atualizar(self, tarefa):
+        """Grava os campos da tarefa. O estado não muda aqui: cada mudança de estado grava também o histórico."""
+        self._executar(
+            "UPDATE tarefa SET imovel_id = %s, reserva_id = %s, funcionario_id = %s, tipo = %s, titulo = %s, "
+            "descricao = %s, agendada_para = %s, prazo = %s WHERE id = %s",
+            (tarefa.imovel_id, tarefa.reserva_id, tarefa.funcionario_id, tarefa.tipo.value, tarefa.titulo,
+             tarefa.descricao, tarefa.agendada_para, tarefa.prazo, tarefa.id))
+
+    def excluir(self, id):
+        """Apaga a tarefa; o histórico dela vai junto (ON DELETE CASCADE)."""
+        self._executar("DELETE FROM tarefa WHERE id = %s", (id,))
+
     def inserir(self, tarefa, criada_por):
         """Grava a tarefa e a primeira linha do histórico (nada → pendente), em nome de quem criou,
         na mesma transação. Devolve o id da tarefa."""

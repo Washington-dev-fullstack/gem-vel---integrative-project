@@ -7,8 +7,9 @@ from datetime import date
 
 from config import carregar_config
 from gemovel.conexao import Conexao
+from gemovel.dao.base import hora
 from gemovel.rotas.formato_json import periodo
-from testes.apoio import (DIA, CasoApi, apagar_depois, apagar_reservas_depois, consultar, datas_livres,
+from testes.apoio import (DIA, CasoApi, apagar_depois, apagar_reservas_depois, consultar, datas_livres, executar,
                           imovel_temporario, linha)
 
 
@@ -134,6 +135,93 @@ class TestReservas(CasoApi):
         corpo = self.reserva(imovel_id=imovel_temporario(self, ativo=0))
         self.confere_erro(self.cliente.post("/api/reservas", json=corpo), 422,
                           {"imovel_id": "Este imóvel está desativado."})
+
+    def horarios_do_imovel(self, imovel_id):
+        """Os horários de saída e de entrada do imóvel, como a API escreve: ("11:00", "15:00")."""
+        h = linha("SELECT horario_saida, horario_entrada FROM imovel WHERE id = %s", (imovel_id,))
+        return hora(h["horario_saida"]).strftime("%H:%M"), hora(h["horario_entrada"]).strftime("%H:%M")
+
+    def test_uma_reserva_traz_o_hospede_e_a_limpeza(self):
+        r = self.cliente.get("/api/reservas/5")
+        self.assertEqual(r.status_code, 200, r.get_json())
+        dados = r.get_json()
+        self.assertEqual(list(dados["hospede"]), ["id", "nome", "telefone", "email", "documento", "observacoes"])
+        limpeza = consultar("SELECT id FROM tarefa WHERE reserva_id = 5 AND tipo = 'limpeza'")
+        self.assertEqual(dados["limpeza"]["id"], limpeza[0]["id"])
+
+    def test_reserva_de_outro_admin_da_404(self):
+        self.assertEqual(self.cliente.get("/api/reservas/5").status_code, 200)
+        corpo = self.reserva()
+        criada = self.criar(corpo)
+        paulo = self.app.test_client()
+        self.entrar("paulo@gemovel.test", paulo)
+        self.confere_erro(paulo.get("/api/reservas/5"), 404)
+        self.confere_erro(paulo.patch(f"/api/reservas/{criada['id']}", json=corpo), 404)
+        self.confere_erro(paulo.post(f"/api/reservas/{criada['id']}/cancelar", json={}), 404)
+        self.assertEqual(linha("SELECT status FROM reserva WHERE id = %s", (criada["id"],))["status"], "confirmada")
+
+    def test_editar_muda_as_datas_e_leva_a_limpeza_pendente(self):
+        corpo = self.reserva()
+        criada = self.criar(corpo)
+        nova_saida = corpo["data_saida"] + DIA
+        r = self.cliente.patch(f"/api/reservas/{criada['id']}", json={**corpo, "data_saida": nova_saida})
+        self.assertEqual(r.status_code, 200, r.get_json())
+        editada = r.get_json()
+        saida, entrada = self.horarios_do_imovel(6)
+        self.assertEqual((editada["data_saida"], editada["noites"], editada["valor_total"]),
+                         (nova_saida.isoformat(), 3, "1350.00"))  # sem valor_total, recalcula (R2)
+        limpeza = editada["limpeza"]
+        self.assertEqual((limpeza["id"], limpeza["agendada_para"], limpeza["prazo"]),
+                         (criada["limpeza"]["id"], f"{nova_saida}T{saida}", f"{nova_saida}T{entrada}"))
+
+    def test_limpeza_que_ja_comecou_fica_como_esta(self):  # decisões 3 e 4 de web-admin.md
+        corpo = self.reserva()
+        criada = self.criar(corpo)
+        executar("UPDATE tarefa SET status = 'em_andamento', iniciada_em = NOW() WHERE id = %s",
+                 (criada["limpeza"]["id"],))
+        r = self.cliente.patch(f"/api/reservas/{criada['id']}", json={**corpo, "data_saida": corpo["data_saida"] + DIA})
+        self.assertEqual(r.status_code, 200, r.get_json())
+        self.assertEqual(r.json["limpeza"]["agendada_para"], criada["limpeza"]["agendada_para"])
+        r = self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={})
+        self.assertEqual(r.status_code, 200, r.get_json())
+        self.assertEqual(r.json["limpeza"]["id"], criada["limpeza"]["id"])
+
+    def test_editar_com_conflito_da_409(self):
+        primeira = self.reserva()
+        criada = self.criar(primeira)
+        segunda = self.criar(self.reserva())
+        nome = linha("SELECT nome FROM hospede WHERE id = 11")["nome"]
+        frase = (f"Conflita com {criada['codigo']} ({nome}, {periodo(primeira['data_entrada'], primeira['data_saida'])})."
+                 " Escolha outras datas.")
+        corpo = {**primeira, "data_entrada": primeira["data_entrada"] + DIA, "data_saida": primeira["data_saida"] + DIA}
+        self.confere_erro(self.cliente.patch(f"/api/reservas/{segunda['id']}", json=corpo), 409,
+                          {"data_entrada": frase}, frase)
+
+    def test_editar_reserva_cancelada_da_409(self):
+        corpo = self.reserva()
+        criada = self.criar(corpo)
+        self.assertEqual(self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={}).status_code, 200)
+        self.confere_erro(self.cliente.patch(f"/api/reservas/{criada['id']}", json=corpo), 409,
+                          mensagem="Esta reserva está cancelada.")
+
+    def test_cancelar_apaga_a_limpeza_pendente(self):
+        criada = self.criar(self.reserva())
+        r = self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={})
+        self.assertEqual(r.status_code, 200, r.get_json())
+        self.assertEqual((r.json["status"], r.json["situacao"], r.json["limpeza"]), ("cancelada", "cancelada", None))
+        self.assertEqual(consultar("SELECT id FROM tarefa WHERE reserva_id = %s", (criada["id"],)), [])
+        self.assertEqual(consultar("SELECT id FROM historico_tarefa WHERE tarefa_id = %s",
+                                   (criada["limpeza"]["id"],)), [])
+
+    def test_cancelar_de_novo_da_422(self):
+        criada = self.criar(self.reserva())
+        self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={})
+        self.confere_erro(self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={}), 422,
+                          {"status": "Esta reserva já está cancelada."})
+
+    def test_cancelar_sem_json_da_400(self):
+        criada = self.criar(self.reserva())
+        self.confere_erro(self.cliente.post(f"/api/reservas/{criada['id']}/cancelar"), 400)
 
     def test_reservas_ao_mesmo_tempo_so_uma_grava(self):
         corpo, resultado = self.reserva(), {}

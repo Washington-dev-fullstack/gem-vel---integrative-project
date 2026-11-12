@@ -60,3 +60,25 @@ class ReservaDAO(DAOBase):
             "valor_total, status, observacoes) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
             (reserva.imovel_id, reserva.hospede_id, reserva.data_entrada, reserva.data_saida, reserva.num_hospedes,
              reserva.valor_diaria, reserva.valor_total, reserva.status.value, reserva.observacoes))
+
+    def listar_do_hospede(self, hospede_id):
+        """As reservas do hóspede (as canceladas também), da entrada mais nova para a mais antiga."""
+        linhas = self._consultar(_SELECT + " WHERE r.hospede_id = %s ORDER BY r.data_entrada DESC, r.id DESC",
+                                 (hospede_id,))
+        return [self._para_objeto(linha) for linha in linhas]
+
+    def travar(self, id):
+        """Trava só a linha da reserva (FOR UPDATE) até o fim da transação recebida: editar e
+        cancelar a mesma reserva passam um de cada vez. A trava vem antes das outras leituras da
+        transação, para quem chega depois ler o que o primeiro gravou."""
+        if self._transacao is None:
+            raise ValueError("travar precisa da transação da rota: a trava acaba com a transação.")
+        self._consultar("SELECT id FROM reserva WHERE id = %s FOR UPDATE", (id,))
+
+    def atualizar(self, reserva):
+        """Grava os campos e o estado da reserva."""
+        self._executar(
+            "UPDATE reserva SET imovel_id = %s, hospede_id = %s, data_entrada = %s, data_saida = %s, "
+            "num_hospedes = %s, valor_diaria = %s, valor_total = %s, status = %s, observacoes = %s WHERE id = %s",
+            (reserva.imovel_id, reserva.hospede_id, reserva.data_entrada, reserva.data_saida, reserva.num_hospedes,
+             reserva.valor_diaria, reserva.valor_total, reserva.status.value, reserva.observacoes, reserva.id))

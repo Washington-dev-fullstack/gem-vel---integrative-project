@@ -110,6 +110,13 @@ class Tarefa:
         self._funcionario_id = None if funcionario is None else funcionario.id
         self._funcionario = funcionario
 
+    def reagendar(self, imovel, agendada_para, prazo):
+        """Muda o imóvel e o horário da tarefa, com a mesma regra do cadastro para o prazo."""
+        if prazo is not None and prazo < agendada_para:
+            raise ErroValidacao({"prazo": "O prazo não pode ser antes do início."})
+        self._imovel_id, self._imovel = imovel.id, imovel
+        self._agendada_para, self._prazo = agendada_para, prazo
+
     def iniciar(self, por):
         """Pendente → em andamento (R5)."""
         if self._status is not StatusTarefa.PENDENTE:

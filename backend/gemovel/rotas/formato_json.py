@@ -107,6 +107,19 @@ def reserva_json(reserva, agora):
             "situacao": reserva.situacao(agora, reserva.imovel), "observacoes": reserva.observacoes}
 
 
+def reserva_completa_json(reserva, limpeza, agora):
+    """A reserva aberta na gaveta: o hóspede com os contatos e a limpeza da saída (ou None)."""
+    return reserva_json(reserva, agora) | {"hospede": hospede_json(reserva.hospede),
+                                           "limpeza": None if limpeza is None else tarefa_json(limpeza, agora)}
+
+
+def reserva_resumo_json(reserva, agora):
+    """A reserva na ficha do hóspede: o que identifica, as datas e o estado."""
+    return {"id": reserva.id, "codigo": codigo_reserva(reserva.id), "imovel": imovel_resumo(reserva.imovel),
+            "data_entrada": reserva.data_entrada, "data_saida": reserva.data_saida, "status": reserva.status,
+            "situacao": reserva.situacao(agora, reserva.imovel)}
+
+
 def bloqueio_json(bloqueio):
     return {"id": bloqueio.id, "imovel_id": bloqueio.imovel_id, "data_inicio": bloqueio.data_inicio,
             "data_fim": bloqueio.data_fim, "motivo": bloqueio.motivo}
