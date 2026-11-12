@@ -2,7 +2,7 @@
 dos Blueprints e os tratadores de erro, que respondem sempre no mesmo formato:
 {"erro": {"mensagem": ..., "campos": {...}}}."""
 
-from flask import current_app, jsonify, request
+from flask import current_app, jsonify, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from gemovel.conexao import BancoIndisponivel
@@ -34,9 +34,10 @@ def _e_da_api():
 
 def registrar(app):
     """Registra os Blueprints e os tratadores de erro no app."""
-    from gemovel.rotas import atividade, funcionarios, hospedes, imoveis, reservas, saude, sessao, tarefas
+    from gemovel.rotas import (atividade, funcionarios, hospedes, imoveis, paginas, reservas, saude, sessao,
+                               tarefas)
 
-    for modulo in (saude, sessao, funcionarios, imoveis, hospedes, reservas, tarefas, atividade):
+    for modulo in (saude, sessao, funcionarios, imoveis, hospedes, reservas, tarefas, atividade, paginas):
         app.register_blueprint(modulo.bp)
 
     @app.errorhandler(ErroGemovel)
@@ -51,7 +52,8 @@ def registrar(app):
     @app.errorhandler(HTTPException)
     def _erro_http(erro):
         if not _e_da_api():
-            return erro  # fora de /api, a página padrão do Flask
+            # Fora de /api: a página 404 do Gemóvel; nos outros códigos, a página padrão do Flask.
+            return (render_template("404.html"), 404) if erro.code == 404 else erro
         status = erro.code or 500
         resposta, status = resposta_de_erro(_MENSAGEM_HTTP.get(status, MENSAGEM_500), status)
         if status == 405 and getattr(erro, "valid_methods", None):

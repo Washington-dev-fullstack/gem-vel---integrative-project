@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="casca">
+  <nav class="lateral" aria-label="Principal">
+    <ul class="lateral__menu">
+      {% for id, endereco, rotulo in [("visao-geral", "/", "Visão geral"), ("agenda", "/agenda", "Agenda"),
+                                      ("reservas", "/reservas", "Reservas"), ("imoveis", "/imoveis", "Imóveis"),
+                                      ("tarefas", "/tarefas", "Tarefas"), ("equipe", "/equipe", "Equipe")] %}
+      <li><a href="{{ endereco }}"{% if tela == id %} aria-current="page"{% endif %}>{{ rotulo }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <main id="conteudo" class="principal">
+    {% block principal %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
