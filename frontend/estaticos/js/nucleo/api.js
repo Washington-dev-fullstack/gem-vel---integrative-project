@@ -66,7 +66,7 @@ async function pedir(metodo, caminho, {dados, keepalive = false} = {}) {
 
 export const api = {
   get: (caminho, parametros) => pedir("GET", enderecoCom(caminho, parametros)),
-  post: (caminho, dados) => pedir("POST", caminho, {dados}),
+  post: (caminho, dados, {keepalive = false} = {}) => pedir("POST", caminho, {dados, keepalive}),
   patch: (caminho, dados) => pedir("PATCH", caminho, {dados}),
   delete: (caminho, {keepalive = false} = {}) => pedir("DELETE", caminho, {keepalive}),
 };

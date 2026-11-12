@@ -64,21 +64,32 @@ export function lerEstado() {
   return estadoDe(new URL(location.href));
 }
 
+/** O que veio para preencher o formulário da gaveta aberta ({imovelId, entrada, saida…}), ou null.
+ * Fica no history.state da gaveta: sobrevive a recarregar e a voltar, e some quando ela fecha. */
+export function preenchimento() {
+  return history.state?.preencher ?? null;
+}
+
 function avisarMudanca() {
   globalThis.dispatchEvent(new Event(EVENTO));
 }
 
-export function trocarFiltro(nome, valor) {
-  history.replaceState(history.state, "", urlCom(new URL(location.href), {filtros: {[nome]: valor}}));
+/** Troca vários filtros de uma vez (um só aviso de mudança): {de, ate} ou o Limpar filtros. */
+export function trocarFiltros(filtros) {
+  history.replaceState(history.state, "", urlCom(new URL(location.href), {filtros}));
   avisarMudanca();
 }
 
-export function abrirGaveta(tipo, id, {editar = false} = {}) {
+export function trocarFiltro(nome, valor) {
+  trocarFiltros({[nome]: valor});
+}
+
+export function abrirGaveta(tipo, id, {editar = false, preencher = null} = {}) {
   const atual = lerEstado().gaveta;
   const destino = urlCom(new URL(location.href), {gaveta: {tipo, id, editar}});
   // Trocar de gaveta (do detalhe para editar) não empilha mais um passo no Voltar.
-  if (atual) history.replaceState(history.state, "", destino);
-  else history.pushState({gaveta: true}, "", destino);
+  if (atual) history.replaceState({...history.state, preencher}, "", destino);
+  else history.pushState({gaveta: true, preencher}, "", destino);
   avisarMudanca();
 }
 

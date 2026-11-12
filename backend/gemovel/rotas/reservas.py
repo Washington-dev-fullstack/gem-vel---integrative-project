@@ -70,9 +70,9 @@ def _hospede_novo(dados, administrador_id):
     """O hóspede que vem dentro da reserva. Os erros levam o prefixo "hospede_novo." (decisão 7)."""
     try:
         leitor = Leitor(dados)
-        nome, telefone = leitor.texto("nome"), leitor.texto("telefone")
+        campos = {campo: leitor.texto(campo) for campo in ("nome", "telefone", "email", "documento")}
         leitor.conferir()
-        return Hospede(administrador_id=administrador_id, nome=nome, telefone=telefone)
+        return Hospede(administrador_id=administrador_id, **campos)
     except ErroValidacao as erro:
         raise ErroValidacao({f"hospede_novo.{campo}": mensagem for campo, mensagem in erro.campos.items()}) from erro
 

@@ -20,3 +20,5 @@
 @import url("componentes/aviso.css") layer(componentes);
 @import url("componentes/faixa.css") layer(componentes);
 @import url("componentes/estados.css") layer(componentes);
+@import url("componentes/seletor-datas.css") layer(componentes);
+@import url("componentes/busca.css") layer(componentes);

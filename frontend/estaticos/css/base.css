@@ -107,3 +107,5 @@ ul[role="list"], ol[role="list"], nav ul { list-style: none; padding: 0; }
     scroll-behavior: auto !important;
   }
 }
+
+.numero { font-variant-numeric: tabular-nums; }

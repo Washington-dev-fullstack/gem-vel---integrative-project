@@ -4,6 +4,7 @@ import {html, renderizar} from "../nucleo/html.js";
 import {icone} from "./pecas.js";
 
 let contador = 0;
+let escutandoTamanho = false;
 
 function montar(menu, itens) {
   renderizar(menu, html`${itens.map((item, i) => {
@@ -38,7 +39,13 @@ export function ligarMenu(botao, itensIniciais) {
   menu.id = `menu-${++contador}`;
   menu.setAttribute("role", "menu");
   menu.popover = "auto";
-  document.body.append(menu);
+  // Dentro de uma gaveta (dialog modal), o menu mora nela: fora, ele ficaria inerte. Os menus de
+  // botões que já saíram da tela (a lista foi redesenhada) saem junto.
+  const lugar = botao.closest("dialog") ?? document.body;
+  for (const velho of lugar.querySelectorAll(":scope > .menu")) {
+    if (!document.querySelector(`[aria-controls="${velho.id}"]`)) velho.remove();
+  }
+  lugar.append(menu);
   botao.setAttribute("aria-haspopup", "menu");
   botao.setAttribute("aria-expanded", "false");
   botao.setAttribute("aria-controls", menu.id);
@@ -97,7 +104,10 @@ export function ligarMenu(botao, itensIniciais) {
     fechar();
     item.fazer?.();
   });
-  addEventListener("resize", () => fechar({devolverFoco: false}));
+  if (!escutandoTamanho) {
+    escutandoTamanho = true;
+    addEventListener("resize", () => document.querySelectorAll(".menu:popover-open").forEach((aberto) => aberto.hidePopover()));
+  }
 
   return {
     elemento: menu,

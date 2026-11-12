@@ -89,20 +89,28 @@ function mostrarResumo(form, mensagem, erros) {
   form.prepend(resumo);
 }
 
+// O campo escondido que um controle preenche (as datas do seletor, o hóspede da busca) aponta
+// esse controle em data-erro-em: o erro aparece e recebe o foco ali.
+function alvoDoErro(form, campo) {
+  return (campo?.dataset?.erroEm && form.querySelector(campo.dataset.erroEm)) || campo;
+}
+
 function camposDoErro(form, campos) {
   return Object.entries(campos ?? {})
     .map(([nome, texto]) => [form.elements.namedItem(nome), texto])
-    .map(([campo, texto]) => [campo instanceof RadioNodeList ? campo[0] : campo, texto])
-    .filter(([campo]) => campo);
+    .map(([campo, texto]) => [alvoDoErro(form, campo instanceof RadioNodeList ? campo[0] : campo), texto])
+    // Um erro por controle: as duas datas escondidas apontam o mesmo seletor.
+    .filter(([campo], i, todos) => campo && todos.findIndex(([outro]) => outro === campo) === i);
 }
 
-/** Erros ditos pela API (ou pela conferência local) aparecem nos campos e no resumo. */
-export function mostrarErros(form, {mensagem, campos}) {
+/** Erros ditos pela API (ou pela conferência local) aparecem nos campos e no resumo. O conflito
+ * (409) também vai para o resumo do topo, mesmo com o campo certo marcado (web-admin.md §4). */
+export function mostrarErros(form, {mensagem, campos, status = null}) {
   for (const campo of form.querySelectorAll("[aria-invalid]")) limparErro(campo);
   const erros = camposDoErro(form, campos);
   for (const [campo, texto] of erros) marcarErro(campo, texto);
   const semCampo = Object.keys(campos ?? {}).length > erros.length;
-  mostrarResumo(form, erros.length > 1 || semCampo || !erros.length ? mensagem : null, erros);
+  mostrarResumo(form, erros.length > 1 || semCampo || !erros.length || status === 409 ? mensagem : null, erros);
   const primeiro = erros[0]?.[0];
   if (primeiro) primeiro.focus();
   else form.querySelector(".formulario__resumo")?.focus?.();
@@ -155,7 +163,8 @@ export function ligarFormulario(form, {enviar, depois, dados: ajustar = (dados) 
       await depois?.(resposta);
     } catch (erro) {
       if (erro?.status === 401) return; // o aviso de sessão expirada já apareceu
-      mostrarErros(form, {mensagem: erro?.mensagem ?? "Algo deu errado do nosso lado. Tente de novo.", campos: erro?.campos});
+      mostrarErros(form, {mensagem: erro?.mensagem ?? "Algo deu errado do nosso lado. Tente de novo.", campos: erro?.campos,
+        status: erro?.status});
     } finally {
       botao?.removeAttribute("aria-busy");
       if (botao?.dataset.enviando && rotulo?.isConnected) trocarTexto(rotulo, rotuloOriginal);

@@ -1,0 +1,29 @@
+/* Busca no formulário (lote B §4): a lista fica no fluxo, logo abaixo do campo, para não ser
+   cortada pela rolagem da gaveta. A última opção cadastra o que foi digitado. */
+
+.busca-lista {
+  max-height: 264px;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  background-color: var(--elev-2-bg);
+  box-shadow: var(--elev-2-shadow), inset 0 0 0 1px var(--elev-2-edge);
+  list-style: none;
+}
+.busca-lista[hidden] { display: none; }
+.busca-lista__opcao {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.busca-lista__opcao:hover, .busca-lista__opcao[aria-selected="true"] { background-color: var(--color-hover); }
+.busca-lista__opcao[aria-selected="true"] { box-shadow: inset 0 0 0 1px var(--color-border-strong); }
+.busca-lista__titulo { font-size: var(--text-base); }
+.busca-lista__detalhe { color: var(--color-text-muted); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.busca-lista mark { background: none; color: inherit; font-weight: 600; text-decoration: underline 1px; text-underline-offset: 3px; }
+.busca-lista__criar { display: flex; align-items: center; gap: var(--space-2); color: var(--color-text); font-weight: 500; }
+.busca-lista__opcao + .busca-lista__criar { margin-top: var(--space-1); box-shadow: 0 -1px 0 var(--color-border); border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+.campo[data-buscando] .entrada { cursor: progress; }

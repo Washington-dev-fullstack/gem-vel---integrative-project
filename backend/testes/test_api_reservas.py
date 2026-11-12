@@ -79,7 +79,8 @@ class TestReservas(CasoApi):
                          [{"usuario_id": 1, "status_anterior": None, "status_novo": "pendente"}])
 
     def test_hospede_novo_e_criado_junto(self):
-        corpo = self.reserva(imovel_id=7, hospede_novo={"nome": "Hóspede Novo Teste", "telefone": "(11) 90000-0000"})
+        corpo = self.reserva(imovel_id=7, hospede_novo={"nome": "Hóspede Novo Teste", "telefone": "(11) 90000-0000",
+                                                          "email": "Novo@Example.com", "documento": "123.456.789-00"})
         del corpo["hospede_id"]
         r = self.cliente.post("/api/reservas", json=corpo)
         self.assertEqual(r.status_code, 201)
@@ -87,8 +88,9 @@ class TestReservas(CasoApi):
         apagar_depois(self, "hospede", dados["hospede"]["id"])
         apagar_depois(self, "reserva", dados["id"])
         self.assertEqual(dados["hospede"]["nome"], "Hóspede Novo Teste")
-        self.assertEqual(consultar("SELECT administrador_id FROM hospede WHERE id = %s", (dados["hospede"]["id"],)),
-                         [{"administrador_id": 1}])
+        self.assertEqual(consultar("SELECT administrador_id, email, documento FROM hospede WHERE id = %s",
+                                   (dados["hospede"]["id"],)),
+                         [{"administrador_id": 1, "email": "novo@example.com", "documento": "123.456.789-00"}])
 
     def test_hospede_novo_invalido_ou_ausente(self):
         corpo = self.reserva(hospede_novo={"nome": ""})

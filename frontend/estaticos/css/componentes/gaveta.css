@@ -67,3 +67,9 @@
 .dados { display: grid; grid-template-columns: minmax(96px, auto) 1fr; gap: var(--space-2) var(--space-4); margin: 0; font-size: var(--text-base); }
 .dados dt { color: var(--color-text-muted); }
 .dados dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+
+/* Detalhe: linha secundária, chip da limpeza, texto livre e a nota do rodapé. */
+.dados__secundario { color: var(--color-text-muted); font-size: var(--text-sm); }
+.dados__limpeza { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.dados__texto { white-space: pre-line; }
+.gaveta__nota { margin-right: auto; color: var(--color-text-muted); font-size: var(--text-sm); }

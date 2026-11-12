@@ -35,6 +35,15 @@ export function periodo(inicio, fim, opcoes = {}) {
   return `${data(inicio, opcoes)} → ${data(fim, opcoes)}`;
 }
 
+// O período nas frases, como o servidor escreve: "4 a 7 nov", "30 out a 2 nov", "28 dez 2026 a 2 jan 2027".
+export function intervalo(inicio, fim) {
+  const a = comoData(inicio);
+  const b = comoData(fim);
+  if (a.getFullYear() !== b.getFullYear()) return `${dataCurta(a)} ${a.getFullYear()} a ${dataCurta(b)} ${b.getFullYear()}`;
+  if (a.getMonth() !== b.getMonth()) return `${dataCurta(a)} a ${dataCurta(b)}`;
+  return `${a.getDate()} a ${dataCurta(b)}`;
+}
+
 export function horario(isoOuHora) {
   const texto = String(isoOuHora);
   const hora = texto.includes("T") ? texto.split("T")[1] : texto;

@@ -1,7 +1,7 @@
 // Gaveta (lote B §14): detalhe e formulário num <dialog>, aberta e fechada pelo endereço.
 
 import {html, renderizar} from "../nucleo/html.js";
-import {aoMudar, fecharGaveta, lerEstado} from "../nucleo/url.js";
+import {aoMudar, fecharGaveta, lerEstado, preenchimento} from "../nucleo/url.js";
 import {icone} from "./pecas.js";
 import {esqueleto} from "./estados.js";
 import {mostrarFaixa} from "./faixa.js";
@@ -105,7 +105,8 @@ function fecharDialogo() {
 
 function focarInicio(formulario) {
   const {titulo, corpo} = partes();
-  const primeiro = formulario && corpo.querySelector("input:not([type=hidden]):not([disabled]), select, textarea");
+  // No detalhe o foco vai ao título; `false ?? titulo` daria false, por isso o ternário.
+  const primeiro = formulario ? corpo.querySelector("input:not([type=hidden]):not([disabled]), select, textarea") : null;
   (primeiro ?? titulo).focus();
 }
 
@@ -132,7 +133,7 @@ async function sincronizar(gaveta, {forcar = false} = {}) {
   ferramentas.textContent = "";
   esqueleto(corpo, 6);
   try {
-    const conteudo = await (formulario ? definicao.formulario(gaveta.id) : definicao.detalhe(gaveta.id));
+    const conteudo = await (formulario ? definicao.formulario(gaveta.id, preenchimento() ?? {}) : definicao.detalhe(gaveta.id));
     if (minha !== versao) return;
     titulo.textContent = conteudo.titulo;
     if (conteudo.contexto) renderizar(contexto, conteudo.contexto);
@@ -158,7 +159,7 @@ async function sincronizar(gaveta, {forcar = false} = {}) {
   }
 }
 
-/** Liga as gavetas da tela: `definicoes` é {tipo: {detalhe(id), formulario(id)}}. */
+/** Liga as gavetas da tela: `definicoes` é {tipo: {detalhe(id), formulario(id, preencher)}}. */
 export function ligarGavetas(definicoes) {
   tipos = definicoes;
   dialogo ??= criarDialogo();

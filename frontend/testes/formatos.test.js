@@ -1,7 +1,7 @@
 process.env.TZ = "America/Sao_Paulo";
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {dinheiro, data, dataCurta, periodo, horario, lerData, paraDinheiroApi} from "../estaticos/js/nucleo/formatos.js";
+import {dinheiro, data, dataCurta, intervalo, periodo, horario, lerData, paraDinheiroApi} from "../estaticos/js/nucleo/formatos.js";
 
 const hoje = lerData("2026-11-05");
 
@@ -34,4 +34,10 @@ test("paraDinheiroApi", () => {
   assert.equal(paraDinheiroApi("450.5"), "450.50");
   assert.equal(paraDinheiroApi("abc"), null);
   assert.equal(paraDinheiroApi(""), null);
+});
+
+test("intervalo no mesmo mês e na virada", () => {
+  assert.equal(intervalo("2026-11-04", "2026-11-07"), "4 a 7 nov");
+  assert.equal(intervalo("2026-10-30", "2026-11-02"), "30 out a 2 nov");
+  assert.equal(intervalo("2026-12-28", "2027-01-02"), "28 dez 2026 a 2 jan 2027");
 });

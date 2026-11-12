@@ -26,9 +26,11 @@ test("devolve os dados, e null no 204", async () => {
 test("escrita manda JSON, mesmo sem campos, e o keepalive quando pedido", async () => {
   responder(() => new Response(null, {status: 204}));
   await api.post("/api/reservas/3/cancelar");
+  await api.post("/api/reservas/4/cancelar", {}, {keepalive: true});
   await api.delete("/api/hospedes/3", {keepalive: true});
   assert.deepEqual(pedidos.map((p) => [p.opcoes.method, p.opcoes.body, p.opcoes.headers["Content-Type"], p.opcoes.keepalive]),
-    [["POST", "{}", "application/json", false], ["DELETE", "{}", "application/json", true]]);
+    [["POST", "{}", "application/json", false], ["POST", "{}", "application/json", true],
+     ["DELETE", "{}", "application/json", true]]);
 });
 
 test("erro da API vira ErroApi com status, mensagem e campos", async () => {

@@ -1,6 +1,44 @@
 {% extends "admin/base-admin.html" %}
 {% set tela = "reservas" %}
 {% block titulo %}Reservas · Gemóvel{% endblock %}
+{% block css %}{{ super() }}<link rel="stylesheet" href="/estaticos/css/telas/reservas.css">{% endblock %}
+{% macro icone(id) %}<svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>{% endmacro %}
 {% block principal %}
-<div class="cabecalho"><div class="cabecalho__textos"><h1 class="cabecalho__titulo">Reservas</h1></div></div>
+<div class="cabecalho">
+  <div class="cabecalho__textos">
+    <h1 class="cabecalho__titulo">Reservas</h1>
+    <p class="cabecalho__contexto numero" data-contexto></p>
+  </div>
+  <div class="cabecalho__acoes">
+    <button type="button" class="botao botao--secundario" data-bloquear>Bloquear datas</button>
+    <button type="button" class="botao botao--primario" data-nova>{{ icone("mais") }}<span class="botao__rotulo">Nova reserva</span></button>
+  </div>
+</div>
+
+<div class="abas" role="tablist" aria-label="Reservas e hóspedes">
+  <button type="button" class="aba" role="tab" id="aba-reservas" data-aba="reservas" aria-controls="painel-reservas">
+    <span class="aba__rotulo" data-rotulo="Reservas">Reservas</span></button>
+  <button type="button" class="aba" role="tab" id="aba-hospedes" data-aba="hospedes" aria-controls="painel-hospedes">
+    <span class="aba__rotulo" data-rotulo="Hóspedes">Hóspedes</span></button>
+</div>
+
+<section class="reservas-painel" id="painel-reservas" role="tabpanel" aria-labelledby="aba-reservas">
+  <div class="filtros">
+    <button type="button" class="botao botao--secundario filtro" data-filtro="periodo">Período: <span class="filtro__valor">Este mês</span>{{ icone("abrir") }}</button>
+    <button type="button" class="botao botao--secundario filtro" data-filtro="imovel">Imóvel: <span class="filtro__valor">Todos</span>{{ icone("abrir") }}</button>
+    <button type="button" class="botao botao--secundario filtro" data-filtro="estado">Estado: <span class="filtro__valor">3</span>{{ icone("abrir") }}</button>
+    <button type="button" class="botao botao--fantasma botao--sm filtros__limpar" data-limpar hidden>Limpar filtros</button>
+  </div>
+  <div class="reservas-lista" data-lista-reservas></div>
+</section>
+
+<section class="reservas-painel" id="painel-hospedes" role="tabpanel" aria-labelledby="aba-hospedes" hidden>
+  <div class="filtros reservas-hospedes__barra">
+    <input type="search" class="entrada filtros__busca" placeholder="Buscar hóspede…" aria-label="Buscar hóspede por nome ou telefone"
+      autocomplete="off" spellcheck="false" data-busca-hospede>
+    <button type="button" class="botao botao--secundario" data-novo-hospede>{{ icone("mais") }}<span class="botao__rotulo">Novo hóspede</span></button>
+  </div>
+  <div class="reservas-lista" data-lista-hospedes></div>
+</section>
 {% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/reservas.js"></script>{% endblock %}
