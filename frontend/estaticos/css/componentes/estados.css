@@ -1,0 +1,44 @@
+/* Estados de dados: esqueleto facetado, vazio com a primeira ação e o indicador de atualização. */
+
+.esqueleto { display: grid; }
+.esqueleto__linha {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  height: 40px;
+  padding: 0 var(--space-5);
+  box-shadow: inset 0 -1px 0 var(--color-border);
+}
+.esqueleto__linha span {
+  height: 10px;
+  background-color: var(--color-hover);
+  clip-path: polygon(var(--cut-sm) 0, 100% 0, calc(100% - var(--cut-sm)) 100%, 0 100%);
+}
+.esqueleto__linha span:nth-child(1) { width: 80%; }
+.esqueleto__linha span:nth-child(2) { width: 60%; }
+.esqueleto__linha span:nth-child(3) { width: 50%; justify-self: end; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-tier="completo"] .esqueleto__linha span { animation: esqueleto-pulso 1.6s var(--ease-standard) infinite; animation-delay: calc(var(--i, 0) * 80ms); }
+}
+@keyframes esqueleto-pulso { 50% { opacity: .45; } }
+
+.vazio { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-12) var(--space-6); text-align: center; }
+.vazio__gema { width: 32px; height: 32px; margin-bottom: var(--space-2); color: var(--color-text-subtle); }
+.vazio__texto { max-width: 46ch; font-size: var(--text-md); font-weight: 500; text-wrap: balance; }
+.vazio__detalhe { max-width: 52ch; color: var(--color-text-muted); font-size: var(--text-sm); text-wrap: pretty; }
+.vazio__acao, .vazio > .botao { margin-top: var(--space-3); }
+
+/* Ao atualizar, os dados antigos ficam e este indicador aparece ao lado da contagem. */
+.carregando {
+  display: inline-block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--color-border-strong);
+  border-top-color: var(--color-text);
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: carregando-gira .8s linear infinite;
+}
+@keyframes carregando-gira { to { rotate: 1turn; } }

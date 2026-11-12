@@ -1,0 +1,58 @@
+/* Aviso (lote B §17): embaixo e centralizado, a 24px da borda, até 3 empilhados, nível 2.
+   Sobe 12px em 300ms e sai em 200ms (DESIGN.md §10, item 5). A pilha é um popover manual, para
+   ficar por cima da gaveta aberta. */
+
+.avisos {
+  --toast-w: 360px;
+  --toast-offset: var(--space-6);
+  --toast-gap: var(--space-2);
+  position: fixed;
+  inset: auto auto var(--toast-offset) 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--toast-gap);
+  width: min(var(--toast-w), calc(100vw - var(--space-8)));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  overflow: visible;
+  z-index: var(--z-toast);
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.aviso {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 48px;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--elev-2-bg);
+  box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
+  font-size: var(--text-base);
+  overflow: hidden;
+  pointer-events: auto;
+  transition: opacity var(--dur-moderate) var(--ease-entrance), translate var(--dur-moderate) var(--ease-entrance);
+}
+@starting-style { .aviso { opacity: 0; translate: 0 12px; } }
+.aviso--saindo { opacity: 0; translate: 0 6px; transition-duration: var(--dur-base); transition-timing-function: var(--ease-exit); }
+.aviso__texto { flex: 1; min-width: 0; padding-right: var(--space-2); }
+.aviso__acao { font-weight: 600; }
+.aviso__fechar { color: var(--color-text-muted); }
+.aviso__tempo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-text-subtle);
+  transform-origin: left center;
+  animation: aviso-tempo var(--duracao, 10s) linear forwards;
+}
+@keyframes aviso-tempo { to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .aviso__tempo { display: none; } }

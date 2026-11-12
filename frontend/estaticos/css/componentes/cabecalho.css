@@ -1,0 +1,42 @@
+/* Cabeçalho de página (lote B §2): voltar, título (o único h1), linha de contexto e ações. Rola com a página. */
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-6) 0 var(--space-6);
+}
+.cabecalho__textos { min-width: 0; }
+.cabecalho__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.cabecalho__voltar:hover { color: var(--color-text); }
+.cabecalho__titulo {
+  font-family: var(--font-display);
+  font-size: var(--display-lg);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--track-display-lg);
+  font-variation-settings: "opsz" var(--opsz-display-lg);
+  text-wrap: balance;
+}
+.cabecalho--detalhe .cabecalho__titulo {
+  font-size: var(--display-md);
+  line-height: 1.05;
+  letter-spacing: var(--track-display-md);
+  font-variation-settings: "opsz" var(--opsz-display);
+}
+.cabecalho__linha-titulo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.cabecalho__contexto { margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm); }
+.cabecalho__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }

@@ -1,0 +1,13 @@
+/* Medidor: proporção simples (ocupação), 8px ou 4px. O valor vai em --valor, de 0 a 1. */
+
+.medidor { position: relative; height: 8px; border-radius: var(--radius-full); background-color: var(--data-track); overflow: hidden; }
+.medidor--fino { height: 4px; }
+.medidor__valor {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--data-realized);
+  transform: scaleX(var(--valor, 0));
+  transform-origin: left center;
+  transition: transform var(--dur-slow) var(--ease-entrance);
+}

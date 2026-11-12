@@ -1,0 +1,25 @@
+/* Diálogo (lote B §15): centrado, até 400px, nível 3 e véu atrás. Cresce de 0,98 em 200ms e sai em 140ms. */
+
+.dialogo {
+  --dialog-w: 400px;
+  width: min(var(--dialog-w), calc(100vw - var(--space-8)));
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--elev-3-bg);
+  box-shadow: var(--elev-3-edge), var(--elev-2-shadow);
+  color: var(--color-text);
+  -webkit-backdrop-filter: var(--elev-3-filter);
+  backdrop-filter: var(--elev-3-filter);
+  opacity: 0;
+  scale: .98;
+  transition: opacity var(--dur-fast) var(--ease-exit), scale var(--dur-fast) var(--ease-exit),
+    overlay var(--dur-fast) allow-discrete, display var(--dur-fast) allow-discrete;
+}
+.dialogo[open] { opacity: 1; scale: 1; transition-duration: var(--dur-base); transition-timing-function: var(--ease-entrance); }
+@starting-style { .dialogo[open] { opacity: 0; scale: .98; } }
+[data-tier="leve"] .dialogo { background: var(--elev-3-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+.dialogo__titulo { font-size: var(--text-lg); font-weight: 600; line-height: var(--lh-lg); letter-spacing: var(--track-lg); text-wrap: balance; }
+.dialogo__texto { margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-base); }
+.dialogo__botoes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-6); }

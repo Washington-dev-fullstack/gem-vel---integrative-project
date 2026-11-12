@@ -2,16 +2,53 @@
 {% block conteudo %}
 <div class="casca">
   <nav class="lateral" aria-label="Principal">
-    <ul class="lateral__menu">
+    <a class="lateral__marca" href="/">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="prisma" x1="3" y1="4" x2="21" y2="20.5" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#a6f4ff"/><stop offset=".38" stop-color="#cdbcff"/>
+            <stop offset=".7" stop-color="#ffb8e3"/><stop offset="1" stop-color="#ffe2a6"/>
+          </linearGradient>
+        </defs>
+        <path class="lateral__lapide" d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/>
+        <path class="lateral__facetas" d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4M9.5 9.5L12 20.5L14.5 9.5"/>
+      </svg>
+      <span>Gemóvel</span>
+    </a>
+    <ul class="lateral__lista" role="list">
       {% for id, endereco, rotulo in [("visao-geral", "/", "Visão geral"), ("agenda", "/agenda", "Agenda"),
                                       ("reservas", "/reservas", "Reservas"), ("imoveis", "/imoveis", "Imóveis"),
                                       ("tarefas", "/tarefas", "Tarefas"), ("equipe", "/equipe", "Equipe")] %}
-      <li><a href="{{ endereco }}"{% if tela == id %} aria-current="page"{% endif %}>{{ rotulo }}</a></li>
+      <li>
+        <a class="lateral__item" href="{{ endereco }}" data-rotulo="{{ rotulo }}"{% if tela == id %} aria-current="page"{% endif %}>
+          {% if tela == id %}<span class="lateral__pilula" aria-hidden="true"></span>{% endif %}
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>
+          <span class="lateral__rotulo">{{ rotulo }}</span>
+          {% if id == "tarefas" %}<span class="lateral__contador" data-contador-tarefas aria-hidden="true" hidden></span>{% endif %}
+        </a>
+      </li>
       {% endfor %}
     </ul>
   </nav>
-  <main id="conteudo" class="principal">
-    {% block principal %}{% endblock %}
-  </main>
+  <div class="casca__area">
+    <header class="topo">
+      <button type="button" class="busca-gatilho" data-busca aria-keyshortcuts="Control+K Meta+K">
+        <svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#buscar"></use></svg>
+        <span class="busca-gatilho__texto">Buscar imóvel, reserva ou hóspede</span>
+        <kbd class="atalho" data-atalho-k aria-hidden="true">Ctrl K</kbd>
+      </button>
+      <button type="button" class="conta" data-conta aria-label="Conta">
+        <span class="conta__avatar" data-conta-avatar></span>
+        <span class="conta__nome" data-conta-nome></span>
+        <svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#abrir"></use></svg>
+      </button>
+    </header>
+    <main id="conteudo" class="principal" tabindex="-1">
+      {% block principal %}{% endblock %}
+    </main>
+  </div>
 </div>
+<div class="avisos" data-avisos popover="manual"></div>
+<p class="visualmente-oculto" role="status" data-avisos-leitor></p>
 {% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/casca.js"></script>{% endblock %}

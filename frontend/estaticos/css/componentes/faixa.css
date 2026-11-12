@@ -1,0 +1,33 @@
+/* Faixa de aviso (DESIGN.md §4): erro, atenção, informação e sucesso, dentro da página.
+   Com ação ("Tentar de novo"), fixa (sem internet) ou que se fecha. */
+
+.faixa {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: var(--faixa-bg);
+  box-shadow: inset 0 0 0 1px var(--faixa-borda);
+  color: var(--color-text);
+  font-size: var(--text-base);
+}
+.faixa > .icone { margin-top: 3px; color: var(--faixa-cor); }
+.faixa__texto { flex: 1; min-width: 0; align-self: center; }
+.faixa__texto ul { margin: var(--space-1) 0 0; padding-left: var(--space-4); }
+.faixa__texto a { color: inherit; text-underline-offset: 3px; }
+.faixa > .botao { margin-block: -2px; }
+.faixa--erro { --faixa-cor: var(--status-late-fg); --faixa-bg: var(--status-late-bg); --faixa-borda: color-mix(in srgb, var(--status-late-fg) 28%, transparent); }
+.faixa--atencao { --faixa-cor: var(--status-doing-fg); --faixa-bg: var(--status-doing-bg); --faixa-borda: color-mix(in srgb, var(--status-doing-fg) 28%, transparent); }
+.faixa--info { --faixa-cor: var(--color-info); --faixa-bg: var(--color-info-bg); --faixa-borda: color-mix(in srgb, var(--color-info) 28%, transparent); }
+.faixa--sucesso { --faixa-cor: var(--status-done-fg); --faixa-bg: var(--status-done-bg); --faixa-borda: color-mix(in srgb, var(--status-done-fg) 28%, transparent); }
+.faixa--fixa {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-toast);
+  margin: 0;
+  border-radius: 0;
+  background: var(--elev-2-bg);
+  box-shadow: inset 0 -1px 0 var(--faixa-borda);
+}
