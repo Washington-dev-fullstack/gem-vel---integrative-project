@@ -28,3 +28,14 @@ class BloqueioDAO(DAOBase):
         """Grava o bloqueio e devolve o id dele."""
         return self._executar("INSERT INTO bloqueio (imovel_id, data_inicio, data_fim, motivo) VALUES (%s, %s, %s, %s)",
                               (bloqueio.imovel_id, bloqueio.data_inicio, bloqueio.data_fim, bloqueio.motivo))
+
+    def listar_por_periodo(self, administrador_id, inicio, fim):
+        """Os bloqueios dos imóveis do administrador com ao menos uma noite de `inicio` a `fim`."""
+        linhas = self._consultar(
+            "SELECT b.id, b.imovel_id, b.data_inicio, b.data_fim, b.motivo FROM bloqueio b "
+            "JOIN imovel i ON i.id = b.imovel_id WHERE i.administrador_id = %s AND b.data_inicio <= %s "
+            "AND b.data_fim > %s ORDER BY b.data_inicio, b.id", (administrador_id, fim, inicio))
+        return [self._para_objeto(linha) for linha in linhas]
+
+    def excluir(self, id):
+        self._executar("DELETE FROM bloqueio WHERE id = %s", (id,))

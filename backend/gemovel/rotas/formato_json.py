@@ -99,6 +99,14 @@ def atividade_json(historico):
             "imovel": {"id": tarefa.imovel.id, "nome": tarefa.imovel.nome}}
 
 
+def proxima_entrada_json(proxima):
+    """{"data_hora", "hospede": {"id", "nome"}} da próxima entrada do imóvel, ou None."""
+    if proxima is None:
+        return None
+    data_hora, hospede = proxima
+    return {"data_hora": data_hora, "hospede": _pessoa_resumo(hospede)}
+
+
 def reserva_json(reserva, agora):
     return {"id": reserva.id, "codigo": codigo_reserva(reserva.id), "imovel": imovel_resumo(reserva.imovel),
             "hospede": _pessoa_resumo(reserva.hospede), "data_entrada": reserva.data_entrada,

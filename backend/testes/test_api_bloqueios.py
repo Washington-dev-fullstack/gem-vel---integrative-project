@@ -1,9 +1,10 @@
 """API: os bloqueios de cada imóvel (listar e bloquear datas), com banco de verdade."""
 
 import unittest
+from datetime import date, timedelta
 
 from gemovel.rotas.formato_json import periodo
-from testes.apoio import CasoApi, apagar_depois, datas_livres, imovel_temporario, linha
+from testes.apoio import CasoApi, apagar_depois, consultar, datas_livres, imovel_temporario, linha
 
 
 class TestBloqueios(CasoApi):
@@ -62,6 +63,42 @@ class TestBloqueios(CasoApi):
         r = self.cliente.post(f"/api/imoveis/{imovel}/bloqueios", json={"data_inicio": inicio, "data_fim": fim,
                                                                        "motivo": "Teste"})
         self.confere_erro(r, 409, mensagem="Este imóvel está desativado.")
+
+
+class TestBloqueiosDoPeriodo(CasoApi):
+    def setUp(self):
+        super().setUp()
+        self.entrar("marina@gemovel.test")
+
+    def test_bloqueios_do_periodo(self):
+        de, ate = date.today() - timedelta(days=60), date.today() + timedelta(days=60)
+        esperados = [l["id"] for l in consultar(
+            "SELECT b.id FROM bloqueio b JOIN imovel i ON i.id = b.imovel_id WHERE i.administrador_id = 1 "
+            "AND b.data_inicio <= %s AND b.data_fim > %s ORDER BY b.data_inicio, b.id", (ate, de))]
+        r = self.cliente.get(f"/api/bloqueios?de={de}&ate={ate}")
+        self.assertEqual([b["id"] for b in r.get_json()["bloqueios"]], esperados)
+        self.assertTrue(esperados)
+        self.assertEqual(self.cliente.get("/api/bloqueios").status_code, 200)  # padrão: o mês atual
+        self.confere_erro(self.cliente.get(f"/api/bloqueios?de={ate}&ate={de}"), 422,
+                          {"ate": "O fim não pode ser antes do início."})
+
+    def test_excluir_bloqueio(self):
+        id = imovel_temporario(self, ativo=1)
+        inicio, fim = datas_livres(id)
+        r = self.cliente.post(f"/api/imoveis/{id}/bloqueios",
+                              json={"data_inicio": str(inicio), "data_fim": str(fim), "motivo": "Pintura"})
+        bloqueio = r.get_json()["id"]
+        apagar_depois(self, "bloqueio", bloqueio)
+        self.assertEqual(self.cliente.delete(f"/api/bloqueios/{bloqueio}").status_code, 204)
+        self.assertEqual(self.cliente.get(f"/api/imoveis/{id}/bloqueios").get_json(), {"bloqueios": []})
+        self.confere_erro(self.cliente.delete(f"/api/bloqueios/{bloqueio}"), 404)
+
+    def test_bloqueio_de_outro_admin_da_404(self):
+        paulo = self.app.test_client()
+        self.entrar("paulo@gemovel.test", paulo)
+        self.confere_erro(paulo.delete("/api/bloqueios/1"), 404)
+        self.assertEqual(len(consultar("SELECT id FROM bloqueio WHERE id = 1")), 1)
+        self.assertNotIn(1, [b["id"] for b in paulo.get("/api/bloqueios?de=2000-01-01&ate=2099-12-31").get_json()["bloqueios"]])
 
 
 if __name__ == "__main__":

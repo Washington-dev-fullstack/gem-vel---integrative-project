@@ -82,3 +82,17 @@ class ReservaDAO(DAOBase):
             "num_hospedes = %s, valor_diaria = %s, valor_total = %s, status = %s, observacoes = %s WHERE id = %s",
             (reserva.imovel_id, reserva.hospede_id, reserva.data_entrada, reserva.data_saida, reserva.num_hospedes,
              reserva.valor_diaria, reserva.valor_total, reserva.status.value, reserva.observacoes, reserva.id))
+
+    def listar_para_indicadores(self, administrador_id, inicio_do_mes, hoje, imovel_id=None):
+        """As reservas confirmadas que os indicadores dos imóveis usam, numa consulta só: as que saem
+        a partir do início do mês (ocupação, em curso e futuras) e a última que já saiu de cada imóvel
+        (a limpeza dela diz a prontidão). Com `imovel_id`, só as daquele imóvel."""
+        sql = (_SELECT + " WHERE i.administrador_id = %s AND r.status = 'confirmada' AND (r.data_saida >= %s"
+               " OR r.data_saida = (SELECT MAX(r2.data_saida) FROM reserva r2 WHERE r2.imovel_id = r.imovel_id"
+               " AND r2.status = 'confirmada' AND r2.data_saida <= %s))")
+        parametros = [administrador_id, inicio_do_mes, hoje]
+        if imovel_id is not None:
+            sql += " AND r.imovel_id = %s"
+            parametros.append(imovel_id)
+        linhas = self._consultar(sql + " ORDER BY r.data_entrada, r.id", tuple(parametros))
+        return [self._para_objeto(linha) for linha in linhas]

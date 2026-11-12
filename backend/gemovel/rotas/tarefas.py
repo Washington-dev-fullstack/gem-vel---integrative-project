@@ -1,18 +1,18 @@
 """Rotas das tarefas: as abertas e o cadastro (administrador) e as tarefas de cada pessoa da equipe."""
 
-from datetime import datetime
+from datetime import datetime, time
 
-from flask import Blueprint, g, jsonify
+from flask import Blueprint, g, jsonify, request
 
 from gemovel.dao.imovel_dao import ImovelDAO
 from gemovel.dao.reserva_dao import ReservaDAO
 from gemovel.dao.tarefa_dao import TarefaDAO
 from gemovel.dao.usuario_dao import UsuarioDAO
 from gemovel.dominio.tarefa import Tarefa
-from gemovel.erros import ErroValidacao
+from gemovel.erros import ErroValidacao, NaoEncontrado
 from gemovel.rotas import conexao_do_app
 from gemovel.rotas.autenticacao import exige_login
-from gemovel.rotas.entrada import Leitor, corpo_json, parametro_data
+from gemovel.rotas.entrada import Leitor, corpo_json, parametro_data, parametro_inteiro
 from gemovel.rotas.formato_json import tarefa_json
 
 bp = Blueprint("tarefas", __name__, url_prefix="/api")
@@ -22,8 +22,27 @@ bp = Blueprint("tarefas", __name__, url_prefix="/api")
 @exige_login("administrador")
 def listar_abertas():
     agora = datetime.now()
-    tarefas = TarefaDAO(conexao_do_app()).listar_abertas(g.usuario.id)
+    conexao = conexao_do_app()
+    if request.args.get("imovel_id", "") != "":
+        return _tarefas_do_imovel(conexao, agora)
+    tarefas = TarefaDAO(conexao).listar_abertas(g.usuario.id)
     return jsonify(tarefas=[tarefa_json(t, agora) for t in tarefas])
+
+
+POR_VEZ = 30
+
+
+def _tarefas_do_imovel(conexao, agora):
+    """A aba Tarefas do detalhe do imóvel: as agendadas a partir de `de` (padrão: hoje), por horário,
+    30 por vez; `pular` diz quantas já vieram."""
+    imovel_id = parametro_inteiro("imovel_id", None, 1, 2_147_483_647)
+    imovel = ImovelDAO(conexao).buscar_por_id(imovel_id)
+    if imovel is None or imovel.administrador_id != g.usuario.id:
+        raise NaoEncontrado()
+    desde = datetime.combine(parametro_data("de", agora.date()), time.min)
+    pular = parametro_inteiro("pular", 0, 0, 1_000_000)
+    tarefas = TarefaDAO(conexao).listar_do_imovel(imovel_id, desde, pular, POR_VEZ + 1)
+    return jsonify(tarefas=[tarefa_json(t, agora) for t in tarefas[:POR_VEZ]], tem_mais=len(tarefas) > POR_VEZ)
 
 
 @bp.post("/tarefas")

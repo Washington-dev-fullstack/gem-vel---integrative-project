@@ -4,7 +4,7 @@ recente (banco de verdade)."""
 import unittest
 from datetime import date
 
-from testes.apoio import CasoApi, apagar_depois, consultar
+from testes.apoio import CasoApi, apagar_depois, consultar, executar, imovel_temporario
 
 MANUT = {"tipo": "manutencao", "imovel_id": 3, "titulo": "Teste", "agendada_para": "2030-01-10T09:00"}
 
@@ -108,6 +108,30 @@ class TestTarefas(CasoApi):
         for limite in ("0", "51", "abc"):
             self.confere_erro(self.cliente.get(f"/api/atividade?limite={limite}"), 422,
                               {"limite": "Use um número de 1 a 50."})
+
+
+class TestTarefasDoImovel(CasoApi):
+    def setUp(self):
+        super().setUp()
+        self.entrar("marina@gemovel.test")
+
+    def test_tarefas_do_imovel_a_partir_do_dia(self):
+        id = imovel_temporario(self, ativo=1)
+        self.addCleanup(executar, "DELETE FROM tarefa WHERE imovel_id = %s", (id,))
+        datas = [f"2030-01-{dia:02d} 09:00" for dia in range(31, 1, -1)] + ["2029-12-31 09:00", "2029-12-30 09:00"]
+        for n, quando in enumerate(datas):  # 30 a partir do dia pedido, em ordem trocada, e 2 antes dele
+            executar("INSERT INTO tarefa (imovel_id, tipo, titulo, agendada_para) VALUES (%s, 'manutencao', %s, %s)",
+                     (id, f"T{n}", quando))
+        r = self.cliente.get(f"/api/tarefas?imovel_id={id}&de=2030-01-01").get_json()
+        horarios = [t["agendada_para"] for t in r["tarefas"]]
+        self.assertEqual((len(horarios), r["tem_mais"]), (30, False))
+        self.assertEqual(horarios, sorted(horarios))
+        self.assertTrue(all(h >= "2030-01-01" for h in horarios))
+        executar("INSERT INTO tarefa (imovel_id, tipo, titulo, agendada_para) VALUES (%s, 'manutencao', 'Extra', '2030-02-01 09:00')", (id,))
+        r = self.cliente.get(f"/api/tarefas?imovel_id={id}&de=2030-01-01").get_json()
+        self.assertEqual((len(r["tarefas"]), r["tem_mais"]), (30, True))
+        r = self.cliente.get(f"/api/tarefas?imovel_id={id}&de=2030-01-01&pular=30").get_json()
+        self.assertEqual(([t["titulo"] for t in r["tarefas"]], r["tem_mais"]), (["Extra"], False))
 
 
 if __name__ == "__main__":

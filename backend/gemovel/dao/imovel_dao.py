@@ -45,3 +45,17 @@ class ImovelDAO(DAOBase):
             (imovel.administrador_id, imovel.nome, imovel.logradouro, imovel.numero, imovel.complemento,
              imovel.bairro, imovel.cidade, imovel.uf, imovel.cep, imovel.capacidade, imovel.valor_diaria,
              imovel.horario_entrada, imovel.horario_saida, imovel.observacoes, int(imovel.ativo)))
+
+    def atualizar(self, imovel):
+        """Grava os campos do cadastro e o ativo."""
+        self._executar(
+            "UPDATE imovel SET nome = %s, logradouro = %s, numero = %s, complemento = %s, bairro = %s, cidade = %s, "
+            "uf = %s, cep = %s, capacidade = %s, valor_diaria = %s, horario_entrada = %s, horario_saida = %s, "
+            "observacoes = %s, ativo = %s WHERE id = %s",
+            (imovel.nome, imovel.logradouro, imovel.numero, imovel.complemento, imovel.bairro, imovel.cidade,
+             imovel.uf, imovel.cep, imovel.capacidade, imovel.valor_diaria, imovel.horario_entrada,
+             imovel.horario_saida, imovel.observacoes, int(imovel.ativo), imovel.id))
+
+    def mudar_ativo(self, id, ativo):
+        """Desativa ou reativa: o imóvel nunca é apagado."""
+        self._executar("UPDATE imovel SET ativo = %s WHERE id = %s", (int(ativo), id))

@@ -70,6 +70,12 @@ class TarefaDAO(DAOBase):
         return self._listar("i.administrador_id = %s AND t.status IN ('pendente', 'em_andamento')",
                             (administrador_id,))
 
+    def listar_do_imovel(self, imovel_id, desde, pular, quantas):
+        """As tarefas do imóvel agendadas a partir de `desde`, por horário, `quantas` por vez."""
+        linhas = self._consultar(_SELECT_TAREFA + " WHERE t.imovel_id = %s AND t.agendada_para >= %s"
+                                 + _ORDEM_DAS_TAREFAS + " LIMIT %s OFFSET %s", (imovel_id, desde, quantas, pular))
+        return [self._para_objeto(linha) for linha in linhas]
+
     def buscar_limpeza_da_reserva(self, reserva_id):
         """A limpeza da saída da reserva (R4), em qualquer estado, ou None."""
         linhas = self._consultar(_SELECT_TAREFA + " WHERE t.reserva_id = %s AND t.tipo = 'limpeza' ORDER BY t.id LIMIT 1",
