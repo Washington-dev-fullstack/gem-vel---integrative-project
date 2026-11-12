@@ -168,9 +168,9 @@ Bruno Carvalho  (11) 99880-8008  —                                  1  ter, 27
 Carla Nogueira  (61) 98333-1212  carla.nogueira@example.com         1  sáb, 7 nov
 ```
 
-- O campo filtra a tabela enquanto se digita (nome, telefone ou e-mail). Ordem: nome.
+- O campo filtra a tabela enquanto se digita (nome ou telefone). Ordem: nome.
 - **Linha:** abre a gaveta do hóspede, com os dados, as reservas dele em linhas compactas e "Editar".
-- **Menu:** Editar · Nova reserva para Carla · Excluir. "Excluir" só funciona para quem não tem reservas; senão fica desabilitado com o motivo ("Excluir — tem 1 reserva"), porque o banco guarda o histórico.
+- **Menu:** Editar · Nova reserva para Carla · Excluir. "Excluir" só funciona para quem não tem reservas; senão fica desabilitado com o motivo ("Excluir (tem 1 reserva)"), porque o banco guarda o histórico.
 - **Formulário:** nome; telefone, e-mail, documento e observações são opcionais.
 
 ## 5. Imóveis
@@ -330,7 +330,7 @@ Equipe                                                          [+ Nova pessoa]
 | Tela | Primeiro uso | Filtros sem resultado |
 |---|---|---|
 | Reservas | "Nenhuma reserva ainda. Cadastre a primeira: ela aparece aqui e na agenda." + Nova reserva. Sem imóvel cadastrado: "Cadastre um imóvel antes da primeira reserva." + Novo imóvel | "Nenhuma reserva com esses filtros." + Limpar filtros |
-| Hóspedes | "Os hóspedes aparecem aqui quando você cadastra uma reserva." | "Nenhum hóspede com esse nome, telefone ou e-mail." |
+| Hóspedes | "Os hóspedes aparecem aqui quando você cadastra uma reserva." | "Nenhum hóspede com esse nome ou telefone." |
 | Imóveis | "Nenhum imóvel ainda. Cadastre o primeiro para começar a receber reservas." + Novo imóvel | "Nenhum imóvel com esses filtros." + Limpar filtros |
 | Tarefas | "Dia livre: nenhuma tarefa marcada para sex, 6 nov." + Nova tarefa | "Nenhuma tarefa com esses filtros neste dia." + Limpar filtros |
 | Equipe | "Ninguém na equipe ainda. Cadastre quem faz a limpeza e a manutenção para atribuir as tarefas." + Nova pessoa | "Ninguém com essa função." + Limpar filtros |
