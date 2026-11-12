@@ -1,11 +1,15 @@
 """Tarefas de limpeza e manutenção (R4, R5 e R7) e o histórico de cada mudança de estado."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from gemovel.dominio.enums import StatusTarefa, TipoTarefa
 from gemovel.dominio.usuario import Administrador
 from gemovel.dominio.validacao import TEXTO_LONGO, Validador
 from gemovel.erros import ErroValidacao
+
+
+# Até quando quem mudou o estado ainda pode desfazer a mudança.
+PRAZO_PARA_DESFAZER = timedelta(seconds=10)
 
 
 def _agora():
@@ -151,6 +155,18 @@ class Tarefa:
         self._iniciada_em = None
         self._concluida_em = None
         return self._registrar(por, anterior, None, agora)
+
+    def desfazer(self, registro, por, agora):
+        """Volta a última mudança de estado, `registro`: só quem a fez, até 10 segundos depois, e só
+        de em andamento ou concluída. Volta ao estado anterior; voltando a pendente, o início some."""
+        if (registro is None or registro.tarefa_id != self._id or registro.usuario_id != por.id
+                or agora - registro.registrado_em > PRAZO_PARA_DESFAZER or registro.status_novo is not self._status
+                or self._status not in (StatusTarefa.EM_ANDAMENTO, StatusTarefa.CONCLUIDA)):
+            _recusar("Não dá mais para desfazer.")
+        self._status = registro.status_anterior
+        self._concluida_em = None
+        if self._status is StatusTarefa.PENDENTE:
+            self._iniciada_em = None
 
     def esta_atrasada(self, agora):
         """Não concluída e já passou do prazo; sem prazo, do horário agendado (R7)."""

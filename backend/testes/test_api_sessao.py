@@ -53,6 +53,7 @@ class TestSessao(CasoApi):
 
     def test_cada_rota_confere_login_e_perfil(self):  # cobre também as rotas das tarefas seguintes
         sem_login = {("/api/saude", "GET"), ("/api/sessao", "POST"), ("/api/sessao", "DELETE")}
+        dois_perfis = {("/api/tarefas/<int:id>/estado", "POST"), ("/api/tarefas/<int:id>/desfazer", "POST")}
         conferidas = set()
         cida, marina = self.app.test_client(), self.app.test_client()
         self.entrar("cida@gemovel.test", cida)
@@ -65,10 +66,10 @@ class TestSessao(CasoApi):
                 outro = marina if regra.rule == "/api/minhas-tarefas" else cida
                 with self.subTest(metodo=metodo, url=url):
                     self.confere_erro(self.cliente.open(url, method=metodo, json={}), 401)
-                    if regra.rule != "/api/sessao":
+                    if regra.rule != "/api/sessao" and (regra.rule, metodo) not in dois_perfis:
                         self.confere_erro(outro.open(url, method=metodo, json={}), 403)
                 conferidas.add((regra.rule, metodo))
-        self.assertEqual(len(conferidas), 27)  # as 30 rotas menos as 3 que não pedem login
+        self.assertEqual(len(conferidas), 36)  # as 39 rotas menos as 3 que não pedem login
 
     def test_sair_limpa_a_sessao(self):
         self.entrar("marina@gemovel.test")

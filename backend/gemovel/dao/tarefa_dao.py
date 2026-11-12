@@ -54,7 +54,16 @@ class TarefaDAO(DAOBase):
         linhas = self._consultar(_SELECT_TAREFA + " WHERE " + onde + _ORDEM_DAS_TAREFAS, parametros)
         return [self._para_objeto(linha) for linha in linhas]
 
-    def buscar_por_id(self, id):
+    def buscar_por_id(self, id, travar=False):
+        """A tarefa ou None. Com travar=True, a linha da tarefa fica travada (FOR UPDATE) até o fim da
+        transação recebida: duas mudanças de estado da mesma tarefa passam uma de cada vez. A trava
+        pega só a tabela tarefa (não o imóvel nem a pessoa da junção) e vem antes da leitura, que
+        assim já enxerga o que a outra transação gravou."""
+        if travar:
+            if self._transacao is None:
+                raise ValueError("travar=True precisa da transação da rota: a trava acaba com a transação.")
+            if not self._consultar("SELECT id FROM tarefa WHERE id = %s FOR UPDATE", (id,)):
+                return None
         linhas = self._consultar(_SELECT_TAREFA + " WHERE t.id = %s", (id,))
         return self._para_objeto(linhas[0]) if linhas else None
 
@@ -69,6 +78,33 @@ class TarefaDAO(DAOBase):
         """As tarefas pendentes e em andamento dos imóveis do administrador."""
         return self._listar("i.administrador_id = %s AND t.status IN ('pendente', 'em_andamento')",
                             (administrador_id,))
+
+    def listar_do_dia(self, administrador_id, dia):
+        """Todas as tarefas dos imóveis do administrador agendadas no `dia`, de todos os estados."""
+        inicio = datetime.combine(dia, time.min)
+        return self._listar("i.administrador_id = %s AND t.agendada_para >= %s AND t.agendada_para < %s",
+                            (administrador_id, inicio, inicio + timedelta(days=1)))
+
+    def listar_para_equipe(self, administrador_id, dia, agora):
+        """As tarefas com responsável que o resumo da equipe usa, numa consulta só: as do `dia`,
+        as em andamento e as pendentes a partir de `agora`."""
+        inicio = datetime.combine(dia, time.min)
+        return self._listar("i.administrador_id = %s AND t.funcionario_id IS NOT NULL"
+                            " AND ((t.agendada_para >= %s AND t.agendada_para < %s) OR t.status = 'em_andamento'"
+                            " OR (t.status = 'pendente' AND t.agendada_para >= %s))",
+                            (administrador_id, inicio, inicio + timedelta(days=1), agora))
+
+    def contar_abertas_do_funcionario(self, funcionario_id):
+        """Quantas tarefas pendentes ou em andamento a pessoa tem."""
+        linhas = self._consultar("SELECT COUNT(*) AS n FROM tarefa WHERE funcionario_id = %s"
+                                 " AND status IN ('pendente', 'em_andamento')", (funcionario_id,))
+        return linhas[0]["n"]
+
+    def liberar_pendentes_futuras(self, funcionario_id, agora):
+        """Tira o responsável das tarefas pendentes da pessoa agendadas depois de `agora` (decisão 5)
+        e devolve quantas ficaram sem responsável."""
+        return self._executar("UPDATE tarefa SET funcionario_id = NULL WHERE funcionario_id = %s"
+                              " AND status = 'pendente' AND agendada_para > %s", (funcionario_id, agora))
 
     def listar_do_imovel(self, imovel_id, desde, pular, quantas):
         """As tarefas do imóvel agendadas a partir de `desde`, por horário, `quantas` por vez."""
@@ -89,6 +125,12 @@ class TarefaDAO(DAOBase):
             "descricao = %s, agendada_para = %s, prazo = %s WHERE id = %s",
             (tarefa.imovel_id, tarefa.reserva_id, tarefa.funcionario_id, tarefa.tipo.value, tarefa.titulo,
              tarefa.descricao, tarefa.agendada_para, tarefa.prazo, tarefa.id))
+
+    def gravar_estado(self, tarefa):
+        """Grava o estado e as horas de início e de conclusão. Quem chama grava o histórico na mesma
+        transação (R5)."""
+        self._executar("UPDATE tarefa SET status = %s, iniciada_em = %s, concluida_em = %s WHERE id = %s",
+                       (tarefa.status.value, tarefa.iniciada_em, tarefa.concluida_em, tarefa.id))
 
     def excluir(self, id):
         """Apaga a tarefa; o histórico dela vai junto (ON DELETE CASCADE)."""
@@ -120,3 +162,26 @@ class HistoricoTarefaDAO(DAOBase):
         linhas = self._consultar(_SELECT_HISTORICO + " WHERE i.administrador_id = %s"
                                  " ORDER BY h.registrado_em DESC, h.id DESC LIMIT %s", (administrador_id, limite))
         return [self._para_objeto(linha) for linha in linhas]
+
+    def listar_da_tarefa(self, tarefa_id):
+        """O histórico da tarefa, do registro mais antigo ao mais novo."""
+        linhas = self._consultar(_SELECT_HISTORICO + " WHERE h.tarefa_id = %s ORDER BY h.registrado_em, h.id",
+                                 (tarefa_id,))
+        return [self._para_objeto(linha) for linha in linhas]
+
+    def buscar_ultimo(self, tarefa_id):
+        """O registro mais novo da tarefa (o que o desfazer apaga), ou None."""
+        linhas = self._consultar(_SELECT_HISTORICO + " WHERE h.tarefa_id = %s"
+                                 " ORDER BY h.registrado_em DESC, h.id DESC LIMIT 1", (tarefa_id,))
+        return self._para_objeto(linhas[0]) if linhas else None
+
+    def inserir(self, registro):
+        """Grava uma mudança de estado com a hora que o domínio marcou."""
+        return self._executar(
+            "INSERT INTO historico_tarefa (tarefa_id, usuario_id, status_anterior, status_novo, observacao, "
+            "registrado_em) VALUES (%s, %s, %s, %s, %s, %s)",
+            (registro.tarefa_id, registro.usuario_id, registro.status_anterior.value, registro.status_novo.value,
+             registro.observacao, registro.registrado_em))
+
+    def excluir(self, id):
+        self._executar("DELETE FROM historico_tarefa WHERE id = %s", (id,))

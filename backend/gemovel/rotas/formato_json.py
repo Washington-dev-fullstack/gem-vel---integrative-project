@@ -89,6 +89,21 @@ def tarefa_json(tarefa, agora, com_endereco=False):
             "concluida_em": tarefa.concluida_em}
 
 
+def historico_json(registro):
+    """Uma linha do histórico de uma tarefa: quando, de qual estado para qual, e quem mudou."""
+    return {"registrado_em": registro.registrado_em, "status_anterior": registro.status_anterior,
+            "status_novo": registro.status_novo, "observacao": registro.observacao,
+            "usuario": _pessoa_resumo(registro.usuario)}
+
+
+def tarefa_completa_json(tarefa, historico, reserva, agora):
+    """A tarefa aberta na gaveta: o histórico (do mais antigo ao mais novo) e a reserva, ou None."""
+    return tarefa_json(tarefa, agora) | {
+        "historico": [historico_json(registro) for registro in historico],
+        "reserva": None if reserva is None else {"id": reserva.id, "codigo": codigo_reserva(reserva.id),
+                                                 "data_saida": reserva.data_saida}}
+
+
 def atividade_json(historico):
     """Uma linha da atividade recente: quem mudou qual tarefa, de qual imóvel, e para qual estado."""
     tarefa = historico.tarefa

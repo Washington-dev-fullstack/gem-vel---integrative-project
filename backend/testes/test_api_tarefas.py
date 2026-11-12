@@ -134,5 +134,122 @@ class TestTarefasDoImovel(CasoApi):
         self.assertEqual(([t["titulo"] for t in r["tarefas"]], r["tem_mais"]), (["Extra"], False))
 
 
+class TestUmaTarefa(CasoApi):
+    """Uma tarefa: o dia, o histórico, editar, mudar o estado, desfazer e excluir."""
+
+    def setUp(self):
+        super().setUp()
+        self.entrar("marina@gemovel.test")
+
+    def nova(self, **mudar):
+        r = self.cliente.post("/api/tarefas", json={**MANUT, **mudar})
+        self.assertEqual(r.status_code, 201, r.get_data(as_text=True))
+        id = r.get_json()["id"]
+        apagar_depois(self, "tarefa", id)
+        return id
+
+    def registros(self, id):
+        return consultar("SELECT COUNT(*) AS n FROM historico_tarefa WHERE tarefa_id = %s", (id,))[0]["n"]
+
+    def status(self, id):
+        return consultar("SELECT status FROM tarefa WHERE id = %s", (id,))[0]["status"]
+
+    def marcos(self):
+        marcos = self.app.test_client()
+        self.entrar("marcos@gemovel.test", marcos)
+        return marcos
+
+    def test_tarefas_do_dia_incluem_as_concluidas(self):
+        concluida = consultar("SELECT t.id, DATE(t.agendada_para) AS dia FROM tarefa t JOIN imovel i ON i.id = t.imovel_id"
+                              " WHERE i.administrador_id = 1 AND t.status = 'concluida' ORDER BY t.id LIMIT 1")[0]
+        esperado = consultar("SELECT t.id FROM tarefa t JOIN imovel i ON i.id = t.imovel_id WHERE i.administrador_id = 1"
+                             " AND DATE(t.agendada_para) = %s ORDER BY t.agendada_para, t.id", (concluida["dia"],))
+        ids = [t["id"] for t in self.cliente.get(f"/api/tarefas?dia={concluida['dia']}").get_json()["tarefas"]]
+        self.assertEqual(ids, [x["id"] for x in esperado])
+        self.assertIn(concluida["id"], ids)
+        self.confere_erro(self.cliente.get("/api/tarefas?dia=2026-13-01"), 422, {"dia": "Data inválida."})
+
+    def test_uma_tarefa_com_o_historico(self):
+        r = self.cliente.get("/api/tarefas/5").get_json()
+        historico = r["historico"]
+        self.assertEqual(len(historico), self.registros(5))
+        self.assertEqual(list(historico[0]), ["registrado_em", "status_anterior", "status_novo", "observacao", "usuario"])
+        self.assertEqual((historico[0]["status_anterior"], historico[0]["status_novo"]), (None, "pendente"))
+        self.assertEqual([h["registrado_em"] for h in historico], sorted(h["registrado_em"] for h in historico))
+        saida = consultar("SELECT data_saida FROM reserva WHERE id = 5")[0]["data_saida"]
+        self.assertEqual(r["reserva"], {"id": 5, "codigo": "RSV-0005", "data_saida": str(saida)})
+        self.assertEqual((r["id"], r["status"]), (5, "em_andamento"))
+        self.confere_erro(self.cliente.get("/api/tarefas/15"), 404)  # a tarefa 15 é do Paulo
+
+    def test_editar_tarefa(self):
+        id = self.nova()
+        r = self.cliente.patch(f"/api/tarefas/{id}", json={**MANUT, "titulo": "Trocar o chuveiro", "status": "concluida",
+                                                           "prazo": "2030-01-10T12:00", "funcionario_id": 6})
+        self.assertEqual(r.status_code, 200, r.get_data(as_text=True))
+        t = r.get_json()
+        self.assertEqual((t["titulo"], t["prazo"], t["responsavel"], t["status"], t["reserva"]),
+                         ("Trocar o chuveiro", "2030-01-10T12:00", {"id": 6, "nome": "Rafael Souza"}, "pendente", None))
+        self.assertEqual(len(t["historico"]), 1)
+        self.confere_erro(self.cliente.patch(f"/api/tarefas/{id}", json={**MANUT, "funcionario_id": 3}), 422,
+                          {"funcionario_id": "Esta pessoa não faz este tipo de tarefa."})
+        self.confere_erro(self.cliente.patch(f"/api/tarefas/{id}", json={**MANUT, "prazo": "2030-01-10T08:00"}), 422,
+                          {"prazo": "O prazo não pode ser antes do início."})
+        self.assertEqual((self.registros(id), self.status(id)), (1, "pendente"))
+
+    def test_admin_comeca_e_desfaz(self):
+        id = self.nova()
+        antes = self.registros(id)
+        r = self.cliente.post(f"/api/tarefas/{id}/estado", json={"status": "em_andamento"})
+        self.assertEqual(r.status_code, 200, r.get_data(as_text=True))
+        self.assertEqual(r.get_json()["status"], "em_andamento")
+        self.assertIsNotNone(r.get_json()["iniciada_em"])
+        self.assertEqual(self.registros(id), antes + 1)
+        self.assertEqual(consultar("SELECT usuario_id, status_anterior, status_novo FROM historico_tarefa"
+                                   " WHERE tarefa_id = %s ORDER BY id DESC LIMIT 1", (id,)),
+                         [{"usuario_id": 1, "status_anterior": "pendente", "status_novo": "em_andamento"}])
+        r = self.cliente.post(f"/api/tarefas/{id}/desfazer", json={})
+        self.assertEqual(r.status_code, 200, r.get_data(as_text=True))
+        self.assertEqual((r.get_json()["status"], r.get_json()["iniciada_em"]), ("pendente", None))
+        self.assertEqual((self.registros(id), self.status(id)), (antes, "pendente"))
+        self.confere_erro(self.cliente.post(f"/api/tarefas/{id}/desfazer", json={}), 422,
+                          {"status": "Não dá mais para desfazer."})
+        self.confere_erro(self.cliente.post(f"/api/tarefas/{id}/estado", json={"status": "feita"}), 422,
+                          {"status": "Escolha uma das opções."})
+
+    def test_pessoa_da_equipe_comeca_a_propria(self):
+        id = self.nova(tipo="limpeza", funcionario_id=5)
+        marcos = self.marcos()
+        r = marcos.post(f"/api/tarefas/{id}/estado", json={"status": "em_andamento"})
+        self.assertEqual(r.status_code, 200, r.get_data(as_text=True))
+        self.assertEqual(r.get_json()["status"], "em_andamento")
+        r = marcos.post(f"/api/tarefas/{id}/estado", json={"status": "concluida", "observacao": " Faltava sabonete "})
+        self.assertEqual(r.get_json()["status"], "concluida")
+        self.assertEqual(consultar("SELECT usuario_id, observacao FROM historico_tarefa WHERE tarefa_id = %s"
+                                   " ORDER BY id DESC LIMIT 1", (id,)), [{"usuario_id": 5, "observacao": "Faltava sabonete"}])
+        self.confere_erro(marcos.post(f"/api/tarefas/{id}/estado", json={"status": "pendente"}), 422,
+                          {"status": "Só quem administra pode reabrir uma tarefa."})
+
+    def test_pessoa_da_equipe_nao_mexe_na_tarefa_de_outra(self):
+        id = self.nova(tipo="limpeza", funcionario_id=3)  # da Cida
+        marcos = self.marcos()
+        self.confere_erro(marcos.post(f"/api/tarefas/{id}/estado", json={"status": "em_andamento"}), 404)
+        self.confere_erro(marcos.post(f"/api/tarefas/{id}/desfazer", json={}), 404)
+        self.assertEqual(self.status(id), "pendente")
+
+    def test_pessoa_da_equipe_nao_pula_etapa(self):
+        id = self.nova(tipo="limpeza", funcionario_id=5)
+        self.confere_erro(self.marcos().post(f"/api/tarefas/{id}/estado", json={"status": "concluida"}), 409,
+                          mensagem="Comece a tarefa antes de concluir.")
+        self.assertEqual((self.status(id), self.registros(id)), ("pendente", 1))
+
+    def test_excluir_tarefa_leva_o_historico(self):
+        id = self.nova()
+        self.cliente.post(f"/api/tarefas/{id}/estado", json={"status": "em_andamento"})
+        self.assertEqual(self.cliente.delete(f"/api/tarefas/{id}").status_code, 204)
+        self.assertEqual(consultar("SELECT COUNT(*) AS n FROM tarefa WHERE id = %s", (id,)), [{"n": 0}])
+        self.assertEqual(self.registros(id), 0)
+        self.confere_erro(self.cliente.delete(f"/api/tarefas/{id}"), 404)
+
+
 if __name__ == "__main__":
     unittest.main()

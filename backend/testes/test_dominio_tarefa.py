@@ -1,7 +1,7 @@
 """Domínio: tarefa (atraso, mudanças de estado, responsável e validação) e histórico, sem banco."""
 
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from gemovel.dominio.enums import StatusTarefa
 from gemovel.dominio.tarefa import HistoricoTarefa
@@ -86,6 +86,47 @@ class TestTarefa(unittest.TestCase):
             with self.assertRaises(ErroValidacao) as c:
                 nova_tarefa(**mudar)
             self.assertEqual(c.exception.campos, campos)
+
+
+class TestDesfazer(unittest.TestCase):
+    def recusa(self, tarefa, registro, por, agora):
+        with self.assertRaises(ErroValidacao) as c:
+            tarefa.desfazer(registro, por, agora)
+        self.assertEqual(c.exception.campos, {"status": "Não dá mais para desfazer."})
+
+    def test_desfazer_comecar_volta_a_pendente_sem_inicio(self):
+        t, cida = nova_tarefa(funcionario_id=3), novo_funcionario()
+        h = t.iniciar(cida)
+        t.desfazer(h, cida, h.registrado_em + timedelta(seconds=5))
+        self.assertEqual((t.status, t.iniciada_em, t.concluida_em), (StatusTarefa.PENDENTE, None, None))
+
+    def test_desfazer_concluir_volta_a_em_andamento_com_o_inicio(self):
+        t, cida = nova_tarefa(funcionario_id=3), novo_funcionario()
+        t.iniciar(cida)
+        inicio = t.iniciada_em
+        h = t.concluir(cida)
+        t.desfazer(h, cida, h.registrado_em + timedelta(seconds=10))
+        self.assertEqual((t.status, t.iniciada_em, t.concluida_em), (StatusTarefa.EM_ANDAMENTO, inicio, None))
+        self.recusa(t, h, cida, h.registrado_em)  # o mesmo registro não desfaz duas vezes
+
+    def test_desfazer_de_outra_pessoa_recusa(self):
+        t, cida = nova_tarefa(funcionario_id=3), novo_funcionario()
+        h = t.iniciar(cida)
+        self.recusa(t, h, novo_admin(), h.registrado_em)
+        self.assertEqual(t.status, StatusTarefa.EM_ANDAMENTO)
+
+    def test_desfazer_depois_de_10s_recusa(self):
+        t, cida = nova_tarefa(funcionario_id=3), novo_funcionario()
+        h = t.iniciar(cida)
+        self.recusa(t, h, cida, h.registrado_em + timedelta(seconds=11))
+        self.recusa(t, None, cida, h.registrado_em)  # sem registro nenhum, também não
+
+    def test_desfazer_reabrir_recusa(self):
+        t, marina = nova_tarefa(), novo_admin()
+        t.concluir(marina)
+        h = t.reabrir(marina)
+        self.recusa(t, h, marina, h.registrado_em)
+        self.assertEqual(t.status, StatusTarefa.PENDENTE)
 
 
 if __name__ == "__main__":
