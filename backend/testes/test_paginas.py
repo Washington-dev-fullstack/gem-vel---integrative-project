@@ -54,3 +54,10 @@ class TestPaginas(CasoApi):
                                 ("/\\evil.com", None), ("https://evil.com", None), ("", None), (None, None)):
             with self.subTest(volta=volta):
                 self.assertEqual(destino_seguro(volta), esperado)
+
+    def test_estaticos_saem_com_o_tipo_certo(self):
+        for caminho, tipo in (("/estaticos/css/admin.css", "text/css"), ("/estaticos/icones.svg", "image/svg+xml"),
+                              ("/estaticos/lib/gsap.min.js", "text/javascript")):
+            with self.subTest(caminho):
+                r = self.cliente.get(caminho)
+                self.assertEqual((r.status_code, r.mimetype), (200, tipo))

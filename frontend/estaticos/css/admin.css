@@ -1,0 +1,5 @@
+/* Admin (Obsidiana) e tela Entrar: este arquivo só importa, cada parte na sua camada. */
+@layer tokens, base, componentes, telas;
+@import url("fontes.css");
+@import url("tokens.css") layer(tokens);
+@import url("base.css") layer(base);

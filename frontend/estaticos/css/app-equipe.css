@@ -1,0 +1,5 @@
+/* App da equipe (Quartzo): este arquivo só importa, cada parte na sua camada. */
+@layer tokens, base, componentes, telas;
+@import url("fontes-equipe.css");
+@import url("tokens.css") layer(tokens);
+@import url("base.css") layer(base);

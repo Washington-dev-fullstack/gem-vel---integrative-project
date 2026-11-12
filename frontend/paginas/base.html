@@ -4,9 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}Gemóvel{% endblock %}</title>
-  {% block css %}{% endblock %}
+  <link rel="icon" href="/estaticos/favicon.svg" type="image/svg+xml">
+  {% block css %}
+  <link rel="preload" href="/estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/estaticos/css/admin.css">
+  {% endblock %}
 </head>
 <body>
+  <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
   {% block conteudo %}{% endblock %}
   {% block scripts %}{% endblock %}
 </body>

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block tema %}quartzo{% endblock %}
+{% block css %}
+<link rel="preload" href="/estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/estaticos/css/app-equipe.css">
+{% endblock %}
 {% block conteudo %}
 <main id="conteudo" class="app-equipe">
   {% block principal %}{% endblock %}

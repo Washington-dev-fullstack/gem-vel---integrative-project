@@ -1,0 +1,4 @@
+/* Fontes do app da equipe: Geist e uma única instância de Bodoni (500, latino). */
+@font-face { font-family: "Geist"; src: url("../fontes/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../fontes/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Bodoni Moda"; src: url("../fontes/bodoni-moda-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }

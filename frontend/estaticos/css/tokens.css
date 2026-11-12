@@ -1,0 +1,310 @@
+/* Gemóvel · tokens do sistema Lapidado (DESIGN.md v0.4)
+   Camadas: primitivos (:root) → semânticos ([data-theme]) → componentes ([data-theme], no fim).
+   Só este arquivo cita primitivos e valores crus. Token que depende de um semântico mora num
+   bloco [data-theme]: no :root ele seria resolvido uma vez só e não mudaria dentro de outro tema. */
+
+:root {
+  /* Neutros (matiz ≈ 288, croma ≤ 0,015) */
+  --neutral-0: #ffffff;
+  --neutral-50: #f1f1f5;
+  --neutral-100: #e7e7ed;
+  --neutral-400: #a7a7af;
+  --neutral-500: #898992;
+  --neutral-600: #63636c;
+  --neutral-700: #4d4d56;
+  --neutral-850: #1b1b21;
+  --neutral-900: #131317;
+  --neutral-950: #08080b;
+
+  /* Gemas: estado e dado (reservadas, um significado cada) */
+  --ambar-100: #fff0d6;
+  --ambar-300: #ffb547;
+  --ambar-600: #a86400;
+  --ambar-700: #8a5300;
+  --esmeralda-100: #dcf5ea;
+  --esmeralda-300: #2ee6a6;
+  --esmeralda-600: #08936a;
+  --esmeralda-700: #06734e;
+  --rubi-100: #ffe4ea;
+  --rubi-400: #ff4d6d;
+  --rubi-700: #a8133a;
+  --safira-100: #e6ebff;
+  --safira-400: #7d9cff;
+  --safira-700: #3e5cb8;
+
+  /* Prisma: identidade, nunca significado (logo, avatar e tela Entrar) */
+  --prisma-ciano: #a6f4ff;
+  --prisma-lilas: #cdbcff;
+  --prisma-rosa: #ffb8e3;
+  --prisma-champanhe: #ffe2a6;
+  --gradient-prisma: linear-gradient(90deg, var(--prisma-ciano), var(--prisma-lilas), var(--prisma-rosa), var(--prisma-champanhe));
+  --gradient-avatar: linear-gradient(135deg, var(--prisma-lilas), var(--prisma-ciano));
+  --color-on-prisma: var(--neutral-900);
+
+  /* Tipografia */
+  --font-display: "Bodoni Moda", "Bodoni 72", Didot, "Bodoni MT", Georgia, serif;
+  --font-ui: Geist, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --text-2xs: .6875rem;  --lh-2xs: 1.3;   /* 11px, mono em caixa alta */
+  --text-xs: .75rem;     --lh-xs: 1.4;    /* 12px */
+  --text-sm: .8125rem;   --lh-sm: 1.45;   /* 13px */
+  --text-base: .875rem;  --lh-base: 1.5;  /* 14px, corpo do admin */
+  --text-md: 1rem;       --lh-md: 1.5;    /* 16px, corpo da equipe */
+  --text-lg: 1.125rem;   --lh-lg: 1.35;   /* 18px */
+  --text-xl: 1.25rem;    --lh-xl: 1.3;    /* 20px */
+  --num-md: 1.75rem;                      /* 28px */
+  --num-lg: 2rem;                         /* 32px */
+  --num-xl: 3.25rem;                      /* 52px (44px no celular) */
+  --display-sm: 1.75rem;                  /* 28px */
+  --display-md: 2rem;                     /* 32px */
+  --display-lg: 2.625rem;                 /* 42px */
+  --display-xl: 6rem;                     /* 96px (64px no celular), só o nome na tela Entrar */
+  --track-caps: .12em;
+  --track-md: -.005em;
+  --track-lg: -.01em;
+  --track-xl: -.015em;
+  --track-num-md: -.03em;
+  --track-num-lg: -.035em;
+  --track-num-xl: -.045em;
+  --track-display-sm: -.02em;
+  --track-display-md: -.025em;
+  --track-display-lg: -.035em;
+  --track-display-xl: -.035em;
+  --opsz-display-lg: 96;                  /* display-lg e display-xl */
+  --opsz-display: 72;                     /* display-sm e display-md */
+
+  /* Espaço (base 4px) */
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Raios e facetas */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+  --cut-sm: 4px;
+  --cut-md: 8px;
+
+  /* Controles */
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: 48px;
+
+  /* Camadas */
+  --z-bg: -1;
+  --z-base: 0;
+  --z-gem: 2;
+  --z-now: 3;
+  --z-sticky: 4;
+  --z-header: 20;
+  --z-nav: 40;
+  --z-scrim: 55;
+  --z-drawer: 60;
+  --z-tooltip: 80;
+  --z-toast: 90;
+  --z-skip: 100;
+
+  /* Movimento: só transform, opacity, clip-path e filter curto; nunca ease-in */
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+  --dur-moderate: 300ms;
+  --dur-slow: 400ms;
+  --dur-exit: 220ms;
+  --dur-cinematic: 900ms;
+  --ease-standard: cubic-bezier(.23, 1, .32, 1);   /* GSAP power4.out */
+  --ease-entrance: cubic-bezier(.16, 1, .3, 1);    /* GSAP expo.out */
+  --ease-exit: cubic-bezier(.2, .8, .2, 1);        /* GSAP power3.out */
+  --ease-pop: cubic-bezier(.34, 1.56, .64, 1);     /* GSAP back.out(2): só gema, contador e dígito do tambor */
+}
+
+/* Dedo pede alvo maior. */
+@media (pointer: coarse) {
+  :root { --control-sm: 40px; --control-md: 44px; }
+}
+
+@media (max-width: 640px) {
+  :root { --num-xl: 2.75rem; --display-xl: 4rem; }
+}
+
+/* Obsidiana: admin, escuro */
+[data-theme="obsidiana"] {
+  color-scheme: dark;
+
+  --color-bg: var(--neutral-950);
+  --color-surface-1: var(--neutral-900);
+  --color-surface-2: var(--neutral-850);
+  --color-surface-inverse: var(--neutral-100);
+  --color-surface-inverse-hover: var(--neutral-0);
+  --color-text: var(--neutral-50);
+  --color-text-muted: var(--neutral-400);
+  --color-text-subtle: var(--neutral-500);
+  --color-text-disabled: var(--neutral-600);
+  --color-text-on-inverse: var(--neutral-900);
+  --color-border: color-mix(in srgb, var(--neutral-0) 7.5%, transparent);
+  --color-border-strong: color-mix(in srgb, var(--neutral-0) 13%, transparent);
+  --color-border-control: color-mix(in srgb, var(--neutral-0) 36%, transparent);
+  --color-focus: var(--neutral-100);
+  --color-now: var(--neutral-0);
+  --color-hover: color-mix(in srgb, var(--neutral-0) 6%, transparent);
+  --color-pressed: color-mix(in srgb, var(--neutral-0) 11%, transparent);
+
+  --status-todo-fg: var(--neutral-100);
+  --status-todo-icon: var(--neutral-100);
+  --status-todo-bg: color-mix(in srgb, var(--neutral-100) 12%, transparent);
+  --status-doing-fg: var(--ambar-300);
+  --status-doing-icon: var(--ambar-300);
+  --status-doing-bg: color-mix(in srgb, var(--ambar-300) 12%, transparent);
+  --status-done-fg: var(--esmeralda-300);
+  --status-done-icon: var(--esmeralda-300);
+  --status-done-bg: color-mix(in srgb, var(--esmeralda-300) 12%, transparent);
+  --status-late-fg: var(--rubi-400);
+  --status-late-icon: var(--rubi-400);
+  --status-late-bg: color-mix(in srgb, var(--rubi-400) 12%, transparent);
+  --color-success: var(--esmeralda-300);
+  --color-warning: var(--ambar-300);
+  --color-danger: var(--rubi-400);
+  --color-info: var(--safira-400);
+  --color-info-bg: color-mix(in srgb, var(--safira-400) 12%, transparent);
+
+  --data-realized: var(--safira-400);
+  --data-projected: var(--safira-700);
+  --data-track: color-mix(in srgb, var(--safira-400) 16%, transparent);
+  --data-grid: color-mix(in srgb, var(--neutral-0) 7%, transparent);
+  --data-baseline: color-mix(in srgb, var(--neutral-0) 20%, transparent);
+
+  /* Profundidade: 1 superfície sólida; 1v vidro (topo ao rolar, barra inferior); 2 flutuante; 3 sobreposto */
+  --elev-1-bg: var(--neutral-900);
+  --elev-1-edge: inset 0 1px 0 color-mix(in srgb, var(--neutral-0) 6%, transparent), inset 0 0 0 1px var(--color-border);
+  --elev-1-shadow: 0 24px 60px -34px rgb(0 0 0 / .85);
+  --elev-1v-bg: linear-gradient(160deg, rgb(30 30 37 / .74), rgb(19 19 23 / .84));
+  --elev-1v-solid: var(--neutral-900);
+  --elev-1v-filter: blur(20px) saturate(140%);
+  --elev-1v-edge: inset 0 1px 0 rgb(255 255 255 / .09), inset 0 0 0 1px rgb(255 255 255 / .055);
+  --elev-2-bg: linear-gradient(180deg, rgb(32 32 39 / .96), rgb(26 26 32 / .96));
+  --elev-2-edge: inset 0 0 0 1px var(--color-border-strong);
+  --elev-2-shadow: 0 18px 40px -16px rgb(0 0 0 / .85);
+  --elev-3-bg: linear-gradient(160deg, rgb(40 40 49 / .8), rgb(19 19 23 / .9) 45%);
+  --elev-3-solid: var(--neutral-850);
+  --elev-3-filter: blur(24px) saturate(150%);
+  --elev-3-edge: inset 0 1px 0 rgb(255 255 255 / .12), inset 0 0 0 1px rgb(255 255 255 / .07);
+  --elev-3-shadow: -30px 0 80px -30px rgb(0 0 0 / .85);
+  --scrim: rgb(4 4 6 / .45);
+  --glow-now: 0 0 12px color-mix(in srgb, var(--neutral-0) 45%, transparent);
+
+  /* Ambiente e marca: só aparência */
+  --page-bg: radial-gradient(circle 1200px at 0 0, color-mix(in srgb, var(--neutral-0) 4.5%, transparent), transparent), var(--neutral-950);
+  --facet-line: color-mix(in srgb, var(--neutral-0) 4%, transparent);
+  --spotlight: color-mix(in srgb, var(--neutral-0) 6%, transparent);
+  --brand-stroke: url(#prisma);
+  --brand-fill: none;
+}
+
+/* Quartzo: app da equipe, claro */
+[data-theme="quartzo"] {
+  color-scheme: light;
+
+  --color-bg: var(--neutral-50);
+  --color-surface-1: var(--neutral-0);
+  --color-surface-2: var(--neutral-50);
+  --color-surface-inverse: var(--neutral-900);
+  --color-surface-inverse-hover: var(--neutral-850);
+  --color-text: var(--neutral-900);
+  --color-text-muted: var(--neutral-700);
+  --color-text-subtle: var(--neutral-600);
+  --color-text-disabled: var(--neutral-500);
+  --color-text-on-inverse: var(--neutral-0);
+  --color-border: color-mix(in srgb, var(--neutral-900) 8%, transparent);
+  --color-border-strong: color-mix(in srgb, var(--neutral-900) 14%, transparent);
+  --color-border-control: color-mix(in srgb, var(--neutral-900) 50%, transparent);
+  --color-focus: var(--neutral-900);
+  --color-now: var(--neutral-900);
+  --color-hover: color-mix(in srgb, var(--neutral-900) 5%, transparent);
+  --color-pressed: color-mix(in srgb, var(--neutral-900) 9%, transparent);
+
+  /* Rótulo neutro; só a gema leva a cor viva (daltonismo) */
+  --status-todo-fg: var(--neutral-700);
+  --status-todo-icon: var(--neutral-600);
+  --status-todo-bg: var(--neutral-100);
+  --status-doing-fg: var(--ambar-700);
+  --status-doing-icon: var(--ambar-600);
+  --status-doing-bg: var(--ambar-100);
+  --status-done-fg: var(--esmeralda-700);
+  --status-done-icon: var(--esmeralda-600);
+  --status-done-bg: var(--esmeralda-100);
+  --status-late-fg: var(--rubi-700);
+  --status-late-icon: var(--rubi-700);
+  --status-late-bg: var(--rubi-100);
+  --color-success: var(--esmeralda-700);
+  --color-warning: var(--ambar-700);
+  --color-danger: var(--rubi-700);
+  --color-info: var(--safira-700);
+  --color-info-bg: var(--safira-100);
+
+  --data-realized: var(--safira-700);
+  --data-track: var(--safira-100);
+  --data-grid: color-mix(in srgb, var(--neutral-900) 8%, transparent);
+  --data-baseline: color-mix(in srgb, var(--neutral-900) 30%, transparent);
+
+  --elev-1-bg: var(--neutral-0);
+  --elev-1-edge: inset 0 0 0 1px rgb(19 19 23 / .07);
+  --elev-1-shadow: 0 14px 30px -18px rgb(19 19 23 / .22);
+  --elev-1v-bg: rgb(255 255 255 / .72);
+  --elev-1v-solid: var(--neutral-0);
+  --elev-1v-filter: blur(14px) saturate(160%);
+  --elev-1v-edge: inset 0 1px 0 var(--neutral-0), inset 0 0 0 1px rgb(19 19 23 / .06);
+  --elev-2-bg: rgb(255 255 255 / .96);
+  --elev-2-edge: inset 0 0 0 1px rgb(19 19 23 / .1);
+  --elev-2-shadow: 0 18px 40px -16px rgb(19 19 23 / .2);
+  --elev-3-bg: rgb(255 255 255 / .94);
+  --elev-3-solid: var(--neutral-0);
+  --elev-3-filter: blur(24px) saturate(160%);
+  --elev-3-edge: inset 0 1px 0 var(--neutral-0), inset 0 0 0 1px rgb(19 19 23 / .08);
+  --elev-3-shadow: 0 -20px 60px -30px rgb(19 19 23 / .28);
+  --scrim: rgb(19 19 23 / .35);
+  --glow-now: none;
+
+  --page-bg: linear-gradient(180deg, var(--neutral-0), var(--neutral-50) 45%, var(--neutral-100));
+  --facet-line: color-mix(in srgb, var(--neutral-900) 4%, transparent);
+  --spotlight: color-mix(in srgb, var(--neutral-900) 4%, transparent);
+  --brand-stroke: var(--neutral-900);
+  --brand-fill: url(#prisma);
+}
+
+/* Componentes: sempre apontam para os semânticos */
+[data-theme] {
+  --btn-primary-bg: var(--color-surface-inverse);
+  --btn-primary-bg-hover: var(--color-surface-inverse-hover);
+  --btn-primary-fg: var(--color-text-on-inverse);
+  --field-bg: var(--color-surface-2);
+  --field-border: var(--color-border-control);
+  --field-border-focus: var(--color-focus);
+  --field-border-error: var(--status-late-fg);
+  --bar-stay-bg: linear-gradient(90deg, color-mix(in srgb, var(--safira-400) 55%, transparent), color-mix(in srgb, var(--safira-400) 32%, transparent));
+  --bar-stay-fg: var(--neutral-0);
+  --bar-future-bg: color-mix(in srgb, var(--neutral-100) 17%, transparent);
+  --bar-past-bg: color-mix(in srgb, var(--neutral-0) 6%, transparent);
+  --bar-block-bg: repeating-linear-gradient(135deg, color-mix(in srgb, var(--neutral-0) 10%, transparent) 0 5px, color-mix(in srgb, var(--neutral-0) 2.5%, transparent) 5px 10px);
+}
+
+[data-theme="obsidiana"] { --chip-label: initial; } /* inválido de propósito: o chip usa a cor do status */
+
+[data-theme="quartzo"] {
+  --chip-label: var(--color-text);
+  --bar-stay-bg: var(--safira-100);
+  --bar-stay-fg: var(--safira-700);
+  --bar-future-bg: var(--neutral-100);
+  --bar-past-bg: color-mix(in srgb, var(--neutral-900) 4%, transparent);
+  --bar-block-bg: repeating-linear-gradient(135deg, color-mix(in srgb, var(--neutral-900) 9%, transparent) 0 5px, color-mix(in srgb, var(--neutral-900) 2.5%, transparent) 5px 10px);
+}

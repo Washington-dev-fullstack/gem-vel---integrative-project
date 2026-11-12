@@ -4,6 +4,7 @@ Para rodar, da raiz do projeto: backend/.venv/Scripts/python backend/app.py
 e abrir http://127.0.0.1:5000/api/saude
 """
 
+import mimetypes
 from pathlib import Path
 
 from flask import Flask
@@ -15,6 +16,13 @@ from gemovel.rotas.formato_json import ProvedorJson
 
 # O front-end fica ao lado do backend: as páginas Jinja e os arquivos estáticos.
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
+
+# No Windows, o tipo de cada extensão vem do registro, e há máquinas em que o .js sai como
+# text/plain: o navegador recusa o módulo. Fixar os tipos deixa o front igual em toda máquina.
+mimetypes.add_type("text/javascript", ".js")
+mimetypes.add_type("text/css", ".css")
+mimetypes.add_type("image/svg+xml", ".svg")
+mimetypes.add_type("font/woff2", ".woff2")
 
 
 def criar_app(config: dict | None = None, segredo: str | None = None) -> Flask:
