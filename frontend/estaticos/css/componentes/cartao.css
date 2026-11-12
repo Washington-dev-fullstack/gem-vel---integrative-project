@@ -14,14 +14,14 @@
 .cartao__corpo { padding: var(--space-5); }
 .cartao__divisao { height: 1px; margin: 0; border: 0; background-color: var(--color-border); }
 
-/* Luz do ponteiro (DESIGN.md §10, item 11): o brilho radial segue o ponteiro; o JS escreve --x e --y. */
-@media (hover: hover) and (pointer: fine) {
+/* Luz do ponteiro (DESIGN.md §10, item 11): o brilho radial segue o ponteiro; o JS escreve --luz-x e --luz-y. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   :is([data-tier="completo"], [data-tier="padrao"]) .cartao--luz::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), var(--spotlight), transparent 70%);
+    background: radial-gradient(360px circle at var(--luz-x, 50%) var(--luz-y, 50%), var(--spotlight), transparent 70%);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--dur-base) var(--ease-standard);

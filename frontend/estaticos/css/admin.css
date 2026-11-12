@@ -22,3 +22,6 @@
 @import url("componentes/estados.css") layer(componentes);
 @import url("componentes/seletor-datas.css") layer(componentes);
 @import url("componentes/busca.css") layer(componentes);
+@import url("componentes/tambor.css") layer(componentes);
+@import url("componentes/kpi.css") layer(componentes);
+@import url("componentes/dica.css") layer(componentes);

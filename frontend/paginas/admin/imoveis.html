@@ -1,6 +1,29 @@
 {% extends "admin/base-admin.html" %}
 {% set tela = "imoveis" %}
 {% block titulo %}Imóveis · Gemóvel{% endblock %}
+{% block css %}{{ super() }}<link rel="stylesheet" href="/estaticos/css/telas/imoveis.css">{% endblock %}
+{% macro icone(id) %}<svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>{% endmacro %}
 {% block principal %}
-<div class="cabecalho"><div class="cabecalho__textos"><h1 class="cabecalho__titulo">Imóveis</h1></div></div>
+<div class="cabecalho">
+  <div class="cabecalho__textos">
+    <h1 class="cabecalho__titulo">Imóveis</h1>
+    <p class="cabecalho__contexto numero" data-contexto></p>
+  </div>
+  <div class="cabecalho__acoes">
+    <div class="alternador" role="group" aria-label="Ver os imóveis em">
+      <button type="button" class="alternador__opcao" data-vista="tabela" aria-pressed="false">Tabela</button>
+      <button type="button" class="alternador__opcao" data-vista="cartoes" aria-pressed="true">Cartões</button>
+    </div>
+    <button type="button" class="botao botao--primario" data-novo>{{ icone("mais") }}<span class="botao__rotulo">Novo imóvel</span></button>
+  </div>
+</div>
+
+<div class="filtros">
+  <button type="button" class="botao botao--secundario filtro" data-filtro="prontidao">Prontidão: <span class="filtro__valor">Todas</span>{{ icone("abrir") }}</button>
+  <button type="button" class="botao botao--secundario filtro" data-filtro="cidade" hidden>Cidade: <span class="filtro__valor">Todas</span>{{ icone("abrir") }}</button>
+  <button type="button" class="botao botao--fantasma botao--sm filtros__limpar" data-limpar hidden>Limpar filtros</button>
+  <label class="escolha filtros__interruptor"><input type="checkbox" role="switch" data-desativados>Mostrar desativados</label>
+</div>
+<div class="imoveis-lista" data-lista></div>
 {% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/imoveis.js"></script>{% endblock %}

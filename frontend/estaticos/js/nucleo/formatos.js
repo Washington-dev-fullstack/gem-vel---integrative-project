@@ -4,6 +4,7 @@
 const DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
 const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const REAL = new Intl.NumberFormat("pt-BR", {style: "currency", currency: "BRL"});
+const REAL_INTEIRO = new Intl.NumberFormat("pt-BR", {style: "currency", currency: "BRL", maximumFractionDigits: 0});
 
 export function lerData(iso) {
   const [dia, hora = "00:00"] = String(iso).split("T");
@@ -18,6 +19,11 @@ function comoData(valor) {
 
 export function dinheiro(valor) {
   return REAL.format(Number(valor));
+}
+
+/** Nos KPIs, sem centavos: "R$ 12.340" (DESIGN.md §3). */
+export function dinheiroSemCentavos(valor) {
+  return REAL_INTEIRO.format(Number(valor));
 }
 
 export function dataCurta(iso) {

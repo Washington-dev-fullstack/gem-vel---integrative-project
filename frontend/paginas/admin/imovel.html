@@ -1,6 +1,47 @@
 {% extends "admin/base-admin.html" %}
 {% set tela = "imoveis" %}
 {% block titulo %}Imóvel · Gemóvel{% endblock %}
+{% block css %}{{ super() }}<link rel="stylesheet" href="/estaticos/css/telas/reservas.css"><link rel="stylesheet" href="/estaticos/css/telas/imovel.css">{% endblock %}
+{% macro icone(id) %}<svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>{% endmacro %}
 {% block principal %}
-<div class="cabecalho"><div class="cabecalho__textos"><h1 class="cabecalho__titulo">Imóvel</h1></div></div>
+<div class="cabecalho">
+  <div class="cabecalho__textos">
+    <a class="cabecalho__voltar" href="/imoveis">{{ icone("voltar") }}Imóveis</a>
+    <div class="imovel-titulo"><h1 class="cabecalho__titulo" data-nome>Imóvel</h1><span data-prontidao></span></div>
+    <p class="cabecalho__contexto numero" data-contexto></p>
+  </div>
+  <div class="cabecalho__acoes" data-acoes-cabecalho hidden>
+    <button type="button" class="botao botao--secundario" data-editar>Editar</button>
+    <button type="button" class="botao botao--icone botao--secundario" data-mais-acoes aria-label="Mais ações do imóvel">{{ icone("acoes") }}</button>
+  </div>
+</div>
+
+<div data-pagina>
+  <div data-faixa-desativado></div>
+  <section class="kpis" data-kpis aria-label="Indicadores do mês" hidden></section>
+
+  <div class="abas" role="tablist" aria-label="Reservas, tarefas e dados do imóvel">
+    <button type="button" class="aba" role="tab" id="aba-reservas" data-aba="reservas" aria-controls="painel-reservas">
+      <span class="aba__rotulo" data-rotulo="Reservas">Reservas</span></button>
+    <button type="button" class="aba" role="tab" id="aba-tarefas" data-aba="tarefas" aria-controls="painel-tarefas">
+      <span class="aba__rotulo" data-rotulo="Tarefas">Tarefas</span></button>
+    <button type="button" class="aba" role="tab" id="aba-dados" data-aba="dados" aria-controls="painel-dados">
+      <span class="aba__rotulo" data-rotulo="Dados">Dados</span></button>
+  </div>
+
+  <section class="imovel-painel" id="painel-reservas" role="tabpanel" aria-labelledby="aba-reservas">
+    <div class="filtros">
+      <span class="filtros__contagem imovel-painel__contagem" data-contagem-reservas></span>
+      <button type="button" class="botao botao--secundario" data-nova-reserva hidden>{{ icone("mais") }}<span class="botao__rotulo">Nova reserva</span></button>
+    </div>
+    <div data-lista-reservas></div>
+  </section>
+  <section class="imovel-painel" id="painel-tarefas" role="tabpanel" aria-labelledby="aba-tarefas" hidden>
+    <div data-lista-tarefas></div>
+  </section>
+  <section class="imovel-painel" id="painel-dados" role="tabpanel" aria-labelledby="aba-dados" hidden>
+    <div data-dados></div>
+  </section>
+</div>
 {% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/imovel.js"></script>{% endblock %}

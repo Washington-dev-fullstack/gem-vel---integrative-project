@@ -1,0 +1,25 @@
+/* Dica flutuante rica (lote B §16): popover manual a 8px do elemento, até 280px de largura. */
+
+.dica {
+  position: fixed;
+  inset: auto;
+  max-width: var(--tip-max-w, 280px);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--elev-2-bg);
+  box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: var(--lh-sm);
+  pointer-events: none;
+  opacity: 0;
+  translate: 0 4px;
+  transition: opacity var(--dur-base) var(--ease-standard), translate var(--dur-base) var(--ease-standard),
+    display var(--dur-base) allow-discrete, overlay var(--dur-base) allow-discrete;
+}
+.dica[data-lado="baixo"] { translate: 0 -4px; }
+.dica:popover-open { opacity: 1; translate: 0 0; }
+@starting-style { .dica:popover-open { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dica, .dica[data-lado="baixo"] { translate: none; } }

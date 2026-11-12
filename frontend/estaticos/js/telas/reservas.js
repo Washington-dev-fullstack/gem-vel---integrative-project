@@ -4,7 +4,7 @@
 import {api} from "../nucleo/api.js";
 import {data, dataCurta, dinheiro, intervalo} from "../nucleo/formatos.js";
 import {html, renderizar} from "../nucleo/html.js";
-import {abrirGaveta, aoMudar, lerEstado, trocarFiltro, trocarFiltros, urlCom} from "../nucleo/url.js";
+import {abrirGaveta, aoMudar, lerEstado, trocarFiltro, trocarFiltros} from "../nucleo/url.js";
 import {ligarAbas} from "../componentes/abas.js";
 import {erro, esqueleto, vazio} from "../componentes/estados.js";
 import {esconderFaixa} from "../componentes/faixa.js";
@@ -13,10 +13,11 @@ import {ligarGavetas} from "../componentes/gaveta.js";
 import {ligarMenu} from "../componentes/menu.js";
 import {icone} from "../componentes/pecas.js";
 import {seletorDatas} from "../componentes/seletor-datas.js";
+import {cabecalhosDasReservas, enderecoDaGaveta, itensDaReserva, linhaDaReserva, ordenarReservas} from "../componentes/tabela-reservas.js";
 import {iniciarCasca} from "../componentes/shell.js";
 import {gavetaBloqueio} from "../gavetas/bloqueio.js";
 import {cliqueComum, excluirHospede, gavetaHospede, itensDoHospede} from "../gavetas/hospede.js";
-import {SITUACOES, cancelarReserva, carregarImoveis, enderecoNaAgenda, gavetaReserva, pilulaDaSituacao} from "../gavetas/reserva.js";
+import {SITUACOES, cancelarReserva, carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
 
 const POR_VEZ = 50;
 const ESTADOS_PADRAO = ["futura", "em_curso", "concluida"];
@@ -64,10 +65,6 @@ const mesmosEstados = (estados) => estados.length === ESTADOS_PADRAO.length && E
 const filtrosAtivos = (f) => f.atalho !== "este" || f.imoveis.length > 0 || !mesmosEstados(f.estados);
 const limparFiltros = () => trocarFiltros({de: null, ate: null, imoveis: null, estado: null});
 const novaReserva = () => abrirGaveta("reserva", "nova");
-const enderecoDaGaveta = (tipo, id) => {
-  const url = urlCom(new URL(location.href), {gaveta: {tipo, id}});
-  return `${url.pathname}${url.search}`;
-};
 
 // Estado da tela.
 let lista = null;
@@ -162,48 +159,6 @@ function rotularFiltros(f) {
 
 // Lista de reservas.
 
-const COMPARAR = {
-  codigo: (a, b) => a.id - b.id,
-  hospede: (a, b) => (a.hospede?.nome ?? "").localeCompare(b.hospede?.nome ?? "", "pt-BR"),
-  imovel: (a, b) => a.imovel.nome.localeCompare(b.imovel.nome, "pt-BR"),
-  entrada: (a, b) => a.data_entrada.localeCompare(b.data_entrada),
-  saida: (a, b) => a.data_saida.localeCompare(b.data_saida),
-  noites: (a, b) => a.noites - b.noites,
-  valor: (a, b) => Number(a.valor_total) - Number(b.valor_total),
-};
-
-const ordenar = (reservas) => [...reservas].sort((a, b) => COMPARAR[ordem.coluna](a, b) * ordem.sentido
-  || a.data_entrada.localeCompare(b.data_entrada) || a.id - b.id);
-
-function cabecalho(coluna, rotulo, {direita = false, classe = ""} = {}) {
-  const ativa = ordem.coluna === coluna;
-  return html`<th scope="col" class="${classe}" ${direita ? html`data-alinhar="direita"` : ""}
-    ${ativa ? html`aria-sort="${ordem.sentido > 0 ? "ascending" : "descending"}"` : ""}>
-    <button type="button" class="tabela__ordenar" data-ordenar="${coluna}">${rotulo}${icone("abrir", {classe: "tabela__seta"})}</button></th>`;
-}
-
-function linha(r) {
-  return html`<tr data-id="${r.id}" data-situacao="${r.situacao}" ${r.id === destaque ? html`data-destaque` : ""}>
-    <td><a class="tabela__link numero" href="${enderecoDaGaveta("reserva", r.id)}" data-abrir="reserva" data-id="${r.id}">${r.codigo}</a></td>
-    <td>${r.hospede?.nome ?? "–"}</td>
-    <td>${r.imovel.nome}</td>
-    <td class="numero">${data(r.data_entrada)}</td>
-    <td class="numero">${data(r.data_saida)}</td>
-    <td class="numero coluna-p3" data-alinhar="direita">${r.noites}</td>
-    <td class="numero" data-alinhar="direita"><span class="valor">${dinheiro(r.valor_total)}</span></td>
-    <td>${pilulaDaSituacao(r.situacao)}</td>
-    <td class="tabela__acoes"><button type="button" class="botao botao--icone botao--fantasma botao--sm" data-acoes="${r.id}"
-      aria-label="Ações de ${r.codigo}">${icone("acoes")}</button></td>
-  </tr>`;
-}
-
-function itensDaReserva(r) {
-  const agenda = {rotulo: "Ver na agenda", fazer: () => location.assign(enderecoNaAgenda(r))};
-  if (r.status === "cancelada") return [{rotulo: "Editar", desabilitado: "reserva cancelada"}, agenda];
-  return [{rotulo: "Editar", fazer: () => abrirGaveta("reserva", r.id, {editar: true})}, agenda, {separador: true},
-    {rotulo: "Cancelar reserva", perigo: true, fazer: () => cancelarDaLista(r)}];
-}
-
 function escreverContexto(reservas, f) {
   const centavos = reservas.filter((r) => r.status !== "cancelada")
     .reduce((soma, r) => soma + Math.round(Number(r.valor_total) * 100), 0);
@@ -240,7 +195,7 @@ function desenhar() {
   const f = filtros();
   chaveDesenhada = JSON.stringify([f, ordem, limite, [...escondidas], lista?.length]);
   rotularFiltros(f);
-  const reservas = ordenar(filtradas(f));
+  const reservas = ordenarReservas(filtradas(f), ordem);
   escreverContexto(reservas, f);
   if (!reservas.length) {
     desenharVazio(f);
@@ -249,18 +204,13 @@ function desenhar() {
   const mostradas = reservas.slice(0, limite);
   renderizar(area, html`<div class="tabela-cartao"><table class="tabela">
       <caption class="visualmente-oculto">Reservas de ${nomeDoPeriodo(f.de, f.ate)}</caption>
-      <thead><tr>
-        ${cabecalho("codigo", "Código")}${cabecalho("hospede", "Hóspede")}${cabecalho("imovel", "Imóvel")}
-        ${cabecalho("entrada", "Entrada")}${cabecalho("saida", "Saída")}
-        ${cabecalho("noites", "Noites", {direita: true, classe: "coluna-p3"})}${cabecalho("valor", "Valor", {direita: true})}
-        <th scope="col">Estado</th><th scope="col"><span class="visualmente-oculto">Ações</span></th>
-      </tr></thead>
-      <tbody>${mostradas.map(linha)}</tbody>
+      <thead>${cabecalhosDasReservas(ordem)}</thead>
+      <tbody>${mostradas.map((r) => linhaDaReserva(r, {destaque}))}</tbody>
     </table></div>
     <div class="tabela-rodape"><span class="numero">${mostradas.length} de ${reservas.length}</span>
       ${reservas.length > mostradas.length ? html`<button type="button" class="botao botao--secundario botao--sm" data-mais>Carregar mais</button>` : ""}</div>`);
   const porId = new Map(mostradas.map((r) => [r.id, r]));
-  for (const botao of area.querySelectorAll("[data-acoes]")) ligarMenu(botao, itensDaReserva(porId.get(Number(botao.dataset.acoes))));
+  for (const botao of area.querySelectorAll("[data-acoes]")) ligarMenu(botao, itensDaReserva(porId.get(Number(botao.dataset.acoes)), {cancelar: cancelarDaLista}));
   marcarAberta();
 }
 

@@ -1,7 +1,7 @@
 process.env.TZ = "America/Sao_Paulo";
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {dinheiro, data, dataCurta, intervalo, periodo, horario, lerData, paraDinheiroApi} from "../estaticos/js/nucleo/formatos.js";
+import {dinheiro, dinheiroSemCentavos, data, dataCurta, intervalo, periodo, horario, lerData, paraDinheiroApi} from "../estaticos/js/nucleo/formatos.js";
 
 const hoje = lerData("2026-11-05");
 
@@ -40,4 +40,11 @@ test("intervalo no mesmo mês e na virada", () => {
   assert.equal(intervalo("2026-11-04", "2026-11-07"), "4 a 7 nov");
   assert.equal(intervalo("2026-10-30", "2026-11-02"), "30 out a 2 nov");
   assert.equal(intervalo("2026-12-28", "2027-01-02"), "28 dez 2026 a 2 jan 2027");
+});
+
+test("dinheiroSemCentavos: os KPIs mostram o real inteiro (DESIGN.md §3)", () => {
+  const sem = (valor) => dinheiroSemCentavos(valor).replace(/\s/g, " ");
+  assert.equal(sem("4560.00"), "R$ 4.560");
+  assert.equal(sem("1234.50"), "R$ 1.235");
+  assert.equal(sem(0), "R$ 0");
 });
