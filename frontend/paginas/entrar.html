@@ -1,7 +1,72 @@
 {% extends "base.html" %}
 {% block titulo %}Entrar · Gemóvel{% endblock %}
-{% block conteudo %}
-<main id="conteudo" class="entrar">
-  <h1>Entrar</h1>
-</main>
+{% block css %}
+<link rel="preload" href="/estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/estaticos/fontes/bodoni-moda-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/estaticos/css/admin.css">
+<link rel="stylesheet" href="/estaticos/css/telas/entrar.css">
 {% endblock %}
+{% block conteudo %}
+<div class="entrar">
+  <header class="palco">
+    <svg class="palco__defs" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="prisma" x1="3" y1="4" x2="21" y2="20.5" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#a6f4ff"/><stop offset=".38" stop-color="#cdbcff"/>
+          <stop offset=".7" stop-color="#ffb8e3"/><stop offset="1" stop-color="#ffe2a6"/>
+        </linearGradient>
+        <symbol id="gema-palco" viewBox="0 0 24 24">
+          <path class="palco__lapide" d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/>
+          <path class="palco__facetas" d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4M9.5 9.5L12 20.5L14.5 9.5"/>
+        </symbol>
+      </defs>
+    </svg>
+    <p class="palco__etiqueta" aria-hidden="true">Gestão de temporada</p>
+    <h1 class="palco__nome display-xl" data-nome="Gemóvel">Gemóvel</h1>
+    <div class="palco__gemas" aria-hidden="true">
+      {% for x, y, t, prof, dur in [(62, 16, 136, 1, 8), (84, 44, 64, 0.6, 7), (71, 70, 40, 0.35, 9),
+                                     (20, 56, 92, 0.8, 6.5), (46, 36, 28, 0.25, 7.5), (38, 80, 52, 0.5, 8.5)] %}
+      <span class="palco__gema" style="--x: {{ x }}%; --y: {{ y }}%; --t: {{ t }}px; --prof: {{ prof }}; --dur: {{ dur }}s; --i: {{ loop.index0 }}">
+        <svg viewBox="0 0 24 24" focusable="false"><use href="#gema-palco"></use></svg>
+      </span>
+      {% endfor %}
+    </div>
+    <div class="palco__faixa" aria-hidden="true">
+      <div class="palco__trilho">
+        {% for _ in range(2) %}
+        <span>Entrada 15:00 · Saída 11:00 · Limpeza entre estadias · Reservas sem conflito ·</span>
+        {% endfor %}
+      </div>
+    </div>
+  </header>
+  <main id="conteudo" class="entrar__lado">
+    <section class="cartao entrar__painel" aria-labelledby="entrar-titulo">
+      <h2 class="display-md" id="entrar-titulo">Entrar</h2>
+      <div class="entrar__avisos" data-entrar-avisos></div>
+      <form class="formulario" id="form-entrar" novalidate>
+        <div class="campo">
+          <label class="campo__rotulo" for="email">E-mail</label>
+          <input class="entrada" id="email" name="email" type="email" autocomplete="username" autocapitalize="off"
+                 spellcheck="false" required data-obrigatorio="Preencha o e-mail.">
+        </div>
+        <div class="campo">
+          <label class="campo__rotulo" for="senha">Senha</label>
+          <div class="controle">
+            <input class="entrada" id="senha" name="senha" type="password" autocomplete="current-password"
+                   data-tipo="senha" required data-obrigatorio="Preencha a senha.">
+            <button type="button" class="botao botao--sm botao--fantasma" data-mostrar aria-controls="senha">
+              <svg class="icone" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#mostrar"></use></svg>
+              <span data-mostrar-rotulo>Mostrar</span>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="botao botao--primario botao--lg botao--largo" data-enviando="Entrando…">
+          <span class="botao__rotulo">Entrar</span>
+        </button>
+      </form>
+      <p class="entrar__ajuda">Esqueceu a senha? Peça para quem administra redefinir.</p>
+    </section>
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/entrar.js"></script>{% endblock %}

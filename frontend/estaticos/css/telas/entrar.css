@@ -1,0 +1,114 @@
+/* Tela Entrar (web-admin.md §3; DESIGN.md §4 Modelos e §10, item 12): o palco da marca à esquerda
+   e o formulário num painel sólido à direita. O que se mexe em cada nível segue a tabela da Seção 6. */
+@layer telas {
+  .entrar { display: grid; grid-template-columns: 58fr 42fr; min-height: 100vh; min-height: 100dvh; }
+
+  /* Palco */
+  .palco {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding: var(--space-16) var(--space-12) 0;
+    overflow: hidden;
+    box-shadow: inset -1px 0 0 var(--color-border);
+  }
+  .palco__defs { position: absolute; width: 0; height: 0; }
+  .palco__etiqueta {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-xs);
+    background-color: var(--color-surface-inverse);
+    color: var(--color-text-on-inverse);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    font-weight: 500;
+    letter-spacing: var(--track-caps);
+    line-height: var(--lh-2xs);
+    text-transform: uppercase;
+  }
+  .palco__nome { position: relative; z-index: 1; }
+
+  /* O brilho atravessa o nome uma vez ao abrir (Completo e Padrão). */
+  @media (prefers-reduced-motion: no-preference) {
+    :is([data-tier="completo"], [data-tier="padrao"]) .palco__nome::after {
+      content: attr(data-nome) / "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, transparent 38%, rgb(255 255 255 / .85) 50%, transparent 62%) no-repeat;
+      background-size: 250% 100%;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      pointer-events: none;
+      animation: brilho-do-nome var(--dur-cinematic) var(--ease-standard) 250ms both;
+    }
+  }
+  @keyframes brilho-do-nome { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+
+  /* Gemas: paralaxe do ponteiro (até 12px, as mais próximas mexem mais) no Completo e no Padrão;
+     flutuam em 6 a 9s só no Completo. */
+  .palco__gemas { position: absolute; inset: 0; pointer-events: none; }
+  .palco__gema {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    width: var(--t);
+    height: var(--t);
+    transform: translate3d(calc(var(--px, 0) * var(--prof) * -12px), calc(var(--py, 0) * var(--prof) * -12px), 0);
+    transition: transform 700ms var(--ease-standard);
+  }
+  .palco__gema svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .palco__lapide { fill: url(#prisma); fill-opacity: .1; }
+  .palco__lapide, .palco__facetas { stroke: url(#prisma); stroke-width: 1.25px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .palco__facetas { fill: none; stroke-opacity: .7; }
+  @media (prefers-reduced-motion: no-preference) {
+    :is([data-tier="completo"], [data-tier="padrao"]) .palco__gema { animation: gema-chega var(--dur-cinematic) var(--ease-entrance) backwards; animation-delay: calc(var(--i) * 60ms); }
+    [data-tier="completo"] .palco__gema svg { animation: gema-flutua var(--dur) cubic-bezier(.45, 0, .55, 1) infinite alternate; animation-delay: calc(var(--i) * -1.3s); }
+  }
+  @keyframes gema-chega { from { opacity: 0; scale: .8; } }
+  @keyframes gema-flutua { from { transform: translateY(-7px) rotate(-4deg); } to { transform: translateY(7px) rotate(4deg); } }
+
+  /* Faixa corrida: dá a volta em 40s e para ao apontar; só no Completo. */
+  .palco__faixa {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 48px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 var(--color-border);
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .palco__trilho { display: flex; width: max-content; height: 100%; align-items: center; }
+  .palco__trilho span { padding-right: var(--space-3); white-space: nowrap; }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-tier="completo"] .palco__trilho { animation: faixa-corre 40s linear infinite; }
+    .palco__faixa:hover .palco__trilho { animation-play-state: paused; }
+  }
+  @keyframes faixa-corre { to { transform: translateX(-50%); } }
+
+  /* Formulário */
+  .entrar__lado { display: grid; place-items: center; padding: var(--space-8); }
+  .entrar__painel { display: grid; gap: var(--space-6); width: min(400px, 100%); padding: var(--space-8); }
+  .entrar__avisos:empty { display: none; }
+  .entrar__avisos .faixa { margin: 0; }
+  .entrar__ajuda { color: var(--color-text-muted); font-size: var(--text-sm); text-align: center; text-wrap: balance; }
+
+  /* Até 1020px: o palco vira uma faixa de 160px com a etiqueta e o nome em 64px. */
+  @media (max-width: 1020px) {
+    .entrar { grid-template-columns: minmax(0, 1fr); grid-template-rows: 160px auto; }
+    .palco { justify-content: center; gap: var(--space-3); padding: var(--space-6); box-shadow: inset 0 -1px 0 var(--color-border); }
+    .palco__nome { font-size: 4rem; }
+    .palco__gemas, .palco__faixa { display: none; }
+    .entrar__lado { align-items: start; padding: var(--space-8) var(--space-4); }
+  }
+  @media (max-width: 480px) {
+    .entrar__painel { padding: var(--space-6); }
+  }
+}

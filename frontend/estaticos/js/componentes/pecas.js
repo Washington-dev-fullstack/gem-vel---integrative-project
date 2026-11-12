@@ -38,17 +38,26 @@ export function avatar(nome, {tamanho = "md"} = {}) {
   return html`<span class="avatar avatar--${tamanho}" aria-hidden="true">${iniciais(nome)}</span>`;
 }
 
+// O texto que cada elemento deve mostrar no fim da troca em andamento.
+const textoPedido = new WeakMap();
+
 // O texto velho sai subindo com desfoque e o novo entra de baixo (DESIGN.md §10, item 8).
+// Uma troca pedida no meio de outra só atualiza o destino: vale sempre o último texto pedido.
 export async function trocarTexto(elemento, texto) {
-  if (!elemento || elemento.textContent === texto) return;
-  if (!podeAnimar() || !elemento.animate) {
+  if (!elemento) return;
+  const emAndamento = textoPedido.has(elemento);
+  textoPedido.set(elemento, texto);
+  if (emAndamento) return;
+  if (elemento.textContent === texto || !podeAnimar() || !elemento.animate) {
     elemento.textContent = texto;
+    textoPedido.delete(elemento);
     return;
   }
   const curva = "cubic-bezier(.23, 1, .32, 1)";
   await elemento.animate([{opacity: 1, transform: "none", filter: "blur(0)"},
     {opacity: 0, transform: "translateY(-4px)", filter: "blur(4px)"}], {duration: 100, easing: curva}).finished.catch(() => {});
-  elemento.textContent = texto;
+  elemento.textContent = textoPedido.get(elemento);
+  textoPedido.delete(elemento);
   elemento.animate([{opacity: 0, transform: "translateY(4px)", filter: "blur(4px)"},
     {opacity: 1, transform: "none", filter: "blur(0)"}], {duration: 100, easing: curva});
 }

@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% block titulo %}Página não encontrada · Gemóvel{% endblock %}
+{% block css %}{{ super() }}
+<link rel="stylesheet" href="/estaticos/css/telas/erro.css">
+{% endblock %}
 {% block conteudo %}
 <main id="conteudo" class="nao-encontrada">
-  <h1>Esta página ainda não foi lapidada.</h1>
+  <svg class="nao-encontrada__gema" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="prisma" x1="3" y1="4" x2="21" y2="20.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#a6f4ff"/><stop offset=".38" stop-color="#cdbcff"/>
+        <stop offset=".7" stop-color="#ffb8e3"/><stop offset="1" stop-color="#ffe2a6"/>
+      </linearGradient>
+    </defs>
+    <path d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/>
+    <path d="M3 9.5H11.2M13.4 9.5H21M7 4L9.5 9.5M17 4L14.5 9.5"/>
+    <path class="nao-encontrada__racha" d="M12.6 4L11.2 7.6L13.4 10.2L11 14L12.2 17.2"/>
+  </svg>
+  <h1 class="nao-encontrada__titulo">Esta página ainda não foi lapidada.</h1>
+  <p class="nao-encontrada__texto">O endereço pode ter mudado ou nunca ter existido.</p>
+  <a class="botao botao--secundario" href="/">Voltar para o início</a>
 </main>
 {% endblock %}

@@ -25,6 +25,8 @@ export function umEnvioPorVez(funcao) {
 
 function valorDoCampo(campo) {
   if (campo.type === "checkbox") return campo.checked;
+  // A senha vai como foi digitada: espaço no começo ou no fim faz parte dela.
+  if (campo.type === "password" || campo.dataset.tipo === "senha") return campo.value === "" ? null : campo.value;
   const texto = campo.value.trim();
   if (texto === "") return null;
   if (campo.dataset.tipo === "moeda") return paraDinheiroApi(texto) ?? texto;
@@ -81,6 +83,7 @@ function mostrarResumo(form, mensagem, erros) {
   const resumo = document.createElement("div");
   resumo.className = "faixa faixa--erro formulario__resumo";
   resumo.setAttribute("role", "alert");
+  resumo.tabIndex = -1;
   renderizar(resumo, html`${icone("erro")}<div class="faixa__texto"><p>${mensagem}</p>${erros.length > 1
     ? html`<ul>${erros.map(([campo, texto]) => html`<li><a href="#${campo.id}">${texto}</a></li>`)}</ul>` : ""}</div>`);
   form.prepend(resumo);
