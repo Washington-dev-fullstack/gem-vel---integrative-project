@@ -1,5 +1,5 @@
 /* Casca do admin (DESIGN.md §4, Modelos; lote B §1): lateral sólida, topo fosco só ao rolar e o conteúdo.
-   ≥1241px lateral de 232px; 761 a 1240px (e abaixo, porque o admin no celular fica fora) trilho de 76px. */
+   ≥1241px lateral de 232px; 761 a 1240px trilho de 76px; até 760px, barra inferior (celular.css). */
 
 .casca {
   --nav-w: 232px;
@@ -211,3 +211,35 @@
 .conta__nome { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .conta > .icone { color: var(--color-text-muted); }
 @media (max-width: 1020px) { .conta__nome { display: none; } }
+
+/* "Mais" (DESIGN.md §4, Navegação): no celular, Imóveis e Equipe saem da barra inferior e vão para este
+   menu. No computador o botão fica escondido; o celular.css o mostra. */
+.lateral__mais-casa { display: none; }
+.lateral__mais { width: 100%; border: 0; background: none; font-family: inherit; cursor: pointer; }
+.lateral__mais[data-ativo] { background-color: var(--nav-pill-bg); color: var(--color-text); font-weight: 600; }
+.nav-mais {
+  inset: auto var(--space-2) calc(var(--barra-h, 64px) + var(--space-4) + env(safe-area-inset-bottom)) auto;
+  min-width: 200px;
+  margin: 0;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--elev-2-bg);
+  box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
+  color: var(--color-text);
+}
+.nav-mais:popover-open { display: grid; gap: 2px; }
+.nav-mais__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 48px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav-mais__item:hover { background-color: var(--color-hover); color: var(--color-text); }
+.nav-mais__item[aria-current="page"] { background-color: var(--nav-pill-bg); color: var(--color-text); font-weight: 600; }

@@ -35,7 +35,8 @@ const MES = /^\d{4}-(0[1-9]|1[0-2])$/;
 const SEMANA = ["D", "S", "T", "Q", "Q", "S", "S"];
 const CLASSE_DA_SITUACAO = {em_curso: "estadia", futura: "futura", concluida: "passada"};
 const CORTE = "cubic-bezier(.16, 1, .3, 1)"; // ease-entrance, 400ms (DESIGN.md §10, corte de faceta)
-const LARGURA_DOS_IMOVEIS = 220;
+/** A largura da coluna dos imóveis vem do CSS (220px; 128px no celular). */
+const larguraDosImoveis = (grade) => parseFloat(getComputedStyle(grade).getPropertyValue("--esquerda")) || 0;
 const abertura = podeAnimar() && primeiraVisita();
 const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
 const porcento = (fracao) => `${(fracao * 100).toFixed(4)}%`;
@@ -139,7 +140,7 @@ function desenharLinhaDoTempo() {
   const hoje = isoDoDia();
   const marcas = (dia) => html`${[0, 6].includes(diaDaSemana(dia)) ? html`data-fds` : ""} ${dia === hoje ? html`data-hoje` : ""}`;
   const agora = agoraNaVista(inicio, dias.length);
-  renderizar(rolagem, html`<div class="agenda__grade" style="--dias: ${dias.length}; --esquerda: ${LARGURA_DOS_IMOVEIS}px">
+  renderizar(rolagem, html`<div class="agenda__grade" style="--dias: ${dias.length}">
     <div class="agenda__cabeca" aria-hidden="true"><div class="agenda__canto">Imóveis</div>
       <div class="agenda__dias">${dias.map((dia) => html`<div class="agenda__dia" ${marcas(dia)}>
         <span>${SEMANA[diaDaSemana(dia)]}</span><b class="numero">${Number(dia.slice(8))}</b></div>`)}</div></div>
@@ -210,8 +211,9 @@ function desenhar(anterior) {
   if (anterior?.mes !== mes) {
     // Mês novo: o dia de hoje à vista quando a grade é mais larga que a tela.
     const agora = agoraNaVista(dias[0], dias.length);
-    const pistas = rolagem.scrollWidth - LARGURA_DOS_IMOVEIS;
-    rolagem.scrollLeft = agora === null ? 0 : Math.max(0, agora * pistas - (rolagem.clientWidth - LARGURA_DOS_IMOVEIS) / 3);
+    const esquerda = larguraDosImoveis(rolagem.querySelector(".agenda__grade"));
+    const pistas = rolagem.scrollWidth - esquerda;
+    rolagem.scrollLeft = agora === null ? 0 : Math.max(0, agora * pistas - (rolagem.clientWidth - esquerda) / 3);
   }
   if (!podeAnimar()) return;
   if (!anterior && abertura) lapidar(rolagem.querySelectorAll(".barra"), rolagem.querySelectorAll(".agenda__gema"));

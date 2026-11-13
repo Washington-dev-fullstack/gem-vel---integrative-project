@@ -1,5 +1,5 @@
 /* Admin (Obsidiana) e tela Entrar: este arquivo só importa, cada parte na sua camada. */
-@layer tokens, base, componentes, telas;
+@layer tokens, base, componentes, telas, celular;
 @import url("fontes.css");
 @import url("tokens.css") layer(tokens);
 @import url("base.css") layer(base);
@@ -27,3 +27,4 @@
 @import url("componentes/dica.css") layer(componentes);
 @import url("componentes/seletor-periodo.css") layer(componentes);
 @import url("componentes/atividade.css") layer(componentes);
+@import url("celular.css") layer(celular);

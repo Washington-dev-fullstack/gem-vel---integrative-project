@@ -19,7 +19,7 @@
       {% for id, endereco, rotulo in [("visao-geral", "/", "Visão geral"), ("agenda", "/agenda", "Agenda"),
                                       ("reservas", "/reservas", "Reservas"), ("imoveis", "/imoveis", "Imóveis"),
                                       ("tarefas", "/tarefas", "Tarefas"), ("equipe", "/equipe", "Equipe")] %}
-      <li>
+      <li{% if id in ("imoveis", "equipe") %} class="lateral__extra"{% endif %}>
         <a class="lateral__item" href="{{ endereco }}" data-rotulo="{{ rotulo }}"{% if tela == id %} aria-current="page"{% endif %}>
           {% if tela == id %}<span class="lateral__pilula" aria-hidden="true"></span>{% endif %}
           <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>
@@ -28,6 +28,20 @@
         </a>
       </li>
       {% endfor %}
+      <li class="lateral__mais-casa">
+        <button type="button" class="lateral__item lateral__mais" popovertarget="nav-mais"{% if tela in ("imoveis", "equipe") %} data-ativo{% endif %}>
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#acoes"></use></svg>
+          <span class="lateral__rotulo">Mais</span>
+        </button>
+        <div class="nav-mais" id="nav-mais" popover>
+          {% for id, endereco, rotulo in [("imoveis", "/imoveis", "Imóveis"), ("equipe", "/equipe", "Equipe")] %}
+          <a class="nav-mais__item" href="{{ endereco }}"{% if tela == id %} aria-current="page"{% endif %}>
+            <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="/estaticos/icones.svg#{{ id }}"></use></svg>
+            {{ rotulo }}
+          </a>
+          {% endfor %}
+        </div>
+      </li>
     </ul>
   </nav>
   <div class="casca__area">

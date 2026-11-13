@@ -272,6 +272,10 @@ export function ligarBuscaGeral(gatilho) {
   }
 
   function posicionar() {
+    if (matchMedia("(max-width: 760px)").matches) { // no celular a busca abre em tela cheia (celular.css)
+      painel.style.top = painel.style.left = "";
+      return;
+    }
     const caixa = gatilho.getBoundingClientRect();
     painel.style.top = `${Math.round(caixa.top - 4)}px`;
     painel.style.left = `${Math.round(Math.max(16, Math.min(caixa.left - 4, innerWidth - painel.offsetWidth - 16)))}px`;

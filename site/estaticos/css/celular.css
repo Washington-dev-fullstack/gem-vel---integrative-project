@@ -1,0 +1,93 @@
+/* Celular (DESIGN.md §8, faixa ≤760px): o admin desce até o celular sem perder função.
+   Fica na última camada (celular), para valer por cima dos componentes e das telas sem !important;
+   cada bloco diz de qual componente ou tela ele é. O app da equipe já nasce no celular e não usa este arquivo. */
+
+@media (max-width: 760px) {
+  :root { --barra-h: 64px; }
+
+  /* Casca: a lateral vira a barra inferior flutuante, de vidro, a 8px das bordas, com Imóveis e Equipe
+     no "Mais". O topo deixa de ser preso e perde o vidro; a margem da página cai para 16px. */
+  .casca { display: block; }
+  .principal { padding: 0 var(--space-4) calc(var(--barra-h) + var(--space-10) + env(safe-area-inset-bottom)); }
+  .lateral {
+    position: fixed;
+    inset: auto var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
+    z-index: var(--z-nav);
+    flex-direction: row;
+    gap: 0;
+    height: var(--barra-h);
+    padding: var(--space-1);
+    border-radius: var(--radius-xl);
+    background: var(--elev-3-bg);
+    box-shadow: var(--elev-3-edge), var(--elev-3-shadow);
+    -webkit-backdrop-filter: var(--elev-3-filter);
+    backdrop-filter: var(--elev-3-filter);
+    overflow: visible;
+  }
+  [data-tier="leve"] .lateral { background: var(--elev-3-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .lateral__marca, .lateral__extra { display: none; }
+  .lateral__mais-casa { display: block; }
+  .lateral__lista { flex: 1; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .lateral__item {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    height: calc(var(--barra-h) - 2 * var(--space-1));
+    padding: 0 var(--space-1);
+    font-size: var(--text-2xs);
+  }
+  .lateral__rotulo { position: static; width: auto; height: auto; max-width: 100%; overflow: hidden; clip-path: none; text-overflow: ellipsis; }
+  .lateral__item::after { content: none; }
+  .lateral__contador { top: 4px; right: calc(50% - 24px); }
+
+  .topo { position: static; padding: 0 var(--space-4); }
+  .topo[data-rolou] { background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+  /* Busca: o gatilho vira um botão só com a lupa, e a busca abre em tela cheia. */
+  .busca-gatilho { width: var(--control-md); padding: 0; justify-content: center; }
+  .busca-gatilho__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .busca-gatilho .atalho { display: none; }
+  .busca-geral { inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; }
+
+  /* Cabeçalho da página: título em 32px. */
+  .cabecalho__titulo { font-size: var(--display-md); letter-spacing: var(--track-display-md); font-variation-settings: "opsz" var(--opsz-display); }
+
+  /* Filtros: a busca da lista ocupa a linha toda. */
+  .filtros__busca { flex: 1 1 100%; width: auto; }
+
+  /* Tabela: vira linhas de lista. Cada célula é um trecho da linha, que quebra quando não cabe; o
+     cabeçalho fica só para o leitor de tela, e o menu da linha vai para a ponta direita. */
+  .tabela thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .tabela, .tabela tbody { display: block; }
+  .tabela tbody tr { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); padding: var(--space-3) var(--space-12) var(--space-3) var(--space-4); border-bottom: 1px solid var(--table-divider); }
+  .tabela tbody tr:last-child { border-bottom: 0; }
+  .tabela tbody tr[data-aberta] { box-shadow: inset 2px 0 0 var(--table-row-open-bar); }
+  .tabela td, .tabela :is(th, td):is(:first-child, :last-child) { height: auto; max-width: 100%; padding: 0; border: 0; overflow: hidden; text-overflow: ellipsis; box-shadow: none; }
+  .tabela .tabela__acoes { position: absolute; top: 50%; right: var(--space-2); width: auto; overflow: visible; translate: 0 -50%; }
+
+  /* Gaveta: quase tela cheia (12px de margem), sobe de baixo como folha. */
+  .gaveta { --drawer-pad: var(--space-5); inset: var(--space-3); width: auto; translate: 0 calc(100% + var(--space-4)); }
+  .gaveta[open] { translate: 0 0; }
+  @starting-style { .gaveta[open] { translate: 0 calc(100% + var(--space-4)); } }
+
+  /* Formulários: um campo por linha e texto de 16px, que evita o zoom do iOS ao tocar no campo. */
+  .formulario__linha { grid-template-columns: minmax(0, 1fr); }
+  input:not([type="checkbox"], [type="radio"]), select, textarea { font-size: 1rem; }
+
+  /* Avisos: acima da barra inferior, na largura da tela. */
+  .avisos { --toast-offset: calc(var(--barra-h) + var(--space-4) + env(safe-area-inset-bottom)); --toast-w: calc(100vw - 2 * var(--space-4)); }
+
+  /* Visão geral: KPIs em 1 coluna. */
+  .visao .kpis { grid-template-columns: minmax(0, 1fr); }
+  .visao .kpi { box-shadow: none; }
+  .visao .kpi + .kpi { border-top: 1px solid var(--color-border); }
+  .contagens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* Tarefas: título na largura toda; responsável e horário na segunda linha, o estado na terceira. */
+  .linha-tarefa { grid-template-columns: 16px minmax(0, 1fr) 32px; grid-template-areas: "gema titulo acoes" ". info acoes" ". estado acoes"; }
+  .linha-tarefa__estado { justify-self: start; }
+
+  /* Agenda: coluna de imóveis de 128px e sem a legenda. */
+  .agenda__grade { --esquerda: 128px; }
+  .agenda-legenda { display: none; }
+}
