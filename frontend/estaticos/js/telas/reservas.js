@@ -19,6 +19,7 @@ import {gavetaBloqueio} from "../gavetas/bloqueio.js";
 import {excluirHospede, gavetaHospede, itensDoHospede} from "../gavetas/hospede.js";
 import {SITUACOES, cancelarReserva, carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
 import {gavetaTarefa} from "../gavetas/tarefa.js";
+import {ir} from "../nucleo/enderecos.js";
 
 const POR_VEZ = 50;
 const ESTADOS_PADRAO = ["futura", "em_curso", "concluida"];
@@ -178,7 +179,7 @@ async function desenharVazio(f) {
   const minha = chaveDesenhada;
   if (!imoveis.length) {
     vazio(area, {texto: "Cadastre um imóvel antes da primeira reserva.",
-      acao: {rotulo: "Novo imóvel", fazer: () => location.assign("/imoveis?imovel=novo")}});
+      acao: {rotulo: "Novo imóvel", fazer: () => ir("/imoveis?imovel=novo")}});
     return;
   }
   const primeiroUso = !filtrosAtivos(f) && !(await temAlgumaReserva().catch(() => true));

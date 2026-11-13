@@ -9,6 +9,7 @@ import {abrirGaveta, fecharGaveta} from "../nucleo/url.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
 import {ligarFormulario} from "../componentes/formulario.js";
 import {chip, icone} from "../componentes/pecas.js";
+import {ir} from "../nucleo/enderecos.js";
 
 export const UFS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR",
   "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
@@ -195,7 +196,7 @@ export function gavetaImovel({depois = () => {}} = {}) {
             depois: (salvo) => {
               fecharGaveta();
               avisar(`${salvo.nome} ${editando ? "salvo" : "cadastrado"}.`, editando ? {}
-                : {acao: {rotulo: "Ver imóvel", fazer: () => location.assign(`/imoveis/${salvo.id}`)}});
+                : {acao: {rotulo: "Ver imóvel", fazer: () => ir(`/imoveis/${salvo.id}`)}});
               depois(salvo);
             },
           });

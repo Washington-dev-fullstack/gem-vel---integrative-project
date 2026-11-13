@@ -31,6 +31,11 @@
   <link rel="preload" href="/estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/estaticos/css/admin.css">
   {% endblock %}
+  {% if demo %}{# Só na versão do GitHub Pages (ferramentas/gerar_site.py); o Flask nunca passa demo. #}
+  <meta name="gemovel-modo" content="demo">
+  <link rel="stylesheet" href="/estaticos/css/demo.css">
+  <script type="module" src="/estaticos/js/demo/navegador.js"></script>
+  {% endif %}
 </head>
 <body>
   <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>

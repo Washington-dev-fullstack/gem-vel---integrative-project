@@ -1,0 +1,52 @@
+/* Tela Imóveis (web-admin.md §5): alternador Tabela · Cartões, a tabela e a grade de cartões (lote B §10). */
+@layer telas {
+  .alternador { display: inline-flex; padding: 3px; border-radius: var(--radius-full); background-color: var(--color-hover); box-shadow: inset 0 0 0 1px var(--color-border); }
+  .alternador__opcao {
+    height: calc(var(--control-md) - 6px);
+    padding: 0 var(--space-4);
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+  }
+  .alternador__opcao:hover { color: var(--color-text); }
+  .alternador__opcao[aria-pressed="true"] { background: var(--elev-1-bg); box-shadow: var(--elev-1-edge); color: var(--color-text); }
+
+  .ocupacao { display: flex; align-items: center; gap: var(--space-2); min-width: 120px; }
+  .ocupacao .medidor { flex: 1; }
+  .ocupacao__valor { min-width: 4ch; color: var(--color-text-muted); font-size: var(--text-sm); text-align: right; }
+
+  .tabela tr[data-desativado] td { color: var(--color-text-muted); }
+  @media (max-width: 1279px) { .coluna-p3 { display: none; } }
+  @media (max-width: 1099px) { .coluna-p2 { display: none; } }
+
+  .grade-imoveis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--prop-card-min, 280px), 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cartao-imovel { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); transition: box-shadow var(--dur-fast) var(--ease-standard); }
+  .cartao-imovel:hover { box-shadow: var(--elev-1-edge), inset 0 0 0 1px var(--color-border-strong), var(--elev-1-shadow); }
+  .cartao-imovel__topo { display: flex; align-items: flex-start; gap: var(--space-2); }
+  .cartao-imovel__nome { flex: 1; min-width: 0; margin: 0; font-size: var(--text-md); font-weight: 600; letter-spacing: var(--track-md); }
+  .cartao-imovel__link { color: var(--color-text); text-decoration: none; }
+  .cartao-imovel__link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .cartao-imovel__link:focus-visible { outline: none; }
+  .cartao-imovel__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .cartao-imovel__acoes, .cartao-imovel .ocupacao { position: relative; z-index: 1; }
+  .cartao-imovel__acoes { margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1) 0 0; }
+  .cartao-imovel__local, .cartao-imovel__proxima, .cartao-imovel__diaria { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+  .cartao-imovel__local .numero { font-family: var(--font-mono); }
+  .cartao-imovel__hospede { color: var(--color-text); }
+  .cartao-imovel__diaria { margin-top: auto; }
+  .cartao-imovel__diaria .numero { color: var(--color-text); font-weight: 500; }
+  .cartao-imovel[data-desativado] .cartao-imovel__link { color: var(--color-text-muted); }
+}

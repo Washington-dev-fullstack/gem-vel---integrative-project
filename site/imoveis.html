@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="obsidiana">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imóveis · Gemóvel</title>
+  <link rel="icon" href="estaticos/favicon.svg" type="image/svg+xml">
+  <script>
+    /* Nível de efeito (DESIGN.md §6), antes do CSS: leve, completo ou padrão. ?nivel= força o nível na aba. */
+    (function () {
+      var raiz = document.documentElement, nav = navigator, nivel = null;
+      var pedido = new URLSearchParams(location.search).get("nivel");
+      try {
+        if (pedido) sessionStorage.setItem("gemovel:nivel", pedido);
+        nivel = sessionStorage.getItem("gemovel:nivel");
+      } catch (e) { nivel = pedido; }
+      if (["completo", "padrao", "leve"].indexOf(nivel) < 0) {
+        var leve = (nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) ||
+          (nav.connection && nav.connection.saveData) || matchMedia("(prefers-reduced-transparency: reduce)").matches ||
+          !(window.CSS && CSS.supports("backdrop-filter", "blur(1px)"));
+        var marcas = (nav.userAgentData && nav.userAgentData.brands) || [];
+        var chromium = marcas.some(function (m) { return m.brand === "Chromium"; });
+        var computador = matchMedia("(pointer: fine)").matches && !(nav.userAgentData && nav.userAgentData.mobile);
+        nivel = leve ? "leve" : (chromium && computador ? "completo" : "padrao");
+      }
+      if (raiz.dataset.theme === "quartzo" && nivel === "completo") nivel = "padrao";
+      raiz.dataset.tier = nivel;
+    })();
+  </script>
+  
+  <link rel="preload" href="estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="estaticos/css/admin.css">
+  <link rel="stylesheet" href="estaticos/css/telas/imoveis.css">
+  
+  <meta name="gemovel-modo" content="demo">
+  <link rel="stylesheet" href="estaticos/css/demo.css">
+  <script type="module" src="estaticos/js/demo/navegador.js"></script>
+  
+</head>
+<body>
+  <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  
+<div class="casca">
+  <nav class="lateral" aria-label="Principal">
+    <a class="lateral__marca" href="/">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="prisma" x1="3" y1="4" x2="21" y2="20.5" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#a6f4ff"/><stop offset=".38" stop-color="#cdbcff"/>
+            <stop offset=".7" stop-color="#ffb8e3"/><stop offset="1" stop-color="#ffe2a6"/>
+          </linearGradient>
+        </defs>
+        <path class="lateral__lapide" d="M7 4H17L21 9.5L12 20.5L3 9.5Z"/>
+        <path class="lateral__facetas" d="M3 9.5H21M7 4L9.5 9.5L12 4L14.5 9.5L17 4M9.5 9.5L12 20.5L14.5 9.5"/>
+      </svg>
+      <span>Gemóvel</span>
+    </a>
+    <ul class="lateral__lista" role="list">
+      
+      <li>
+        <a class="lateral__item" href="/" data-rotulo="Visão geral">
+          
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#visao-geral"></use></svg>
+          <span class="lateral__rotulo">Visão geral</span>
+          
+        </a>
+      </li>
+      
+      <li>
+        <a class="lateral__item" href="/agenda" data-rotulo="Agenda">
+          
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#agenda"></use></svg>
+          <span class="lateral__rotulo">Agenda</span>
+          
+        </a>
+      </li>
+      
+      <li>
+        <a class="lateral__item" href="/reservas" data-rotulo="Reservas">
+          
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#reservas"></use></svg>
+          <span class="lateral__rotulo">Reservas</span>
+          
+        </a>
+      </li>
+      
+      <li>
+        <a class="lateral__item" href="/imoveis" data-rotulo="Imóveis" aria-current="page">
+          <span class="lateral__pilula" aria-hidden="true"></span>
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#imoveis"></use></svg>
+          <span class="lateral__rotulo">Imóveis</span>
+          
+        </a>
+      </li>
+      
+      <li>
+        <a class="lateral__item" href="/tarefas" data-rotulo="Tarefas">
+          
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#tarefas"></use></svg>
+          <span class="lateral__rotulo">Tarefas</span>
+          <span class="lateral__contador" data-contador-tarefas aria-hidden="true" hidden></span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="lateral__item" href="/equipe" data-rotulo="Equipe">
+          
+          <svg class="icone icone--20" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#equipe"></use></svg>
+          <span class="lateral__rotulo">Equipe</span>
+          
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+  <div class="casca__area">
+    <header class="topo">
+      <button type="button" class="busca-gatilho" data-busca aria-keyshortcuts="Control+K Meta+K">
+        <svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#buscar"></use></svg>
+        <span class="busca-gatilho__texto">Buscar imóvel, reserva ou hóspede</span>
+        <kbd class="atalho" data-atalho-k aria-hidden="true">Ctrl K</kbd>
+      </button>
+      <button type="button" class="conta" data-conta aria-label="Conta">
+        <span class="conta__avatar" data-conta-avatar></span>
+        <span class="conta__nome" data-conta-nome></span>
+        <svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#abrir"></use></svg>
+      </button>
+    </header>
+    <main id="conteudo" class="principal" tabindex="-1">
+      
+<div class="cabecalho">
+  <div class="cabecalho__textos">
+    <h1 class="cabecalho__titulo">Imóveis</h1>
+    <p class="cabecalho__contexto numero" data-contexto></p>
+  </div>
+  <div class="cabecalho__acoes">
+    <div class="alternador" role="group" aria-label="Ver os imóveis em">
+      <button type="button" class="alternador__opcao" data-vista="tabela" aria-pressed="false">Tabela</button>
+      <button type="button" class="alternador__opcao" data-vista="cartoes" aria-pressed="true">Cartões</button>
+    </div>
+    <button type="button" class="botao botao--primario" data-novo><svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#mais"></use></svg><span class="botao__rotulo">Novo imóvel</span></button>
+  </div>
+</div>
+
+<div class="filtros">
+  <button type="button" class="botao botao--secundario filtro" data-filtro="prontidao">Prontidão: <span class="filtro__valor">Todas</span><svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#abrir"></use></svg></button>
+  <button type="button" class="botao botao--secundario filtro" data-filtro="cidade" hidden>Cidade: <span class="filtro__valor">Todas</span><svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#abrir"></use></svg></button>
+  <button type="button" class="botao botao--fantasma botao--sm filtros__limpar" data-limpar hidden>Limpar filtros</button>
+  <label class="escolha filtros__interruptor"><input type="checkbox" role="switch" data-desativados>Mostrar desativados</label>
+</div>
+<div class="imoveis-lista" data-lista></div>
+
+    </main>
+  </div>
+</div>
+<div class="avisos" data-avisos popover="manual"></div>
+<p class="visualmente-oculto" role="status" data-avisos-leitor></p>
+
+  <script type="module" src="estaticos/js/telas/imoveis.js"></script>
+</body>
+</html>

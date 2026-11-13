@@ -8,12 +8,9 @@ import {ligarMenu} from "./menu.js";
 import {avisar} from "./aviso.js";
 import {ligarBuscaGeral} from "./busca.js";
 import {ligarFaixaSemInternet} from "./faixa.js";
+import {enderecoAtual, ir, irSubstituindo} from "../nucleo/enderecos.js";
 
 const CINCO_MINUTOS = 5 * 60 * 1000;
-
-function enderecoAtual() {
-  return location.pathname + location.search + location.hash;
-}
 
 function ligarTopo() {
   const topo = document.querySelector(".topo");
@@ -27,7 +24,7 @@ function ligarSessaoExpirada() {
   addEventListener("gemovel:sessao-expirada", () => {
     avisar("Sua sessão expirou.", {
       fixo: true,
-      acao: {rotulo: "Entrar de novo", fazer: () => location.assign(`/entrar?volta=${encodeURIComponent(enderecoAtual())}`)},
+      acao: {rotulo: "Entrar de novo", fazer: () => ir(`/entrar?volta=${encodeURIComponent(enderecoAtual())}`)},
     });
   });
 }
@@ -54,7 +51,7 @@ async function sair() {
   try {
     await api.delete("/api/sessao");
   } finally {
-    location.assign("/entrar?saiu=1");
+    ir("/entrar?saiu=1");
   }
 }
 
@@ -74,7 +71,7 @@ async function carregarConta() {
     }
     return usuario;
   } catch (erro) {
-    if (erro.status === 401) location.replace(`/entrar?volta=${encodeURIComponent(enderecoAtual())}`);
+    if (erro.status === 401) irSubstituindo(`/entrar?volta=${encodeURIComponent(enderecoAtual())}`);
     return null;
   }
 }

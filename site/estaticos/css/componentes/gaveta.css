@@ -1,0 +1,75 @@
+/* Gaveta (lote B §14): painel de 430px à direita, nível 3. Entra em 400ms (expo.out) e sai em 220ms
+   (DESIGN.md §10, item 5). No nível Leve, sólida. */
+
+.gaveta {
+  --drawer-w: 430px;
+  --drawer-pad: var(--space-6);
+  position: fixed;
+  inset: var(--space-2) var(--space-2) var(--space-2) auto;
+  flex-direction: column;
+  width: min(var(--drawer-w), calc(100vw - var(--space-4)));
+  max-width: none;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--elev-3-bg);
+  box-shadow: var(--elev-3-edge), var(--elev-3-shadow);
+  color: var(--color-text);
+  overflow: hidden;
+  -webkit-backdrop-filter: var(--elev-3-filter);
+  backdrop-filter: var(--elev-3-filter);
+  translate: calc(100% + var(--space-4)) 0;
+  transition: translate var(--dur-exit) var(--ease-exit), overlay var(--dur-exit) allow-discrete, display var(--dur-exit) allow-discrete;
+}
+.gaveta[open] { display: flex; translate: 0 0; transition-duration: var(--dur-slow); transition-timing-function: var(--ease-entrance); }
+@starting-style { .gaveta[open] { translate: calc(100% + var(--space-4)) 0; } }
+[data-tier="leve"] .gaveta { background: var(--elev-3-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+.gaveta::backdrop, .dialogo::backdrop {
+  background-color: var(--scrim);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-standard), overlay var(--dur-exit) allow-discrete, display var(--dur-exit) allow-discrete;
+}
+.gaveta[open]::backdrop, .dialogo[open]::backdrop { opacity: 1; }
+@starting-style { .gaveta[open]::backdrop, .dialogo[open]::backdrop { opacity: 0; } }
+
+.gaveta__cabecalho { display: flex; align-items: flex-start; gap: var(--space-2); padding: var(--drawer-pad) var(--space-4) var(--space-4) var(--drawer-pad); }
+.gaveta__titulos { flex: 1; min-width: 0; display: grid; gap: var(--space-2); }
+.gaveta__titulo { overflow-wrap: anywhere; text-wrap: balance; }
+.gaveta__titulo:focus { outline: none; }
+.gaveta__titulo:empty { min-height: 1lh; }
+.gaveta__contexto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm); }
+.gaveta__contexto:empty, .gaveta__ferramentas:empty { display: none; }
+.gaveta__ferramentas { display: flex; align-items: center; gap: var(--space-1); }
+.gaveta__corpo { flex: 1; min-height: 0; padding: 0 var(--drawer-pad) var(--drawer-pad); overflow-y: auto; overscroll-behavior: contain; }
+.gaveta__voltar { display: inline-flex; align-items: center; gap: var(--space-1-5); margin-bottom: var(--space-1); color: var(--color-text-muted); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
+.gaveta__voltar:hover { color: var(--color-text); }
+
+/* Rodapé do formulário: preso embaixo, com a ação principal à direita. */
+.gaveta__rodape {
+  position: sticky;
+  bottom: calc(var(--drawer-pad) * -1);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin: var(--space-6) calc(var(--drawer-pad) * -1) calc(var(--drawer-pad) * -1);
+  padding: var(--space-4) var(--drawer-pad);
+  background: var(--elev-3-solid);
+  box-shadow: inset 0 1px 0 var(--color-border);
+}
+
+/* Seções do detalhe */
+.gaveta__secao + .gaveta__secao { margin-top: var(--space-6); padding-top: var(--space-6); box-shadow: inset 0 1px 0 var(--color-border); }
+.gaveta__secao-titulo { margin-bottom: var(--space-3); color: var(--color-text-subtle); font-family: var(--font-mono); font-size: var(--text-2xs); font-weight: 500; letter-spacing: var(--track-caps); text-transform: uppercase; }
+.dados { display: grid; grid-template-columns: minmax(96px, auto) 1fr; gap: var(--space-2) var(--space-4); margin: 0; font-size: var(--text-base); }
+.dados dt { color: var(--color-text-muted); }
+.dados dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+
+/* Detalhe: linha secundária, chip da limpeza, texto livre e a nota do rodapé. */
+.dados__secundario { color: var(--color-text-muted); font-size: var(--text-sm); }
+.dados__limpeza { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.dados__texto { white-space: pre-line; }
+.gaveta__nota { margin-right: auto; color: var(--color-text-muted); font-size: var(--text-sm); }

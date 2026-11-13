@@ -5,6 +5,7 @@ import {destinoSeguro} from "../nucleo/url.js";
 import {podeAnimar} from "../nucleo/nivel.js";
 import {ligarFormulario, ligarMostrarSenha} from "../componentes/formulario.js";
 import {esconderFaixa, mostrarFaixa} from "../componentes/faixa.js";
+import {ir} from "../nucleo/enderecos.js";
 
 const SEM_CONEXAO = "Não deu para entrar agora. Confira a internet e tente de novo.";
 const parametros = new URLSearchParams(location.search);
@@ -26,7 +27,7 @@ ligarFormulario(form, {
   },
   depois({usuario}) {
     const painel = usuario.perfil === "administrador" ? "/" : "/minhas-tarefas";
-    location.assign(destinoSeguro(parametros.get("volta")) ?? painel);
+    ir(destinoSeguro(parametros.get("volta")) ?? painel);
   },
 });
 

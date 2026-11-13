@@ -1,6 +1,6 @@
 # Gemóvel — Versão de demonstração no GitHub Pages
 
-> **Proposta, aguardando o sim da dupla (13 nov 2026).** Pedido: "o site tem que estar no formato para postar no GitHub Pages". Escolha feita: demonstração no navegador, com os dados de exemplo e as mudanças guardadas só no navegador de quem visita.
+> **Aprovada pela dupla em 13 nov 2026.** Pedido: "o site tem que estar no formato para postar no GitHub Pages". Escolha feita: demonstração no navegador, com os dados de exemplo e as mudanças guardadas só no navegador de quem visita.
 
 ## Objetivo
 

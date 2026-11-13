@@ -21,7 +21,7 @@ export function carregarGsap() {
   if (globalThis.gsap) return Promise.resolve(globalThis.gsap);
   gsapCarregando ??= new Promise((resolver) => {
     const script = document.createElement("script");
-    script.src = "/estaticos/lib/gsap.min.js";
+    script.src = new URL("../../lib/gsap.min.js", import.meta.url).href;
     script.onload = () => resolver(globalThis.gsap ?? null);
     script.onerror = () => resolver(null);
     document.head.append(script);

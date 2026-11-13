@@ -1,0 +1,16 @@
+/* Faixa de KPIs (DESIGN.md §4): um painel só, com filetes entre os números. O valor (num-lg) gira no
+   tambor de dígitos ao chegar e ao mudar; embaixo, a legenda. */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  border-radius: var(--radius-xl);
+  background: var(--elev-1-bg);
+  box-shadow: var(--elev-1-edge), var(--elev-1-shadow);
+  overflow: clip;
+}
+.kpi { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; padding: var(--space-5); box-shadow: -1px 0 0 var(--color-border); }
+.kpi__rotulo { color: var(--color-text-muted); font-size: var(--text-sm); font-weight: 500; }
+.kpi__valor { font-size: var(--num-lg); font-weight: 600; line-height: 1; letter-spacing: var(--track-num-lg); font-variant-numeric: tabular-nums; }
+.kpi__valor--texto { font-size: var(--text-lg, 1.125rem); letter-spacing: var(--track-lg); line-height: 1.2; }
+.kpi__legenda { overflow: hidden; color: var(--color-text-muted); font-size: var(--text-sm); text-overflow: ellipsis; white-space: nowrap; }

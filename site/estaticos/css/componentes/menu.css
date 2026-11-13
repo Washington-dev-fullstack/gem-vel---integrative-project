@@ -1,0 +1,61 @@
+/* Menu de ações (lote B §13) e painéis de filtro: nível 2, crescem de 0,96 a partir do botão
+   em 200ms e fecham em 140ms (DESIGN.md §10, item 9). O JS escreve left, top, --origem e --desloca. */
+
+.menu, .painel-filtro {
+  --menu-min-w: 200px;
+  --menu-item-h: var(--control-sm);
+  --menu-danger-fg: var(--status-late-fg);
+  position: fixed;
+  inset: auto;
+  min-width: var(--menu-min-w);
+  max-width: min(320px, calc(100vw - var(--space-4)));
+  margin: 0;
+  padding: var(--space-1-5);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--elev-2-bg);
+  box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
+  color: var(--color-text);
+  overflow: visible;
+  opacity: 0;
+  transform: translateY(var(--desloca, -4px)) scale(.96);
+  transform-origin: var(--origem, left top);
+  transition: opacity var(--dur-fast) var(--ease-exit), transform var(--dur-fast) var(--ease-exit),
+    overlay var(--dur-fast) allow-discrete, display var(--dur-fast) allow-discrete;
+}
+.menu:popover-open, .painel-filtro:popover-open {
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-standard);
+}
+@starting-style {
+  .menu:popover-open, .painel-filtro:popover-open { opacity: 0; transform: translateY(var(--desloca, -4px)) scale(.96); }
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--menu-item-h);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-base);
+  text-align: left;
+  cursor: pointer;
+}
+.menu__item:hover { background-color: var(--color-hover); }
+.menu__item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; background-color: var(--color-hover); }
+.menu__item .icone { color: var(--color-text-muted); }
+.menu__item--perigo, .menu__item--perigo .icone { color: var(--menu-danger-fg); }
+.menu__item[aria-disabled="true"], .menu__item[aria-disabled="true"] .icone { color: var(--color-text-disabled); cursor: not-allowed; }
+.menu__item[aria-disabled="true"]:hover { background: none; }
+.menu__separador { height: 1px; margin: var(--space-1-5) calc(var(--space-1-5) * -1); background-color: var(--color-border); }
+.menu__cabecalho { display: grid; gap: 2px; padding: var(--space-2); font-size: var(--text-sm); }
+.menu__cabecalho strong { font-weight: 600; }
+.menu__cabecalho span { color: var(--color-text-muted); font-size: var(--text-xs); overflow-wrap: anywhere; }

@@ -20,6 +20,7 @@ import {gavetaHospede} from "../gavetas/hospede.js";
 import {prontidaoDe} from "../gavetas/imovel.js";
 import {carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
 import {gavetaTarefa} from "../gavetas/tarefa.js";
+import {ir} from "../nucleo/enderecos.js";
 
 const painel = document.querySelector("[data-painel]");
 const $ = (seletor) => painel.querySelector(seletor);
@@ -169,7 +170,7 @@ function desenharReceita(meses, escolhido) {
 function desenharOcupacao(linhas, media) {
   $("[data-ocupacao-sub]").textContent = `Noites ocupadas ÷ noites do mês · média de ${media}%`;
   if (!linhas.length) {
-    vazio(areaOcupacao, {texto: "Nenhum imóvel ativo neste mês.", acao: {rotulo: "Novo imóvel", fazer: () => location.assign("/imoveis?imovel=novo")}});
+    vazio(areaOcupacao, {texto: "Nenhum imóvel ativo neste mês.", acao: {rotulo: "Novo imóvel", fazer: () => ir("/imoveis?imovel=novo")}});
     renderizar($('[data-tabela="ocupacao"]'), html``);
     return;
   }

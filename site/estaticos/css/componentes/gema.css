@@ -1,0 +1,26 @@
+/* Gema de estado: a forma diz o estado, e a cor vem do token do estado (DESIGN.md §2.2). */
+
+.gema { color: var(--gema-cor, currentColor); }
+.gema--pendente { --gema-cor: var(--status-todo-icon); }
+.gema--em_andamento { --gema-cor: var(--status-doing-icon); }
+.gema--concluida { --gema-cor: var(--status-done-icon); }
+.gema--atrasada { --gema-cor: var(--status-late-icon); }
+
+/* A gema que acabou de mudar surge com ease-pop (só coisas pequenas, uma vez por mudança). */
+.gema--surge { animation: gema-surge var(--dur-moderate) var(--ease-pop); }
+@keyframes gema-surge { from { opacity: 0; transform: scale(.6); } }
+
+/* Anel das gemas em andamento e atrasada: laço de 2,2s, só no nível Completo. */
+.gema-anel { position: relative; display: inline-grid; place-items: center; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-tier="completo"] .gema-anel::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1.5px var(--gema-cor, currentColor);
+    opacity: 0;
+    animation: gema-anel 2.2s var(--ease-exit) infinite;
+  }
+}
+@keyframes gema-anel { 0% { opacity: .6; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.5); } }

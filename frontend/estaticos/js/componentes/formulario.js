@@ -3,7 +3,7 @@
 
 import {html, renderizar} from "../nucleo/html.js";
 import {paraDinheiroApi} from "../nucleo/formatos.js";
-import {icone, trocarTexto} from "./pecas.js";
+import {SPRITE, icone, trocarTexto} from "./pecas.js";
 
 /** Enquanto um envio espera a resposta, chamar de novo devolve a mesma promessa. */
 export function umEnvioPorVez(funcao) {
@@ -187,7 +187,7 @@ export function ligarMostrarSenha(form) {
       const aparecendo = senha.type === "text";
       senha.type = aparecendo ? "password" : "text";
       botao.querySelector("[data-mostrar-rotulo]").textContent = aparecendo ? "Mostrar" : "Ocultar";
-      botao.querySelector("use").setAttribute("href", `/estaticos/icones.svg#${aparecendo ? "mostrar" : "ocultar"}`);
+      botao.querySelector("use").setAttribute("href", `${SPRITE}#${aparecendo ? "mostrar" : "ocultar"}`);
     });
   }
 }

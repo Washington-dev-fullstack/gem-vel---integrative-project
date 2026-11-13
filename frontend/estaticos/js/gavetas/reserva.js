@@ -11,6 +11,7 @@ import {ligarFormulario, marcarErro} from "../componentes/formulario.js";
 import {ligarMenu} from "../componentes/menu.js";
 import {chip, estadoVisivel, icone} from "../componentes/pecas.js";
 import {contarNoites, noitesPorExtenso, seletorDatas} from "../componentes/seletor-datas.js";
+import {ir} from "../nucleo/enderecos.js";
 
 export const SITUACOES = {futura: "Futura", em_curso: "Em curso", concluida: "Concluída", cancelada: "Cancelada"};
 
@@ -309,7 +310,7 @@ export function gavetaReserva({depois = () => {}, aoCancelar = (reserva) => canc
               {preencher: {voltarPara: {tipo: "reserva", id: reserva.id, rotulo: `Reserva ${reserva.codigo}`}}});
           });
           ligarMenu(dialogo.querySelector("[data-acoes]"), [
-            {rotulo: "Ver na agenda", fazer: () => location.assign(enderecoNaAgenda(reserva))},
+            {rotulo: "Ver na agenda", fazer: () => ir(enderecoNaAgenda(reserva))},
             ...(reserva.status === "cancelada" ? [] : [{separador: true}, {rotulo: "Cancelar reserva", perigo: true,
               fazer: () => {
                 fecharGaveta();
@@ -344,7 +345,7 @@ export function gavetaReserva({depois = () => {}, aoCancelar = (reserva) => canc
             depois: (salva) => {
               fecharGaveta();
               avisar(`Reserva ${salva.codigo} ${editando ? "salva" : "criada"}`, {acao: {rotulo: "Ver na agenda",
-                fazer: () => location.assign(enderecoNaAgenda(salva))}});
+                fazer: () => ir(enderecoNaAgenda(salva))}});
               depois(salva);
             },
           });

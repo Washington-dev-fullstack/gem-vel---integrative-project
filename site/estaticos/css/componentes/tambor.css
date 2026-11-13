@@ -1,0 +1,9 @@
+/* Tambor de dígitos (DESIGN.md §10, item 7): cada algarismo é uma coluna de 0 a 9 que o JS desliza.
+   A altura da coluna é a da linha; algarismos tabulares sempre. */
+
+.tambor { --tambor-linha: 1.15em; display: inline-flex; line-height: var(--tambor-linha); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tambor__digitos { display: inline-flex; }
+.tambor__coluna { display: inline-block; height: var(--tambor-linha); overflow: hidden; }
+.tambor__rolo { display: flex; flex-direction: column; will-change: transform; }
+.tambor__rolo > span { display: block; height: var(--tambor-linha); text-align: center; }
+.tambor__texto { white-space: pre; }

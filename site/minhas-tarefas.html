@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="quartzo">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minhas tarefas · Gemóvel</title>
+  <link rel="icon" href="estaticos/favicon.svg" type="image/svg+xml">
+  <script>
+    /* Nível de efeito (DESIGN.md §6), antes do CSS: leve, completo ou padrão. ?nivel= força o nível na aba. */
+    (function () {
+      var raiz = document.documentElement, nav = navigator, nivel = null;
+      var pedido = new URLSearchParams(location.search).get("nivel");
+      try {
+        if (pedido) sessionStorage.setItem("gemovel:nivel", pedido);
+        nivel = sessionStorage.getItem("gemovel:nivel");
+      } catch (e) { nivel = pedido; }
+      if (["completo", "padrao", "leve"].indexOf(nivel) < 0) {
+        var leve = (nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) ||
+          (nav.connection && nav.connection.saveData) || matchMedia("(prefers-reduced-transparency: reduce)").matches ||
+          !(window.CSS && CSS.supports("backdrop-filter", "blur(1px)"));
+        var marcas = (nav.userAgentData && nav.userAgentData.brands) || [];
+        var chromium = marcas.some(function (m) { return m.brand === "Chromium"; });
+        var computador = matchMedia("(pointer: fine)").matches && !(nav.userAgentData && nav.userAgentData.mobile);
+        nivel = leve ? "leve" : (chromium && computador ? "completo" : "padrao");
+      }
+      if (raiz.dataset.theme === "quartzo" && nivel === "completo") nivel = "padrao";
+      raiz.dataset.tier = nivel;
+    })();
+  </script>
+  
+<link rel="preload" href="estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="estaticos/css/app-equipe.css">
+<link rel="stylesheet" href="estaticos/css/telas/minhas-tarefas.css">
+  
+  <meta name="gemovel-modo" content="demo">
+  <link rel="stylesheet" href="estaticos/css/demo.css">
+  <script type="module" src="estaticos/js/demo/navegador.js"></script>
+  
+</head>
+<body>
+  <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  
+<header class="equipe-topo">
+  <span class="equipe-topo__marca">Gemóvel</span>
+  <button type="button" class="conta" data-conta aria-label="Conta">
+    <span class="conta__avatar" data-conta-avatar></span>
+    <span class="conta__nome" data-conta-nome></span>
+  </button>
+</header>
+<main id="conteudo" class="app-equipe">
+  
+<div class="minhas-tarefas">
+  <div class="minhas-tarefas__cabeca">
+    <div>
+      <h1 class="minhas-tarefas__saudacao" data-saudacao>Minhas tarefas</h1>
+      <p class="minhas-tarefas__contexto numero" data-contexto></p>
+    </div>
+    <div data-dia></div>
+  </div>
+  <div class="minhas-tarefas__lista" data-lista></div>
+</div>
+
+</main>
+
+  <script type="module" src="estaticos/js/telas/minhas-tarefas.js"></script>
+</body>
+</html>

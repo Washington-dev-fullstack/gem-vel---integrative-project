@@ -20,10 +20,11 @@ import {gavetaBloqueio} from "../gavetas/bloqueio.js";
 import {desativarImovel, gavetaImovel, itensDoImovel, localDoImovel, prontidaoDe, proximaEntrada, reativarImovel} from "../gavetas/imovel.js";
 import {cancelarReserva, carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
 import {gavetaTarefa} from "../gavetas/tarefa.js";
+import {ir, paginaAtual} from "../nucleo/enderecos.js";
 
 const POR_VEZ = 50;
 const TIPO = {limpeza: "Limpeza", manutencao: "Manutenção"};
-const id = Number(location.pathname.match(/^\/imoveis\/(\d+)/)?.[1]);
+const id = Number(paginaAtual().match(/^\/imoveis\/(\d+)/)?.[1]);
 
 const pagina = document.querySelector("[data-pagina]");
 const nome = document.querySelector("[data-nome]");
@@ -100,7 +101,7 @@ function naoEncontrado() {
   nome.textContent = "Imóvel não encontrado";
   contexto.textContent = "";
   vazio(pagina, {texto: "Este imóvel não existe ou não está nesta conta.", detalhe: "Confira o endereço ou volte para a lista de imóveis.",
-    acao: {rotulo: "Ver imóveis", fazer: () => location.assign("/imoveis")}});
+    acao: {rotulo: "Ver imóveis", fazer: () => ir("/imoveis")}});
 }
 
 async function carregarImovel() {

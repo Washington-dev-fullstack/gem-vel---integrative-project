@@ -1,0 +1,5 @@
+/* Fontes do admin e da tela Entrar: Fontsource 5.3.0, subconjunto latino, no próprio servidor. */
+@font-face { font-family: "Geist"; src: url("../fontes/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../fontes/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Bodoni Moda"; src: url("../fontes/bodoni-moda-latin-opsz-normal.woff2") format("woff2"); font-weight: 400 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Bodoni Moda"; src: url("../fontes/bodoni-moda-latin-opsz-italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; font-display: swap; }

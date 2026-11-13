@@ -1,0 +1,38 @@
+/* Só na demonstração do GitHub Pages (ferramentas/gerar_site.py liga este arquivo depois do CSS da tela).
+   Fora das camadas de propósito: vale por cima dos componentes. A faixa é a Faixa de aviso (tom info),
+   colada no topo da página e sem cantos, mas rolando junto, para não cobrir a navegação presa no topo. */
+
+.demo-faixa {
+  align-items: center;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 var(--faixa-borda);
+}
+
+.demo-contas {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+.demo-contas__titulo { margin: 0; font-size: var(--text-base); font-weight: 600; }
+.demo-contas__nota { margin: var(--space-1) 0 var(--space-3); color: var(--color-text-muted); font-size: var(--text-sm); }
+.demo-contas__lista { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.demo-contas__conta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-1);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.demo-contas__conta:hover { border-color: var(--color-border-strong); }
+.demo-contas__conta:focus-visible { outline: 2px solid var(--field-border-focus); outline-offset: 2px; }
+.demo-contas__perfil { color: var(--color-text-muted); font-size: var(--text-sm); }

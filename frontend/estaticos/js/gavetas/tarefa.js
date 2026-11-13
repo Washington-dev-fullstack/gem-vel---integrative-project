@@ -14,6 +14,7 @@ import {recarregarGaveta} from "../componentes/gaveta.js";
 import {ligarMenu} from "../componentes/menu.js";
 import {ROTULO_DO_ESTADO, avatar, chip, estadoVisivel, icone} from "../componentes/pecas.js";
 import {carregarImoveis} from "./reserva.js";
+import {ir} from "../nucleo/enderecos.js";
 
 // O nome do tipo e a janela de horário moram no núcleo, que o app da equipe também usa.
 export {TIPOS, horarioDaTarefa};
@@ -358,7 +359,7 @@ export function gavetaTarefa({depois = () => {}, aoExcluir = (tarefa) => excluir
             depois: (salva) => {
               fecharGaveta();
               avisar(editando ? "Tarefa salva." : "Tarefa criada.", {acao: {rotulo: "Ver no dia",
-                fazer: () => location.assign(`/tarefas?dia=${salva.agendada_para.slice(0, 10)}`)}});
+                fazer: () => ir(`/tarefas?dia=${salva.agendada_para.slice(0, 10)}`)}});
               depois(salva);
             },
           });

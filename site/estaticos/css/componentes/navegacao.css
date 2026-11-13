@@ -1,0 +1,213 @@
+/* Casca do admin (DESIGN.md §4, Modelos; lote B §1): lateral sólida, topo fosco só ao rolar e o conteúdo.
+   ≥1241px lateral de 232px; 761 a 1240px (e abaixo, porque o admin no celular fica fora) trilho de 76px. */
+
+.casca {
+  --nav-w: 232px;
+  --nav-rail-w: 76px;
+  --nav-item-h: var(--control-md);
+  --nav-pill-bg: var(--color-pressed);
+  --topo-h: 64px;
+  display: grid;
+  grid-template-columns: var(--nav-w) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.casca__area { min-width: 0; }
+.principal { padding: 0 var(--space-8) var(--space-16); }
+.principal:focus { outline: none; }
+
+/* Lateral */
+.lateral {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  height: 100vh;
+  height: 100dvh;
+  padding: var(--space-5) var(--space-3);
+  background: var(--elev-1-bg);
+  box-shadow: inset -1px 0 0 var(--color-border);
+  z-index: var(--z-header);
+  overflow-y: auto;
+  scrollbar-width: none;
+  view-transition-name: lateral;
+}
+.lateral__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--nav-item-h);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  text-decoration: none;
+}
+.lateral__marca svg { flex: none; width: 26px; height: 26px; stroke: var(--brand-stroke); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.lateral__lapide { fill: var(--brand-fill); fill-opacity: .6; }
+.lateral__facetas { fill: none; }
+.lateral__lista { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.lateral__item {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--nav-item-h);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.lateral__item:hover { background-color: var(--color-hover); color: var(--color-text); }
+.lateral__item[aria-current="page"] { background-color: transparent; color: var(--color-text); font-weight: 600; }
+.lateral__item .icone { color: inherit; }
+/* A pílula é sólida (v0.4) e desliza entre as páginas pela View Transitions API. */
+.lateral__pilula {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--nav-pill-bg);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--neutral-0) 7%, transparent);
+  view-transition-name: pilula;
+}
+[data-theme="quartzo"] .lateral__pilula { box-shadow: none; }
+.lateral__contador {
+  min-width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background-color: var(--status-late-bg);
+  color: var(--status-late-fg);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 20px;
+  text-align: center;
+}
+.lateral__contador[hidden] { display: none; }
+.lateral__contador--salta { animation: contador-salta var(--dur-moderate) var(--ease-pop); }
+@keyframes contador-salta { from { transform: scale(.8); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(pilula) { animation-duration: var(--dur-slow); animation-timing-function: var(--ease-entrance); }
+}
+
+@media (max-width: 1240px) {
+  .casca { grid-template-columns: var(--nav-rail-w) minmax(0, 1fr); }
+  .lateral { align-items: stretch; padding-inline: var(--space-3); }
+  .lateral__marca { justify-content: center; padding: 0; }
+  .lateral__marca span, .lateral__rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .lateral__item { justify-content: center; padding: 0; }
+  .lateral__contador { position: absolute; top: 2px; right: 6px; min-width: 16px; height: 16px; padding: 0 4px; font-size: 10px; line-height: 16px; }
+  /* No trilho, o rótulo aparece numa dica ao apontar ou focar. */
+  .lateral__item::after {
+    content: attr(data-rotulo) / "";
+    position: absolute;
+    top: 50%;
+    left: calc(100% + var(--space-3));
+    z-index: var(--z-tooltip);
+    padding: var(--space-1-5) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--elev-2-bg);
+    box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-4px, -50%) scale(.96);
+    transform-origin: left center;
+    transition: opacity var(--dur-fast) var(--ease-exit), transform var(--dur-fast) var(--ease-exit);
+  }
+  .lateral__item:hover::after, .lateral__item:focus-visible::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+    transition-duration: var(--dur-base);
+    transition-timing-function: var(--ease-standard);
+  }
+  .lateral { overflow: visible; }
+}
+
+/* Topo: preso, transparente parado e vidro fosco depois de 8px de rolagem. */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  height: var(--topo-h);
+  padding: 0 var(--space-8);
+  transition: background-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  view-transition-name: topo;
+}
+.topo[data-rolou] {
+  background: var(--elev-1v-bg);
+  box-shadow: inset 0 -1px 0 var(--color-border);
+  -webkit-backdrop-filter: var(--elev-1v-filter);
+  backdrop-filter: var(--elev-1v-filter);
+}
+[data-tier="leve"] .topo[data-rolou] { background: var(--elev-1v-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+.busca-gatilho {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 320px;
+  height: var(--control-md);
+  padding: 0 var(--space-2) 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--field-bg);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  color: var(--color-text-subtle);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: text;
+  transition: box-shadow var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+.busca-gatilho:hover { box-shadow: inset 0 0 0 1px var(--color-border-control); color: var(--color-text-muted); }
+.busca-gatilho__texto { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 1240px) { .busca-gatilho { width: 240px; } }
+
+.conta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--control-md);
+  padding: 0 var(--space-2) 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.conta:hover, .conta[aria-expanded="true"] { background-color: var(--color-hover); }
+.conta__avatar:empty { width: 32px; height: 32px; border-radius: 50%; background-color: var(--color-hover); }
+.conta__nome { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.conta > .icone { color: var(--color-text-muted); }
+@media (max-width: 1020px) { .conta__nome { display: none; } }

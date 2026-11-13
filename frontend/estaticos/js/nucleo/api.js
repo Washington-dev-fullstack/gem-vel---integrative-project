@@ -1,8 +1,16 @@
 // Conversa com a API do Flask. Todo erro vira ErroApi, com a mensagem pronta para a tela.
 
+import {modoDemo} from "./enderecos.js";
+
 const SEM_SERVIDOR = "Não deu para falar com o servidor. Confira a internet e tente de novo.";
 const ERRO_NOSSO = "Algo deu errado do nosso lado. Tente de novo.";
 const ESPERA_MAXIMA = 15000;
+
+// Na demonstração do GitHub Pages (sem Flask), quem responde é o servidor simulado, no próprio navegador.
+async function responderNaDemo(metodo, caminho, dados) {
+  const {responder} = await import("../demo/navegador.js");
+  return responder(metodo, caminho, dados);
+}
 
 export class ErroApi extends Error {
   constructor(status, mensagem, campos = {}) {
@@ -38,7 +46,7 @@ async function pedir(metodo, caminho, {dados, keepalive = false} = {}) {
 
   let resposta;
   try {
-    resposta = await fetch(caminho, opcoes);
+    resposta = modoDemo() ? await responderNaDemo(metodo, caminho, dados) : await fetch(caminho, opcoes);
   } catch {
     throw new ErroApi(0, SEM_SERVIDOR);
   }

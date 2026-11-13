@@ -8,6 +8,7 @@ import {html, renderizar} from "../nucleo/html.js";
 import {abrirGaveta, destinoSeguro} from "../nucleo/url.js";
 import {temGaveta} from "./gaveta.js";
 import {icone} from "./pecas.js";
+import {ir, paginaAtual} from "../nucleo/enderecos.js";
 
 const ESPERA = 200;
 let contador = 0;
@@ -306,9 +307,9 @@ export function ligarBuscaGeral(gatilho) {
     // (web-admin.md §8), a não ser que a pessoa já esteja em Reservas.
     const alvo = item.tipo === "acao" ? item.gaveta : {tipo: item.tipo, id: item.id};
     const aqui = item.tipo === "acao" ? temGaveta(alvo.tipo)
-      : item.tipo !== "imovel" && location.pathname === "/reservas" && temGaveta(alvo.tipo);
+      : item.tipo !== "imovel" && paginaAtual() === "/reservas" && temGaveta(alvo.tipo);
     if (aqui) abrirGaveta(alvo.tipo, alvo.id);
-    else if (destinoSeguro(item.endereco)) location.assign(item.endereco);
+    else if (destinoSeguro(item.endereco)) ir(item.endereco);
   }
 
   entrada.addEventListener("input", () => {

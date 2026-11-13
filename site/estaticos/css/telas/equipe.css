@@ -1,0 +1,31 @@
+/* Tela Equipe (web-admin.md §7): a grade de cartões de pessoa (lote B §11). */
+@layer telas {
+  .grade-equipe {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cartao-pessoa { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); transition: box-shadow var(--dur-fast) var(--ease-standard); }
+  .cartao-pessoa:hover { box-shadow: var(--elev-1-edge), inset 0 0 0 1px var(--color-border-strong), var(--elev-1-shadow); }
+  .cartao-pessoa__topo { display: flex; align-items: flex-start; gap: var(--space-3); }
+  .cartao-pessoa__quem { flex: 1; display: grid; gap: var(--space-1); min-width: 0; }
+  .cartao-pessoa__nome { margin: 0; overflow: hidden; font-size: var(--text-md); font-weight: 600; letter-spacing: var(--track-md); text-overflow: ellipsis; white-space: nowrap; }
+  .cartao-pessoa__link { color: var(--color-text); text-decoration: none; }
+  .cartao-pessoa__link::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .cartao-pessoa__link:focus-visible { outline: none; }
+  .cartao-pessoa__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .cartao-pessoa__acoes, .cartao-pessoa__contato a { position: relative; z-index: 1; }
+  .cartao-pessoa__acoes { margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1) 0 0; }
+  .cartao-pessoa__funcao { display: flex; flex-wrap: wrap; gap: var(--space-1-5); margin: 0; }
+  .cartao-pessoa__contato { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+  .cartao-pessoa__dia { display: flex; align-items: center; gap: var(--space-3); margin: 0; font-size: var(--text-sm); }
+  .cartao-pessoa__rotulo, .cartao-pessoa__conta { color: var(--color-text-muted); }
+  .fila-gemas { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .fila-gemas__resto { margin-left: var(--space-0-5); color: var(--color-text-muted); font-size: var(--text-xs); }
+  .cartao-pessoa__agora { margin: auto 0 0; font-size: var(--text-sm); }
+  .cartao-pessoa[data-desativado] .cartao-pessoa__link { color: var(--color-text-muted); }
+  .cartao-pessoa[data-desativado] .avatar { opacity: .6; }
+}

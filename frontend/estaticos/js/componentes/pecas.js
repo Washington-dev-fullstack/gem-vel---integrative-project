@@ -3,7 +3,8 @@
 import {html} from "../nucleo/html.js";
 import {podeAnimar} from "../nucleo/nivel.js";
 
-const SPRITE = "/estaticos/icones.svg";
+// O caminho do sprite sai do endereço deste módulo: vale no Flask e no subcaminho do GitHub Pages.
+export const SPRITE = new URL("../../icones.svg", import.meta.url).pathname;
 
 export function icone(id, {tamanho = 16, classe = ""} = {}) {
   const classes = ["icone", tamanho === 16 ? "" : `icone--${tamanho}`, classe].filter(Boolean).join(" ");

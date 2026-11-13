@@ -17,6 +17,16 @@
         "backend/app.py"
       ],
       "port": 5000
+    },
+    {
+      "name": "gemovel-pages",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-c",
+        "import http.server as h, functools\nP = '/gemovel-integrative-project'\nclass H(h.SimpleHTTPRequestHandler):\n    extensions_map = {'.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.svg': 'image/svg+xml', '.html': 'text/html', '.woff2': 'font/woff2'}\n    def translate_path(s, p):\n        return super().translate_path(p[len(P):] if p.startswith(P + '/') else '/__fora__')\n    def end_headers(s):\n        s.send_header('Cache-Control', 'no-store')\n        super().end_headers()\nh.ThreadingHTTPServer(('127.0.0.1', 5600), functools.partial(H, directory='site')).serve_forever()"
+      ],
+      "port": 5600,
+      "url": "http://127.0.0.1:5600"
     }
   ]
 }

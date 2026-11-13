@@ -1,0 +1,32 @@
+/* Minhas tarefas (app-equipe.md §1 e §5): no celular, margem de 16px e 12px entre os cartões; a
+   partir de 761px, a mesma tela numa coluna de 560px, com o seletor de dia à direita da saudação. */
+
+@layer telas {
+  .equipe-topo, .minhas-tarefas { width: min(100%, 560px); margin-inline: auto; padding-inline: var(--space-4); }
+  .equipe-topo { display: flex; align-items: center; justify-content: space-between; padding-block: var(--space-3) 0; }
+  .equipe-topo__marca { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; }
+  .minhas-tarefas { display: grid; gap: var(--space-6); padding-block: var(--space-4) var(--space-16); }
+  .minhas-tarefas__cabeca { display: grid; gap: var(--space-4); }
+  .minhas-tarefas__saudacao { margin: 0; font-family: var(--font-display); font-size: var(--display-sm); font-weight: 500; line-height: 1.15; text-wrap: balance; }
+  .minhas-tarefas__contexto { margin: var(--space-1) 0 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+  .minhas-tarefas__lista, .minhas-tarefas__grupo { display: grid; gap: var(--space-3); }
+  .minhas-tarefas__concluidas > .cartao-tarefa { margin-top: var(--space-3); }
+  .minhas-tarefas__lista { gap: var(--space-6); }
+  .minhas-tarefas__titulo-grupo {
+    margin: 0;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    font-weight: 500;
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+  }
+  .minhas-tarefas__concluidas > summary { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 44px; list-style: none; cursor: pointer; }
+  .minhas-tarefas__concluidas > summary::-webkit-details-marker { display: none; }
+
+  @media (min-width: 761px) {
+    .minhas-tarefas { padding-block-start: var(--space-8); }
+    .minhas-tarefas__cabeca { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+    .minhas-tarefas__saudacao { font-size: var(--display-md); }
+  }
+}

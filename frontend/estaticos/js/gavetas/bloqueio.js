@@ -9,6 +9,7 @@ import {ligarFormulario} from "../componentes/formulario.js";
 import {icone} from "../componentes/pecas.js";
 import {seletorDatas} from "../componentes/seletor-datas.js";
 import {carregarImoveis} from "./reserva.js";
+import {ir} from "../nucleo/enderecos.js";
 
 export function gavetaBloqueio({depois = () => {}} = {}) {
   return {
@@ -51,7 +52,7 @@ export function gavetaBloqueio({depois = () => {}} = {}) {
             depois: (bloqueio) => {
               fecharGaveta();
               avisar("Datas bloqueadas", {acao: {rotulo: "Ver na agenda",
-                fazer: () => location.assign(`/agenda?mes=${bloqueio.data_inicio.slice(0, 7)}`)}});
+                fazer: () => ir(`/agenda?mes=${bloqueio.data_inicio.slice(0, 7)}`)}});
               depois(bloqueio);
             },
           });

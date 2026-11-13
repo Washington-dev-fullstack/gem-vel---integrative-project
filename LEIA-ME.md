@@ -15,6 +15,8 @@ Este guia leva do zero ao sistema funcionando no seu computador: o banco de dado
 | `banco/diagramas/` | modelo lógico do banco e diagramas de classes, em PNG e SVG (os `.mmd` são a fonte) |
 | `backend/` | a API em Python com Flask: `app.py`, a conexão com o banco (`gemovel/conexao.py`) e os testes (`testes/`) |
 | `frontend/` | as telas: as páginas (`paginas/`), que o Flask serve, o CSS e o JavaScript (`estaticos/`) e os testes do JavaScript (`testes/`) |
+| `ferramentas/gerar_site.py` | gera a versão de demonstração para o GitHub Pages na pasta `site/` |
+| `site/` | a versão de demonstração gerada (não edite à mão: ela é refeita pelo gerador) |
 | `DESIGN.md` | o sistema de design do Gemóvel, fonte da verdade da interface |
 | `design/componentes/` | a especificação aprovada dos componentes da interface |
 | `design/telas/` | as telas aprovadas: o que cada uma mostra, faz e pede do back-end |
@@ -138,6 +140,20 @@ Os erros vêm sempre no mesmo formato: `{"erro": {"mensagem": ..., "campos": {..
 ### 7. Abrir o sistema
 
 Com a API ligada (passo 6), abra http://localhost:5000/entrar e entre com uma das contas de teste. O administrador cai na Visão geral, com a Agenda, as Reservas, os Imóveis, as Tarefas e a Equipe no menu; quem é da equipe cai em Minhas tarefas, feita para o celular. Cada tela busca e grava os dados pela API, com o Fetch.
+
+### 8. Versão de demonstração (GitHub Pages)
+
+A pasta `site/` é o sistema como site estático, para abrir sem Flask e sem MySQL: as mesmas telas, com uma API simulada no navegador e os dados de exemplo. Quem visita entra com qualquer conta de exemplo (a tela Entrar lista as contas, e qualquer senha serve), e as mudanças ficam só no navegador dela, até clicar em **Recomeçar** na faixa do topo. As datas andam sozinhas até o dia da visita. No computador da dupla, com o Flask ligado, nada muda: tudo continua indo para a API de verdade.
+
+Para refazer o site depois de mudar o front-end ou os dados de exemplo, recarregue os dados (passo 2) e rode, da raiz do projeto:
+
+```
+backend/.venv/Scripts/python ferramentas/gerar_site.py
+```
+
+Para ver antes de publicar: `python -m http.server 5600 --directory site` e abra http://127.0.0.1:5600/.
+
+**Publicar:** cada push na `main` que muda a pasta `site/` publica o site (`.github/workflows/pages.yml`). No GitHub, uma vez só: Settings → Pages → Source: **GitHub Actions**. O endereço fica `https://<usuário>.github.io/gemovel-integrative-project/`.
 
 ## Contas de teste
 

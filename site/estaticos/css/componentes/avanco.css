@@ -1,0 +1,16 @@
+/* Avanço de estado (lote B §12): na espera, o indicador toma o lugar do ícone e o texto vira
+   "Começando…" ou "Concluindo…", sem mudar a largura (o botão ocupa a largura do cartão). */
+
+.avanco[aria-busy="true"] { cursor: progress; }
+.avanco__girando {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+.avanco[aria-busy="true"] > .icone { display: none; }
+.avanco[aria-busy="true"] > .avanco__girando { display: inline-block; animation: avanco-girar 700ms linear infinite; }
+@keyframes avanco-girar { to { transform: rotate(1turn); } }
+@media (prefers-reduced-motion: reduce) { .avanco[aria-busy="true"] > .avanco__girando { animation-duration: 2s; } }

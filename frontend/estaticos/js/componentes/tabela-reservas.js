@@ -6,6 +6,7 @@ import {html} from "../nucleo/html.js";
 import {abrirGaveta, urlCom} from "../nucleo/url.js";
 import {enderecoNaAgenda, pilulaDaSituacao} from "../gavetas/reserva.js";
 import {icone} from "./pecas.js";
+import {ir} from "../nucleo/enderecos.js";
 
 export const COMPARAR = {
   codigo: (a, b) => a.id - b.id,
@@ -57,7 +58,7 @@ export function linhaDaReserva(r, {destaque = null, comImovel = true} = {}) {
 }
 
 export function itensDaReserva(r, {cancelar}) {
-  const agenda = {rotulo: "Ver na agenda", fazer: () => location.assign(enderecoNaAgenda(r))};
+  const agenda = {rotulo: "Ver na agenda", fazer: () => ir(enderecoNaAgenda(r))};
   if (r.status === "cancelada") return [{rotulo: "Editar", desabilitado: "reserva cancelada"}, agenda];
   return [{rotulo: "Editar", fazer: () => abrirGaveta("reserva", r.id, {editar: true})}, agenda, {separador: true},
     {rotulo: "Cancelar reserva", perigo: true, fazer: () => cancelar(r)}];

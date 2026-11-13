@@ -1,0 +1,23 @@
+/* Tela Reservas e aba Hóspedes (web-admin.md §4). */
+
+@layer telas {
+  .reservas-painel { padding-top: var(--space-4); }
+  .reservas-lista[aria-busy="true"] .tabela-cartao { opacity: .6; transition: opacity var(--dur-fast) var(--ease-standard); }
+  .reservas-hospedes__barra { justify-content: space-between; }
+
+  /* Concluída em texto secundário; cancelada com o valor riscado. A pílula sempre diz o estado. */
+  .tabela tr[data-situacao="concluida"] td { color: var(--color-text-muted); }
+  .tabela tr[data-situacao="cancelada"] .valor { color: var(--color-text-subtle); text-decoration: line-through; }
+  .pilula[data-situacao="concluida"], .pilula[data-situacao="cancelada"] { color: var(--color-text-muted); }
+
+  /* A linha que acabou de ser salva acende e apaga uma vez. */
+  .tabela tr[data-destaque] td { animation: reservas-destaque 1.6s var(--ease-standard); }
+  @keyframes reservas-destaque { from { background-color: var(--color-pressed); } }
+  @media (prefers-reduced-motion: reduce) { .tabela tr[data-destaque] td { animation: none; } }
+
+  /* Noites é a coluna de prioridade 3: some primeiro quando falta largura. */
+  @media (max-width: 1279px) { .coluna-p3 { display: none; } }
+
+  .painel-filtro__datas { min-width: 296px; margin-top: var(--space-2); }
+  .painel-filtro__datas[hidden] { display: none; }
+}

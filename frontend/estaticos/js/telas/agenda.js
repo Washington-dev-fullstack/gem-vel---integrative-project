@@ -24,6 +24,7 @@ import {gavetaBloqueio} from "../gavetas/bloqueio.js";
 import {gavetaHospede} from "../gavetas/hospede.js";
 import {carregarImoveis, gavetaReserva, pilulaDaSituacao, SITUACOES} from "../gavetas/reserva.js";
 import {gavetaTarefa} from "../gavetas/tarefa.js";
+import {ir} from "../nucleo/enderecos.js";
 
 const pagina = document.querySelector("[data-pagina]");
 const $ = (seletor) => pagina.querySelector(seletor);
@@ -202,7 +203,7 @@ function desenhar(anterior) {
   desenharTabela();
   if (!ativos.length) {
     vazio(rolagem, {texto: "Nenhum imóvel ativo.", detalhe: "A agenda mostra uma linha por imóvel ativo.",
-      acao: {rotulo: "Novo imóvel", fazer: () => location.assign("/imoveis?imovel=novo")}});
+      acao: {rotulo: "Novo imóvel", fazer: () => ir("/imoveis?imovel=novo")}});
     return;
   }
   desenharLinhaDoTempo();
