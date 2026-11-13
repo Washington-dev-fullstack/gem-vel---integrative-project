@@ -21,7 +21,7 @@ Rode da raiz do projeto, com o MySQL do XAMPP ligado. O passo a passo completo e
 - API: `backend/.venv/Scripts/python backend/app.py`, depois `http://127.0.0.1:5000/api/saude`.
 - Sistema: com a API ligada, `http://127.0.0.1:5000/entrar` (o admin cai na Visão geral; a equipe, em Minhas tarefas).
 - Testes do JavaScript: `cd frontend && node --test "testes/*.test.js"` (Node 22 ou mais novo, sem `npm install`).
-- Versão do GitHub Pages: `backend/.venv/Scripts/python ferramentas/gerar_site.py` (com os dados de exemplo recém-carregados) refaz `site/`; o push na `main` publica.
+- Versão do GitHub Pages: `backend/.venv/Scripts/python ferramentas/gerar_site.py` (com os dados de exemplo recém-carregados) refaz `site/`; o push na `main` publica. Para ver: `Abrir o site.bat` (roda `ferramentas/abrir_site.py`, na porta 5700).
 - Protótipos de design: `python -m http.server 5500 --bind 127.0.0.1` e abra `/design/exploracoes/`.
 
 Os testes usam o banco de verdade e esperam as contagens exatas dos dados de exemplo: se os dados mudaram, recarregue o `01` e o `02` antes.

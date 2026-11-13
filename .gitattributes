@@ -1,0 +1,2 @@
+# O cmd do Windows lê melhor os .bat com fim de linha CRLF, em qualquer cópia do repositório.
+*.bat text eol=crlf

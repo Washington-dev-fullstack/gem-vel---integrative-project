@@ -17,6 +17,7 @@ Este guia leva do zero ao sistema funcionando no seu computador: o banco de dado
 | `frontend/` | as telas: as páginas (`paginas/`), que o Flask serve, o CSS e o JavaScript (`estaticos/`) e os testes do JavaScript (`testes/`) |
 | `ferramentas/gerar_site.py` | gera a versão de demonstração para o GitHub Pages na pasta `site/` |
 | `site/` | a versão de demonstração gerada (não edite à mão: ela é refeita pelo gerador) |
+| `Abrir o site.bat` | dois cliques abrem a versão de demonstração no navegador, sem Flask e sem MySQL (roda `ferramentas/abrir_site.py`) |
 | `DESIGN.md` | o sistema de design do Gemóvel, fonte da verdade da interface |
 | `design/componentes/` | a especificação aprovada dos componentes da interface |
 | `design/telas/` | as telas aprovadas: o que cada uma mostra, faz e pede do back-end |
@@ -151,7 +152,7 @@ Para refazer o site depois de mudar o front-end ou os dados de exemplo, recarreg
 backend/.venv/Scripts/python ferramentas/gerar_site.py
 ```
 
-Para ver antes de publicar: `python -m http.server 5600 --directory site` e abra http://127.0.0.1:5600/.
+Para ver no computador: dois cliques em `Abrir o site.bat`, na raiz do projeto (ou `python ferramentas/abrir_site.py` no terminal). O site abre no navegador em http://127.0.0.1:5700/; para desligar, feche a janela.
 
 **Publicar:** cada push na `main` que muda a pasta `site/` publica o site (`.github/workflows/pages.yml`). No GitHub, uma vez só: Settings → Pages → Source: **GitHub Actions**. O endereço fica `https://<usuário>.github.io/gemovel-integrative-project/`.
 
