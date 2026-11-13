@@ -4,7 +4,7 @@
 import {api} from "../nucleo/api.js";
 import {intervalo} from "../nucleo/formatos.js";
 import {html} from "../nucleo/html.js";
-import {abrirGaveta, fecharGaveta} from "../nucleo/url.js";
+import {abrirGaveta, cliqueComum, fecharGaveta} from "../nucleo/url.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
 import {ligarFormulario} from "../componentes/formulario.js";
 import {ligarMenu} from "../componentes/menu.js";
@@ -13,7 +13,6 @@ import {pilulaDaSituacao} from "./reserva.js";
 
 export const reservasPorExtenso = (n) => `${n} ${n === 1 ? "reserva" : "reservas"}`;
 const primeiroNome = (nome) => nome.trim().split(/\s+/)[0];
-export const cliqueComum = (evento) => evento.button === 0 && !evento.ctrlKey && !evento.metaKey && !evento.shiftKey && !evento.altKey;
 
 /** O excluir não pergunta: some da tela, o aviso dá 10s para Desfazer e só depois vai o pedido. */
 export function excluirHospede(hospede, {esconder = () => {}, mostrar = () => {}, depois = () => {}} = {}) {

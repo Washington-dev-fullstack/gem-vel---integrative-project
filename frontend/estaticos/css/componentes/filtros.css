@@ -17,6 +17,7 @@
 .filtros__limpar { font-size: var(--text-sm); }
 .filtros__contagem { margin-left: auto; color: var(--color-text-muted); font-size: var(--text-sm); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .filtros__busca { width: 260px; }
+.filtros__interruptor { margin-left: auto; font-size: var(--text-sm); }
 
 /* O painel usa a mesma camada e o mesmo movimento do menu (menu.css). */
 .painel-filtro { min-width: 220px; }

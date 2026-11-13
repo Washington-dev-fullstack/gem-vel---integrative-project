@@ -3,7 +3,7 @@
 import {api} from "../nucleo/api.js";
 import {destinoSeguro} from "../nucleo/url.js";
 import {podeAnimar} from "../nucleo/nivel.js";
-import {ligarFormulario} from "../componentes/formulario.js";
+import {ligarFormulario, ligarMostrarSenha} from "../componentes/formulario.js";
 import {esconderFaixa, mostrarFaixa} from "../componentes/faixa.js";
 
 const SEM_CONEXAO = "Não deu para entrar agora. Confira a internet e tente de novo.";
@@ -12,17 +12,6 @@ const form = document.querySelector("#form-entrar");
 const avisos = document.querySelector("[data-entrar-avisos]");
 
 if (parametros.has("saiu")) mostrarFaixa(avisos, {tom: "info", mensagem: "Você saiu do Gemóvel."});
-
-function ligarMostrarSenha() {
-  const senha = form.elements.senha;
-  const botao = form.querySelector("[data-mostrar]");
-  botao.addEventListener("click", () => {
-    const aparecendo = senha.type === "text";
-    senha.type = aparecendo ? "password" : "text";
-    botao.querySelector("[data-mostrar-rotulo]").textContent = aparecendo ? "Mostrar" : "Ocultar";
-    botao.querySelector("use").setAttribute("href", `/estaticos/icones.svg#${aparecendo ? "mostrar" : "ocultar"}`);
-  });
-}
 
 ligarFormulario(form, {
   async enviar({email, senha}) {
@@ -58,5 +47,5 @@ function ligarParalaxe() {
   }, {passive: true});
 }
 
-ligarMostrarSenha();
+ligarMostrarSenha(form);
 ligarParalaxe();

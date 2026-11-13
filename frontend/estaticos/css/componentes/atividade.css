@@ -1,0 +1,12 @@
+/* Atividade recente (lote B §8): avatar, a frase com o nome em 600 e a hora. A gaveta da tarefa
+   usa as mesmas linhas para o histórico. */
+.atividade { margin: 0; padding: 0; list-style: none; }
+.atividade__linha { display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: var(--space-3); padding: var(--space-2) 0; }
+.atividade__frase { margin: 0; padding-top: var(--space-0-5); font-size: var(--text-sm); }
+.atividade__frase strong { font-weight: 600; }
+.atividade__obs { margin: var(--space-0-5) 0 0; color: var(--color-text-muted); font-size: var(--text-sm); white-space: pre-line; }
+.atividade__hora { padding-top: var(--space-0-5); color: var(--color-text-muted); font-size: var(--text-xs); white-space: nowrap; }
+/* Texto de atenção ("Sem responsável") e de atraso. Este arquivo vem por último no admin.css: as
+   duas cores ganham das cores das outras peças. */
+.texto-atencao { color: var(--color-warning); }
+.texto-atraso { color: var(--status-late-fg); }

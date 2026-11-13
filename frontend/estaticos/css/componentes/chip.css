@@ -53,3 +53,6 @@
 }
 .avatar--sm { width: 24px; height: 24px; font-size: var(--text-2xs); }
 .avatar--lg { width: 40px; height: 40px; font-size: var(--text-sm); }
+/* Avatar pequeno e o nome, na linha da tarefa e na gaveta. */
+.pessoa-curta { display: inline-flex; align-items: center; gap: var(--space-2); min-width: 0; max-width: 100%; }
+.pessoa-curta > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

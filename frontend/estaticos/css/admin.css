@@ -25,3 +25,5 @@
 @import url("componentes/tambor.css") layer(componentes);
 @import url("componentes/kpi.css") layer(componentes);
 @import url("componentes/dica.css") layer(componentes);
+@import url("componentes/seletor-periodo.css") layer(componentes);
+@import url("componentes/atividade.css") layer(componentes);

@@ -2,9 +2,9 @@
 // formulário de nova reserva e de editar. Usada pela tela Reservas, pelo detalhe do imóvel e pela Agenda.
 
 import {api} from "../nucleo/api.js";
-import {data, dinheiro, horario} from "../nucleo/formatos.js";
+import {data, dinheiro, horario, linkDoWhatsapp} from "../nucleo/formatos.js";
 import {html} from "../nucleo/html.js";
-import {abrirGaveta, fecharGaveta} from "../nucleo/url.js";
+import {abrirGaveta, cliqueComum, fecharGaveta} from "../nucleo/url.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
 import {buscaNoFormulario} from "../componentes/busca.js";
 import {ligarFormulario, marcarErro} from "../componentes/formulario.js";
@@ -60,12 +60,6 @@ export function cancelarReserva(reserva, {esconder = () => {}, mostrar = () => {
   }}});
 }
 
-function linkDoWhatsapp(telefone) {
-  const digitos = String(telefone ?? "").replace(/\D/g, "");
-  if (digitos.length < 10) return null;
-  return `https://wa.me/${digitos.length <= 11 ? `55${digitos}` : digitos}`;
-}
-
 function trechoDoDetalhe(r, imovel) {
   const valores = conta(r.valor_diaria, r.data_entrada, r.data_saida);
   const limpeza = r.limpeza;
@@ -86,7 +80,7 @@ function trechoDoDetalhe(r, imovel) {
         ${Number(r.valor_total) !== Number(valores.total) ? html`<p>Valor combinado <span class="numero">${dinheiro(r.valor_total)}</span></p>` : ""}</dd>
       <dt>Limpeza da saída</dt>
       <dd>${limpeza ? html`<p class="dados__limpeza">${chip(estadoVisivel(limpeza))}
-          <span>${data(limpeza.agendada_para)}, ${horario(limpeza.agendada_para)}${limpeza.prazo ? `–${horario(limpeza.prazo)}` : ""}</span></p>
+          <a class="link" href="?tarefa=${limpeza.id}" data-tarefa>${data(limpeza.agendada_para)}, ${horario(limpeza.agendada_para)}${limpeza.prazo ? `–${horario(limpeza.prazo)}` : ""}</a></p>
         <p class="dados__secundario">${limpeza.responsavel?.nome ?? "Sem responsável"}</p>` : "–"}</dd>
       ${r.observacoes ? html`<dt>Observações</dt><dd class="dados__texto">${r.observacoes}</dd>` : ""}
     </dl>
@@ -307,6 +301,13 @@ export function gavetaReserva({depois = () => {}, aoCancelar = (reserva) => canc
         trecho: trechoDoDetalhe(reserva, imovel),
         ligar(dialogo) {
           dialogo.querySelector("[data-editar]")?.addEventListener("click", () => abrirGaveta("reserva", id, {editar: true}));
+          // A limpeza abre a gaveta da tarefa, com o "← Reserva RSV-0012" para voltar.
+          dialogo.querySelector("[data-tarefa]")?.addEventListener("click", (evento) => {
+            if (!cliqueComum(evento)) return;
+            evento.preventDefault();
+            abrirGaveta("tarefa", reserva.limpeza.id,
+              {preencher: {voltarPara: {tipo: "reserva", id: reserva.id, rotulo: `Reserva ${reserva.codigo}`}}});
+          });
           ligarMenu(dialogo.querySelector("[data-acoes]"), [
             {rotulo: "Ver na agenda", fazer: () => location.assign(enderecoNaAgenda(reserva))},
             ...(reserva.status === "cancelada" ? [] : [{separador: true}, {rotulo: "Cancelar reserva", perigo: true,

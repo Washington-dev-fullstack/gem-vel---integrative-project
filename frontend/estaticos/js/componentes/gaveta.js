@@ -1,7 +1,7 @@
 // Gaveta (lote B §14): detalhe e formulário num <dialog>, aberta e fechada pelo endereço.
 
 import {html, renderizar} from "../nucleo/html.js";
-import {aoMudar, fecharGaveta, lerEstado, preenchimento} from "../nucleo/url.js";
+import {abrirGaveta, aoMudar, fecharGaveta, lerEstado, preenchimento} from "../nucleo/url.js";
 import {icone} from "./pecas.js";
 import {esqueleto} from "./estados.js";
 import {mostrarFaixa} from "./faixa.js";
@@ -15,6 +15,7 @@ let descarte = null;
 
 function partes() {
   return {
+    voltar: dialogo.querySelector("[data-gaveta-voltar]"),
     titulo: dialogo.querySelector("#gaveta-titulo"),
     contexto: dialogo.querySelector("[data-gaveta-contexto]"),
     ferramentas: dialogo.querySelector("[data-gaveta-ferramentas]"),
@@ -29,6 +30,7 @@ function criarDialogo() {
   renderizar(d, html`
     <header class="gaveta__cabecalho">
       <div class="gaveta__titulos">
+        <div data-gaveta-voltar></div>
         <h2 class="gaveta__titulo display-md" id="gaveta-titulo" tabindex="-1"></h2>
         <div class="gaveta__contexto" data-gaveta-contexto></div>
       </div>
@@ -120,7 +122,7 @@ async function sincronizar(gaveta, {forcar = false} = {}) {
     return;
   }
   const formulario = gaveta.editar || gaveta.id === "nova" || gaveta.id === "novo";
-  const {titulo, contexto, ferramentas, corpo} = partes();
+  const {voltar, titulo, contexto, ferramentas, corpo} = partes();
   dialogo.dataset.chave = chave;
   dialogo.dataset.tipo = gaveta.tipo;
   mudou = false;
@@ -128,13 +130,24 @@ async function sincronizar(gaveta, {forcar = false} = {}) {
     quemAbriu = document.activeElement;
     dialogo.showModal();
   }
+  voltar.textContent = "";
   titulo.textContent = "";
   contexto.textContent = "";
   ferramentas.textContent = "";
   esqueleto(corpo, 6);
   try {
-    const conteudo = await (formulario ? definicao.formulario(gaveta.id, preenchimento() ?? {}) : definicao.detalhe(gaveta.id));
+    const preencher = preenchimento() ?? {};
+    const conteudo = await (formulario ? definicao.formulario(gaveta.id, preencher) : definicao.detalhe(gaveta.id, preencher));
     if (minha !== versao) return;
+    // De uma gaveta para outra ("← Reserva RSV-0012"): {tipo, id, rotulo} em preencher.voltarPara.
+    const volta = conteudo.voltarPara ?? preencher.voltarPara;
+    if (volta) {
+      renderizar(voltar, html`<a class="gaveta__voltar" href="?${volta.tipo}=${volta.id}">${icone("voltar")}${volta.rotulo}</a>`);
+      voltar.firstElementChild.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        abrirGaveta(volta.tipo, volta.id);
+      });
+    }
     titulo.textContent = conteudo.titulo;
     if (conteudo.contexto) renderizar(contexto, conteudo.contexto);
     if (conteudo.ferramentas) renderizar(ferramentas, conteudo.ferramentas);
@@ -159,7 +172,7 @@ async function sincronizar(gaveta, {forcar = false} = {}) {
   }
 }
 
-/** Liga as gavetas da tela: `definicoes` é {tipo: {detalhe(id), formulario(id, preencher)}}. */
+/** Liga as gavetas da tela: `definicoes` é {tipo: {detalhe(id, preencher), formulario(id, preencher)}}. */
 export function ligarGavetas(definicoes) {
   tipos = definicoes;
   dialogo ??= criarDialogo();
@@ -172,4 +185,9 @@ export function ligarGavetas(definicoes) {
   });
   sincronizar(lerEstado().gaveta);
   return {recarregar: () => sincronizar(lerEstado().gaveta, {forcar: true})};
+}
+
+/** Desenha de novo a gaveta aberta (depois de mudar o estado da tarefa que ela mostra, por exemplo). */
+export function recarregarGaveta() {
+  if (dialogo?.open) sincronizar(lerEstado().gaveta, {forcar: true});
 }

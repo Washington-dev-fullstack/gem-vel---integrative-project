@@ -111,3 +111,7 @@ export function aoMudar(funcao) {
     globalThis.removeEventListener(EVENTO, chamar);
   };
 }
+
+/** O clique simples no link de uma gaveta: com Ctrl, Shift, Alt ou outro botão, o navegador abre o
+ * endereço do link (em outra aba, por exemplo). */
+export const cliqueComum = (evento) => evento.button === 0 && !evento.ctrlKey && !evento.metaKey && !evento.shiftKey && !evento.altKey;

@@ -4,7 +4,7 @@
 import {api} from "../nucleo/api.js";
 import {data, dataCurta, dinheiro, intervalo} from "../nucleo/formatos.js";
 import {html, renderizar} from "../nucleo/html.js";
-import {abrirGaveta, aoMudar, lerEstado, trocarFiltro, trocarFiltros} from "../nucleo/url.js";
+import {abrirGaveta, aoMudar, cliqueComum, lerEstado, trocarFiltro, trocarFiltros} from "../nucleo/url.js";
 import {ligarAbas} from "../componentes/abas.js";
 import {erro, esqueleto, vazio} from "../componentes/estados.js";
 import {esconderFaixa} from "../componentes/faixa.js";
@@ -16,8 +16,9 @@ import {seletorDatas} from "../componentes/seletor-datas.js";
 import {cabecalhosDasReservas, enderecoDaGaveta, itensDaReserva, linhaDaReserva, ordenarReservas} from "../componentes/tabela-reservas.js";
 import {iniciarCasca} from "../componentes/shell.js";
 import {gavetaBloqueio} from "../gavetas/bloqueio.js";
-import {cliqueComum, excluirHospede, gavetaHospede, itensDoHospede} from "../gavetas/hospede.js";
+import {excluirHospede, gavetaHospede, itensDoHospede} from "../gavetas/hospede.js";
 import {SITUACOES, cancelarReserva, carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
+import {gavetaTarefa} from "../gavetas/tarefa.js";
 
 const POR_VEZ = 50;
 const ESTADOS_PADRAO = ["futura", "em_curso", "concluida"];
@@ -392,6 +393,7 @@ ligarGavetas({
     carregar({forcar: true});
   }, aoExcluir: excluirDaLista}),
   bloqueio: gavetaBloqueio(),
+  tarefa: gavetaTarefa(),
 });
 
 aoMudar(() => {

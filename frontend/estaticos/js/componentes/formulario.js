@@ -177,3 +177,17 @@ export function ligarFormulario(form, {enviar, depois, dados: ajustar = (dados) 
   });
   return {enviar: mandar};
 }
+
+/** O botão Mostrar de cada senha do formulário (o aria-controls diz qual campo): troca o tipo do
+ * campo, o rótulo e o ícone. */
+export function ligarMostrarSenha(form) {
+  for (const botao of form.querySelectorAll("[data-mostrar]")) {
+    const senha = form.querySelector(`#${botao.getAttribute("aria-controls")}`);
+    botao.addEventListener("click", () => {
+      const aparecendo = senha.type === "text";
+      senha.type = aparecendo ? "password" : "text";
+      botao.querySelector("[data-mostrar-rotulo]").textContent = aparecendo ? "Mostrar" : "Ocultar";
+      botao.querySelector("use").setAttribute("href", `/estaticos/icones.svg#${aparecendo ? "mostrar" : "ocultar"}`);
+    });
+  }
+}

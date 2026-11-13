@@ -66,3 +66,41 @@ export function paraDinheiroApi(texto) {
   if (!/^\d+(\.\d{1,2})?$/.test(limpo)) return null;
   return Number(limpo).toFixed(2);
 }
+
+/** A hora de uma atividade (lote B §8): "agora", "há 5 min" até completar uma hora, "10:42" no mesmo
+ * dia, "ontem, 18:20" e, antes disso, o dia: "seg, 3 nov". */
+export function quandoFoi(iso, agora = new Date()) {
+  const quando = comoData(iso);
+  const minutos = Math.floor((agora - quando) / 60000);
+  if (minutos < 1) return "agora";
+  if (minutos < 60) return `há ${minutos} min`;
+  const hora = `${String(quando.getHours()).padStart(2, "0")}:${String(quando.getMinutes()).padStart(2, "0")}`;
+  const ontem = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() - 1);
+  if (quando.toDateString() === agora.toDateString()) return hora;
+  if (quando.toDateString() === ontem.toDateString()) return `ontem, ${hora}`;
+  return data(quando, {hoje: agora});
+}
+
+// Os dígitos do telefone com o 55 do Brasil quando o número vem sem ele; null se não der.
+function comCodigoDoPais(telefone) {
+  const digitos = String(telefone ?? "").replace(/\D/g, "");
+  if (digitos.length < 10) return null;
+  return digitos.length <= 11 ? `55${digitos}` : digitos;
+}
+
+/** O link do WhatsApp do telefone; null se não der. */
+export function linkDoWhatsapp(telefone) {
+  const numero = comCodigoDoPais(telefone);
+  return numero && `https://wa.me/${numero}`;
+}
+
+/** O link para ligar: "tel:+5511985056060"; null se não der. */
+export function linkDoTelefone(telefone) {
+  const numero = comCodigoDoPais(telefone);
+  return numero && `tel:+${numero}`;
+}
+
+/** O dia no formato da API, pela hora local: "2026-11-05". */
+export function isoDoDia(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}

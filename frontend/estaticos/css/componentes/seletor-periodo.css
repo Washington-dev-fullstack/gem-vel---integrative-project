@@ -1,0 +1,7 @@
+/* Seletor de período: anterior · Hoje · rótulo · próximo. O campo de data fica embaixo do rótulo,
+   invisível, para o calendário do sistema abrir ali. */
+.periodo { display: inline-flex; align-items: center; gap: var(--space-1); }
+.periodo__dia { position: relative; display: inline-flex; }
+.periodo__rotulo { min-width: 104px; justify-content: center; color: var(--color-text); font-weight: 500; }
+span.periodo__rotulo { display: inline-flex; padding: 0 var(--space-2); }
+.periodo__data { position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none; }

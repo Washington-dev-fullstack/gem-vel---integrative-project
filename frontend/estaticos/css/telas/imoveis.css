@@ -17,8 +17,6 @@
   .alternador__opcao:hover { color: var(--color-text); }
   .alternador__opcao[aria-pressed="true"] { background: var(--elev-1-bg); box-shadow: var(--elev-1-edge); color: var(--color-text); }
 
-  .filtros__interruptor { margin-left: auto; font-size: var(--text-sm); }
-
   .ocupacao { display: flex; align-items: center; gap: var(--space-2); min-width: 120px; }
   .ocupacao .medidor { flex: 1; }
   .ocupacao__valor { min-width: 4ch; color: var(--color-text-muted); font-size: var(--text-sm); text-align: right; }

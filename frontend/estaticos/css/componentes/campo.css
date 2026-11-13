@@ -130,3 +130,9 @@ select.entrada option { background-color: var(--color-surface-2); color: var(--c
 .formulario__grupo[hidden] { display: none; }
 .formulario__grupo > legend { float: left; width: 100%; padding: 0; }
 .formulario__grupo > .link--botao { justify-self: start; font-size: var(--text-sm); }
+
+/* Dia e horário lado a lado sob um rótulo só (o início e o prazo da tarefa). O legend flutuante
+   vira item da grade, como um rótulo de campo. */
+.campo-data-hora { margin: 0; padding: 0; border: 0; }
+.campo-data-hora > legend { float: left; width: 100%; padding: 0; }
+.campo__dica--acao { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1); }

@@ -5,7 +5,7 @@
 import {api} from "../nucleo/api.js";
 import {data, dataCurta, dinheiro, dinheiroSemCentavos, horario, intervalo} from "../nucleo/formatos.js";
 import {html, renderizar} from "../nucleo/html.js";
-import {abrirGaveta, aoMudar, lerEstado} from "../nucleo/url.js";
+import {abrirGaveta, aoMudar, cliqueComum, lerEstado} from "../nucleo/url.js";
 import {ligarAbas} from "../componentes/abas.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
 import {erro, esqueleto, vazio} from "../componentes/estados.js";
@@ -17,9 +17,9 @@ import {iniciarCasca} from "../componentes/shell.js";
 import {cabecalhosDasReservas, itensDaReserva, linhaDaReserva, ordenarReservas} from "../componentes/tabela-reservas.js";
 import {tambor} from "../componentes/tambor.js";
 import {gavetaBloqueio} from "../gavetas/bloqueio.js";
-import {cliqueComum} from "../gavetas/hospede.js";
 import {desativarImovel, gavetaImovel, itensDoImovel, localDoImovel, prontidaoDe, proximaEntrada, reativarImovel} from "../gavetas/imovel.js";
 import {cancelarReserva, carregarImoveis, gavetaReserva} from "../gavetas/reserva.js";
+import {gavetaTarefa} from "../gavetas/tarefa.js";
 
 const POR_VEZ = 50;
 const TIPO = {limpeza: "Limpeza", manutencao: "Manutenção"};
@@ -232,7 +232,7 @@ function desenharTarefas() {
       <h2 class="tarefas-dia__titulo numero" id="dia-${dia}">${tituloDoDia(dia)}</h2>
       <ul class="lista" role="list">${doDia.map((t) => html`<li class="linha">
         <div class="linha__inicio">${gema(estadoVisivel(t), {tamanho: 20})}</div>
-        <div class="linha__meio"><a class="linha__titulo linha__link" href="/tarefas?tarefa=${t.id}">${t.titulo}</a>
+        <div class="linha__meio"><a class="linha__titulo linha__link" href="?tarefa=${t.id}" data-tarefa="${t.id}">${t.titulo}</a>
           <span class="linha__meta numero">${horario(t.agendada_para)} · ${TIPO[t.tipo] ?? t.tipo} · ${t.responsavel?.nome ?? "Sem responsável"}</span></div>
         <div class="linha__fim">${chip(estadoVisivel(t))}</div></li>`)}</ul></section>`)}
     ${temMaisTarefas ? html`<div class="tabela-rodape"><button type="button" class="botao botao--secundario botao--sm" data-mais-tarefas>Carregar mais</button></div>` : ""}`);
@@ -255,6 +255,11 @@ async function carregarTarefas({mais = false} = {}) {
 
 areaTarefas.addEventListener("click", (evento) => {
   if (evento.target.closest("[data-mais-tarefas]")) carregarTarefas({mais: true});
+  const link = evento.target.closest("[data-tarefa]");
+  if (link && cliqueComum(evento)) {
+    evento.preventDefault();
+    abrirGaveta("tarefa", Number(link.dataset.tarefa));
+  }
 });
 
 // Aba Dados: endereço, hospedagem, instruções e bloqueios.
@@ -366,6 +371,7 @@ ligarGavetas({
   }, aoCancelar: cancelarDaTabela}),
   imovel: gavetaImovel({depois: recarregar}),
   bloqueio: gavetaBloqueio({depois: carregarBloqueios}),
+  tarefa: gavetaTarefa({depois: () => carregarTarefas()}),
 });
 
 aoMudar(marcarAberta);
