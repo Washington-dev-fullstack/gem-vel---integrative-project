@@ -187,6 +187,9 @@ export function ligarGavetas(definicoes) {
   return {recarregar: () => sincronizar(lerEstado().gaveta, {forcar: true})};
 }
 
+/** Se a tela ligou a gaveta deste tipo (a busca geral abre ali mesmo, sem trocar de página). */
+export const temGaveta = (tipo) => Boolean(tipos[tipo]);
+
 /** Desenha de novo a gaveta aberta (depois de mudar o estado da tarefa que ela mostra, por exemplo). */
 export function recarregarGaveta() {
   if (dialogo?.open) sincronizar(lerEstado().gaveta, {forcar: true});

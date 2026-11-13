@@ -1,0 +1,148 @@
+/* Visão geral (web-admin.md §9; DESIGN.md §4 e §5): o Hoje num painel só, a faixa de KPIs, os dois
+   gráficos feitos à mão (cada um com a tabela equivalente) e a atividade recente. Até 1600px. */
+@layer telas {
+  .visao { display: grid; gap: var(--space-5); max-width: 1600px; margin-inline: auto; }
+  .visao > .cabecalho { padding-bottom: var(--space-1); }
+
+  /* Hoje: 292px + 1,15fr + 1fr, com filetes entre as colunas. */
+  .hoje { display: grid; grid-template-columns: 292px minmax(0, 1.15fr) minmax(0, 1fr); }
+  .hoje__coluna { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; padding: var(--space-5); }
+  .hoje__coluna + .hoje__coluna { box-shadow: -1px 0 0 var(--color-border); }
+  .hoje__titulo { margin: 0 0 var(--space-4); }
+  .contagens { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-3); margin: 0; }
+  .contagem { display: flex; flex-direction: column-reverse; gap: var(--space-1-5); min-width: 0; }
+  .contagem dt { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .contagem dd { margin: 0; font-weight: 600; line-height: 1; letter-spacing: var(--track-num-lg); font-variant-numeric: tabular-nums; }
+  .contagem[data-alerta] dd { color: var(--status-late-fg); }
+  .hoje__subtitulo {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    font-weight: 500;
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+  }
+  .hoje__lista { display: grid; margin: 0; padding: 0; list-style: none; }
+  .hoje__lista + .hoje__subtitulo { margin-top: var(--space-4); }
+  .hoje__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding-block: var(--space-1-5);
+  }
+  .hoje__item + .hoje__item { box-shadow: 0 -1px 0 var(--color-border); }
+  .hoje__item--atencao { grid-template-columns: 16px minmax(0, 1fr) auto; }
+  .hoje__hora { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .hoje__quem { display: grid; gap: var(--space-0-5); min-width: 0; }
+  .hoje__link { overflow: hidden; color: var(--color-text); font-weight: 500; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+  .hoje__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-sm); }
+  .hoje__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .hoje__link:focus-visible { outline: none; }
+  .hoje__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+  .hoje__item .acima { position: relative; z-index: 1; }
+  .hoje__detalhe { overflow: hidden; color: var(--color-text-muted); font-size: var(--text-sm); text-overflow: ellipsis; white-space: nowrap; }
+  .hoje__item--atencao .hoje__detalhe { white-space: normal; } /* o "venceu às 12:00" não pode sumir no corte */
+  .hoje__vazio { display: flex; align-items: center; gap: var(--space-2); margin: 0; padding-block: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm); }
+
+  /* Desempenho: o mês na URL, a faixa (herói 1,45fr + 3 × 1fr) e os gráficos (1,7fr + 1fr). */
+  .desempenho { display: grid; gap: var(--space-4); margin-top: var(--space-3); }
+  .secao-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .secao-topo h2 { margin: 0; }
+  .visao .kpis { grid-template-columns: minmax(0, 1.45fr) repeat(3, minmax(0, 1fr)); }
+  .kpi--heroi .kpi__valor { font-size: var(--num-xl); letter-spacing: var(--track-num-xl); }
+  .kpi .medidor { margin-block: var(--space-0-5); }
+  .graficos { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+  .grafico__textos { display: grid; gap: var(--space-0-5); min-width: 0; }
+  .grafico__area { min-height: 240px; }
+  .grafico[data-tabela-aberta] .grafico__area { display: none; }
+  .grafico .tabela { width: 100%; }
+  /* Na tabela equivalente, a primeira célula de cada linha é cabeçalho de linha, com cara de célula. */
+  .grafico .tabela tbody th {
+    position: static;
+    height: var(--table-row-h);
+    background: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--table-divider);
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  .grafico .tabela tbody tr:last-child th { border-bottom: 0; }
+  .grafico .tabela tr[aria-current] :is(th, td) { background-color: var(--color-pressed); }
+
+  /* Receita por mês: colunas que nascem da linha de base; a do mês escolhido em destaque. */
+  .grafico-receita { display: block; width: 100%; height: 240px; overflow: visible; }
+  .grafico-receita text { fill: var(--color-text-muted); font-family: inherit; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .grafico-receita__grade { stroke: var(--data-grid); stroke-width: 1; }
+  .grafico-receita__base { stroke: var(--data-baseline); stroke-width: 1; }
+  .grafico-receita__coluna {
+    fill: var(--data-realized);
+    opacity: .45;
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: opacity var(--dur-fast) var(--ease-standard);
+  }
+  .grafico-receita__coluna--previsto { fill: var(--data-projected); opacity: .8; }
+  .grafico-receita__alvo { fill: transparent; }
+  .grafico-receita .grafico-receita__valor { fill: var(--color-text); font-size: 12px; font-weight: 600; opacity: 0; transition: opacity var(--dur-fast) var(--ease-standard); }
+  .grafico-receita__mes:hover .grafico-receita__coluna,
+  .grafico-receita__mes--escolhido .grafico-receita__coluna { opacity: 1; }
+  .grafico-receita__mes:hover .grafico-receita__valor,
+  .grafico-receita__mes--escolhido .grafico-receita__valor { opacity: 1; }
+  .grafico-receita__mes--escolhido .grafico-receita__rotulo { fill: var(--color-text); font-weight: 600; }
+  .grafico-receita .grafico-receita__ano { font-size: 10px; fill: var(--color-text-subtle); }
+  .legenda-dados { display: inline-flex; gap: var(--space-3); color: var(--color-text-muted); font-size: var(--text-xs); }
+  .legenda-dados__item { display: inline-flex; align-items: center; gap: var(--space-1-5); }
+  .legenda-dados__item::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--data-realized); }
+  .legenda-dados__item--previsto::before { background: var(--data-projected); }
+
+  /* Ocupação por imóvel: um medidor por imóvel, com a média do mês tracejada. */
+  .ocupacao { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+  .ocupacao__linha {
+    display: grid;
+    grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr) 2.75rem;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 28px;
+    font-size: var(--text-sm);
+  }
+  .ocupacao__nome { overflow: hidden; color: var(--color-text); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+  .ocupacao__nome:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .ocupacao__nome:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .ocupacao__barra { position: relative; overflow: visible; }
+  .ocupacao__barra .medidor__valor { transform-origin: left center; }
+  .ocupacao__barra::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    left: calc(var(--media, 0) * 100%);
+    border-left: 1px dashed var(--data-baseline);
+    pointer-events: none;
+  }
+  .ocupacao__valor { color: var(--color-text-muted); text-align: right; }
+
+  .atividade-recente .cartao__corpo { padding-top: var(--space-3); }
+  .atividade__frase .link { font-weight: 500; }
+
+  /* Notebook: KPIs em 2 colunas e gráficos empilhados. */
+  @media (max-width: 1240px) {
+    .visao .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .visao .kpi:nth-child(n + 3) { border-top: 1px solid var(--color-border); }
+    .graficos { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* Tablet: o Hoje em 1 coluna, com as contagens em 4. */
+  @media (max-width: 1020px) {
+    .hoje { grid-template-columns: minmax(0, 1fr); }
+    .hoje__coluna + .hoje__coluna { box-shadow: 0 -1px 0 var(--color-border); }
+    .contagens { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+}

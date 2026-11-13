@@ -6,6 +6,7 @@ import {html, renderizar} from "../nucleo/html.js";
 import {avatar} from "./pecas.js";
 import {ligarMenu} from "./menu.js";
 import {avisar} from "./aviso.js";
+import {ligarBuscaGeral} from "./busca.js";
 import {ligarFaixaSemInternet} from "./faixa.js";
 
 const CINCO_MINUTOS = 5 * 60 * 1000;
@@ -106,6 +107,8 @@ export async function iniciarCasca({recarregar} = {}) {
   ligarSessaoExpirada();
   ligarVolta(recarregar);
   ajustarAtalho();
+  const gatilho = document.querySelector("[data-busca]");
+  if (gatilho) ligarBuscaGeral(gatilho);
   const usuario = await carregarConta();
   if (usuario) atualizarContador();
   return usuario;
