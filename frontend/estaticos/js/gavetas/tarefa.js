@@ -5,7 +5,8 @@
 import {api} from "../nucleo/api.js";
 import {data, horario, isoDoDia, quandoFoi} from "../nucleo/formatos.js";
 import {html} from "../nucleo/html.js";
-import {cargaNoDia, fraseDoRegistro, inicioSugerido, passagensDoAdmin, primeiroNome} from "../nucleo/tarefas.js";
+import {TIPOS, cargaNoDia, fraseDoRegistro, horarioDaTarefa, inicioSugerido, passagensDoAdmin, primeiroNome}
+  from "../nucleo/tarefas.js";
 import {abrirGaveta, cliqueComum, fecharGaveta} from "../nucleo/url.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
 import {ligarFormulario} from "../componentes/formulario.js";
@@ -14,14 +15,8 @@ import {ligarMenu} from "../componentes/menu.js";
 import {ROTULO_DO_ESTADO, avatar, chip, estadoVisivel, icone} from "../componentes/pecas.js";
 import {carregarImoveis} from "./reserva.js";
 
-export const TIPOS = {limpeza: "Limpeza", manutencao: "Manutenção"};
-
-/** "11:00–15:00"; o prazo de outro dia leva a data: "22:00–sex, 6 nov 08:00". */
-export function horarioDaTarefa(t) {
-  if (!t.prazo) return horario(t.agendada_para);
-  const outroDia = t.prazo.slice(0, 10) !== t.agendada_para.slice(0, 10);
-  return `${horario(t.agendada_para)}–${outroDia ? `${data(t.prazo)} ` : ""}${horario(t.prazo)}`;
-}
+// O nome do tipo e a janela de horário moram no núcleo, que o app da equipe também usa.
+export {TIPOS, horarioDaTarefa};
 
 // A recusa do servidor vem no campo status ("Não dá mais para desfazer."); o resto, na mensagem.
 const fraseDoErro = (erro, padrao) => erro?.campos?.status ?? erro?.mensagem ?? padrao;

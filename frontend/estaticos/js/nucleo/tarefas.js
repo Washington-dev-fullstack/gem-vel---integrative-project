@@ -2,6 +2,15 @@
 
 import {data, horario, isoDoDia} from "./formatos.js";
 
+export const TIPOS = {limpeza: "Limpeza", manutencao: "Manutenção"};
+
+/** "11:00–15:00"; o prazo de outro dia leva a data: "22:00–sex, 6 nov 08:00". */
+export function horarioDaTarefa(t) {
+  if (!t.prazo) return horario(t.agendada_para);
+  const outroDia = t.prazo.slice(0, 10) !== t.agendada_para.slice(0, 10);
+  return `${horario(t.agendada_para)}–${outroDia ? `${data(t.prazo)} ` : ""}${horario(t.prazo)}`;
+}
+
 export const porHorario = (a, b) => a.agendada_para.localeCompare(b.agendada_para) || a.id - b.id;
 
 /** Os grupos da tela, na ordem do lote B. A gema de atrasada só vale antes de começar: a tarefa em
@@ -84,4 +93,62 @@ export function inicioSugerido(dia, agora = new Date()) {
   const hora = Math.max(9, agora.getHours() + 1);
   if (hora > 23) return `${isoDoDia(new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1))}T09:00`;
   return `${hoje}T${String(hora).padStart(2, "0")}:00`;
+}
+
+// App da equipe (design/telas/app-equipe.md): a saudação, o contexto do dia, a linha de estado do
+// cartão e o Avanço de estado.
+
+const OBJETO = {limpeza: "limpeza", manutencao: "manutenção"};
+const maiuscula = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1);
+
+/** "Bom dia, Cida." pela hora do aparelho. */
+export function saudacao(nome, agora = new Date()) {
+  const hora = agora.getHours();
+  const parte = hora >= 5 && hora < 12 ? "Bom dia" : hora >= 12 && hora < 18 ? "Boa tarde" : "Boa noite";
+  return `${parte}, ${primeiroNome(nome)}.`;
+}
+
+/** "Sex, 13 nov · 3 tarefas, 1 concluída"; hoje, sem nada aberto, "Tudo pronto por hoje.". */
+export function contextoDoDia(tarefas, dia, hoje) {
+  const total = tarefas.length;
+  const concluidas = tarefas.filter((t) => t.status === "concluida").length;
+  let resumo = "nenhuma tarefa";
+  if (total && concluidas === total && dia === hoje) resumo = "Tudo pronto por hoje.";
+  else if (total) {
+    resumo = `${total} ${total === 1 ? "tarefa" : "tarefas"}`;
+    if (concluidas) resumo += `, ${concluidas} ${concluidas === 1 ? "concluída" : "concluídas"}`;
+  }
+  return `${maiuscula(data(dia))} · ${resumo}`;
+}
+
+// A hora; a de outro dia leva a data junto ("qui, 12 nov 12:00").
+const quando = (iso, hoje) => (iso.slice(0, 10) === hoje ? horario(iso) : `${data(iso)} ${horario(iso)}`);
+
+/** A linha de estado do cartão (app-equipe.md §2); a pendente no horário não tem linha. */
+export function linhaDoEstado(tarefa, hoje) {
+  if (tarefa.status === "concluida") return {texto: `Concluída às ${horario(tarefa.concluida_em)}`, tom: null};
+  if (tarefa.status === "em_andamento") {
+    const texto = `Começou às ${horario(tarefa.iniciada_em)}`;
+    return tarefa.atrasada ? {texto: `${texto} · atrasada`, tom: "atrasada"} : {texto, tom: null};
+  }
+  if (!tarefa.atrasada) return null;
+  return {
+    texto: tarefa.prazo ? `Atrasada · o prazo era ${quando(tarefa.prazo, hoje)}` : `Atrasada · era para ${quando(tarefa.agendada_para, hoje)}`,
+    tom: "atrasada",
+  };
+}
+
+/** O botão do Avanço: o próximo passo, com verbo e objeto, e o texto da espera; a concluída não tem. */
+export function acaoDoAvanco(tarefa) {
+  const objeto = OBJETO[tarefa.tipo] ?? "tarefa";
+  if (tarefa.status === "pendente") return {rotulo: `Começar ${objeto}`, espera: "Começando…", proximo: "em_andamento"};
+  if (tarefa.status === "em_andamento") return {rotulo: `Concluir ${objeto}`, espera: "Concluindo…", proximo: "concluida"};
+  return null;
+}
+
+const ESTADO_NA_FRASE = {pendente: "pendente", em_andamento: "em andamento", concluida: "concluída"};
+
+/** O aviso e o anúncio da mudança. Sem "da" ou "do" antes do imóvel, que dependeriam do nome dele. */
+export function fraseDaMudanca(tarefa) {
+  return `${maiuscula(OBJETO[tarefa.tipo] ?? "tarefa")} ${ESTADO_NA_FRASE[tarefa.status]}: ${tarefa.imovel.nome}.`;
 }

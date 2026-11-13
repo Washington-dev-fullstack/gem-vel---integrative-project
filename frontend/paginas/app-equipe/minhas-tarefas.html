@@ -1,5 +1,16 @@
 {% extends "app-equipe/base-equipe.html" %}
 {% block titulo %}Minhas tarefas · Gemóvel{% endblock %}
+{% block css %}{{ super() }}<link rel="stylesheet" href="/estaticos/css/telas/minhas-tarefas.css">{% endblock %}
 {% block principal %}
-<h1>Minhas tarefas</h1>
+<div class="minhas-tarefas">
+  <div class="minhas-tarefas__cabeca">
+    <div>
+      <h1 class="minhas-tarefas__saudacao" data-saudacao>Minhas tarefas</h1>
+      <p class="minhas-tarefas__contexto numero" data-contexto></p>
+    </div>
+    <div data-dia></div>
+  </div>
+  <div class="minhas-tarefas__lista" data-lista></div>
+</div>
 {% endblock %}
+{% block scripts %}<script type="module" src="/estaticos/js/telas/minhas-tarefas.js"></script>{% endblock %}

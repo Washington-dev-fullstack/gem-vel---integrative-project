@@ -1,6 +1,6 @@
 # Gemóvel — App da equipe: Minhas tarefas
 
-> Seção de telas do app da equipe: a pessoa da limpeza ou da manutenção, no celular (375px), vendo e atualizando as próprias tarefas do dia. No computador e no tablet, a mesma tela numa coluna central. **Proposta, aguardando o sim da dupla (13 nov 2026).**
+> Seção de telas do app da equipe: a pessoa da limpeza ou da manutenção, no celular (375px), vendo e atualizando as próprias tarefas do dia. No computador e no tablet, a mesma tela numa coluna central. **Aprovada pela dupla em 13 nov 2026.**
 
 - **Base:**
   - `DESIGN.md` v0.4: tema Quartzo (claro), nível de efeitos no máximo Padrão, sem GSAP; texto de 16px e alvos de 48px.

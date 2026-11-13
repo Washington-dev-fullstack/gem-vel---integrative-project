@@ -5,6 +5,13 @@
 <link rel="stylesheet" href="/estaticos/css/app-equipe.css">
 {% endblock %}
 {% block conteudo %}
+<header class="equipe-topo">
+  <span class="equipe-topo__marca">Gemóvel</span>
+  <button type="button" class="conta" data-conta aria-label="Conta">
+    <span class="conta__avatar" data-conta-avatar></span>
+    <span class="conta__nome" data-conta-nome></span>
+  </button>
+</header>
 <main id="conteudo" class="app-equipe">
   {% block principal %}{% endblock %}
 </main>

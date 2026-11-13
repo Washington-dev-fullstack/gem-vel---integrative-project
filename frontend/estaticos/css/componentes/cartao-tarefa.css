@@ -1,0 +1,37 @@
+/* Cartão de tarefa grande (lote B §9; app-equipe.md §2): gema, estado e janela no topo; tipo · imóvel;
+   o título; a linha de estado; o Avanço; "Ver detalhes" abre no próprio cartão. */
+
+.cartao-tarefa { display: grid; gap: var(--space-2); padding: var(--space-4); }
+.cartao-tarefa__topo { display: flex; align-items: center; gap: var(--space-2); }
+.cartao-tarefa__topo > .gema { flex: none; }
+.cartao-tarefa__rotulo { font-size: var(--text-sm); font-weight: 500; }
+.cartao-tarefa__janela { margin-left: auto; color: var(--color-text-muted); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.cartao-tarefa__titulo { margin: var(--space-1) 0 0; font-size: var(--text-lg); line-height: var(--lh-lg); font-weight: 600; text-wrap: balance; }
+.cartao-tarefa__subtitulo, .cartao-tarefa__estado { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+.cartao-tarefa__estado { font-variant-numeric: tabular-nums; }
+.cartao-tarefa__estado[data-tom="atrasada"] { color: var(--status-late-fg); font-weight: 500; }
+.cartao-tarefa .avanco { margin-top: var(--space-2); }
+.cartao-tarefa__detalhes > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  list-style: none;
+  cursor: pointer;
+}
+.cartao-tarefa__detalhes > summary::-webkit-details-marker { display: none; }
+.cartao-tarefa__detalhes > summary > .icone, .minhas-tarefas__concluidas > summary > .icone { transition: transform var(--dur-fast) var(--ease-standard); }
+.cartao-tarefa__detalhes[open] > summary > .icone, .minhas-tarefas__concluidas[open] > summary > .icone { transform: rotate(180deg); }
+.cartao-tarefa__detalhes dl { display: grid; gap: var(--space-3); margin: 0 0 var(--space-2); }
+.cartao-tarefa__detalhes dt {
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+}
+.cartao-tarefa__detalhes dd { margin: var(--space-1) 0 0; font-size: var(--text-md); white-space: pre-line; overflow-wrap: anywhere; }
+.cartao-tarefa__detalhes a { display: inline-block; margin-top: var(--space-1); padding-block: var(--space-2); color: var(--color-text); font-weight: 500; }

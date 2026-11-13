@@ -20,3 +20,6 @@
 @import url("componentes/aviso.css") layer(componentes);
 @import url("componentes/faixa.css") layer(componentes);
 @import url("componentes/estados.css") layer(componentes);
+@import url("componentes/seletor-periodo.css") layer(componentes);
+@import url("componentes/cartao-tarefa.css") layer(componentes);
+@import url("componentes/avanco.css") layer(componentes);

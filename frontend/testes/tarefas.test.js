@@ -1,6 +1,7 @@
 process.env.TZ = "America/Sao_Paulo";
 import {test} from "node:test";
 import assert from "node:assert/strict";
+import {acaoDoAvanco, contextoDoDia, fraseDaMudanca, linhaDoEstado, saudacao} from "../estaticos/js/nucleo/tarefas.js";
 import {agruparTarefas, cargaNoDia, filaDeGemas, fraseDoDesativar, fraseDoDia, fraseDoRegistro, inicioSugerido, linhaDoAgora,
   passagensDoAdmin} from "../estaticos/js/nucleo/tarefas.js";
 import {lerData, linkDoTelefone, linkDoWhatsapp, quandoFoi} from "../estaticos/js/nucleo/formatos.js";
@@ -102,4 +103,49 @@ test("início sugerido da nova tarefa: a próxima hora cheia hoje, 9h nos outros
   assert.equal(inicioSugerido("2026-11-06", agora), "2026-11-06T09:00");
   assert.equal(inicioSugerido(null, lerData("2026-11-05T06:10")), "2026-11-05T09:00");
   assert.equal(inicioSugerido(null, lerData("2026-11-05T23:30")), "2026-11-06T09:00");
+});
+
+test("app da equipe: saudação pela hora, com o primeiro nome", () => {
+  assert.equal(saudacao("Cida Ramos", new Date(2026, 10, 13, 8, 0)), "Bom dia, Cida.");
+  assert.equal(saudacao("Cida Ramos", new Date(2026, 10, 13, 12, 0)), "Boa tarde, Cida.");
+  assert.equal(saudacao("Cida Ramos", new Date(2026, 10, 13, 18, 30)), "Boa noite, Cida.");
+  assert.equal(saudacao("Cida Ramos", new Date(2026, 10, 13, 3, 0)), "Boa noite, Cida.");
+});
+
+test("app da equipe: o contexto do dia conta as tarefas e as concluídas", () => {
+  const t = (status) => ({status});
+  assert.equal(contextoDoDia([t("pendente"), t("em_andamento"), t("concluida")], "2026-11-13", "2026-11-13"), "Sex, 13 nov · 3 tarefas, 1 concluída");
+  assert.equal(contextoDoDia([t("pendente"), t("pendente")], "2026-11-13", "2026-11-13"), "Sex, 13 nov · 2 tarefas");
+  assert.equal(contextoDoDia([t("concluida"), t("concluida")], "2026-11-13", "2026-11-13"), "Sex, 13 nov · Tudo pronto por hoje.");
+  assert.equal(contextoDoDia([t("concluida")], "2026-11-12", "2026-11-13"), "Qui, 12 nov · 1 tarefa, 1 concluída");
+  assert.equal(contextoDoDia([], "2026-11-14", "2026-11-13"), "Sáb, 14 nov · nenhuma tarefa");
+});
+
+test("app da equipe: a linha de estado do cartão", () => {
+  const hoje = "2026-11-13";
+  assert.equal(linhaDoEstado({status: "pendente", atrasada: false}, hoje), null);
+  assert.deepEqual(linhaDoEstado({status: "pendente", atrasada: true, agendada_para: "2026-11-13T09:00", prazo: "2026-11-13T12:00"}, hoje),
+    {texto: "Atrasada · o prazo era 12:00", tom: "atrasada"});
+  assert.deepEqual(linhaDoEstado({status: "pendente", atrasada: true, agendada_para: "2026-11-12T09:00", prazo: "2026-11-12T12:00"}, hoje),
+    {texto: "Atrasada · o prazo era qui, 12 nov 12:00", tom: "atrasada"});
+  assert.deepEqual(linhaDoEstado({status: "pendente", atrasada: true, agendada_para: "2026-11-13T09:00", prazo: null}, hoje),
+    {texto: "Atrasada · era para 09:00", tom: "atrasada"});
+  assert.deepEqual(linhaDoEstado({status: "em_andamento", atrasada: false, iniciada_em: "2026-11-13T11:05"}, hoje), {texto: "Começou às 11:05", tom: null});
+  assert.deepEqual(linhaDoEstado({status: "em_andamento", atrasada: true, iniciada_em: "2026-11-13T11:05"}, hoje),
+    {texto: "Começou às 11:05 · atrasada", tom: "atrasada"});
+  assert.deepEqual(linhaDoEstado({status: "concluida", concluida_em: "2026-11-13T12:40"}, hoje), {texto: "Concluída às 12:40", tom: null});
+});
+
+test("app da equipe: o Avanço diz o próximo passo com verbo e objeto", () => {
+  assert.deepEqual(acaoDoAvanco({tipo: "limpeza", status: "pendente"}), {rotulo: "Começar limpeza", espera: "Começando…", proximo: "em_andamento"});
+  assert.deepEqual(acaoDoAvanco({tipo: "manutencao", status: "em_andamento"}), {rotulo: "Concluir manutenção", espera: "Concluindo…", proximo: "concluida"});
+  assert.equal(acaoDoAvanco({tipo: "limpeza", status: "concluida"}), null);
+});
+
+test("app da equipe: a frase do aviso e do anúncio, sem artigo antes do imóvel", () => {
+  const t = {tipo: "limpeza", imovel: {nome: "Casa da Praia"}};
+  assert.equal(fraseDaMudanca({...t, status: "em_andamento"}), "Limpeza em andamento: Casa da Praia.");
+  assert.equal(fraseDaMudanca({...t, status: "concluida"}), "Limpeza concluída: Casa da Praia.");
+  assert.equal(fraseDaMudanca({...t, status: "pendente"}), "Limpeza pendente: Casa da Praia.");
+  assert.equal(fraseDaMudanca({tipo: "manutencao", imovel: {nome: "Studio Vila Madalena"}, status: "concluida"}), "Manutenção concluída: Studio Vila Madalena.");
 });
