@@ -9,7 +9,7 @@ Gemóvel: gestão de imóveis de aluguel por temporada (imóveis, reservas, hós
 Entregas da escola (cronograma em `docs/escola/`):
 - **Etapa 1, 09/11/2026 (pronta):** diagramas UML, tabelas criadas e conexão do Python com o banco.
 - **Etapa 2, 13/11 (pronta):** classes, DAOs e rotas Flask, com cadastrar e listar funcionando.
-- **Entrega final, 17/11:** front-end em HTML, CSS e JS chamando as rotas do Flask via Fetch.
+- **Entrega final, 17/11 (pronta):** front-end em HTML, CSS e JS chamando as rotas do Flask via Fetch.
 
 ## Comandos
 
