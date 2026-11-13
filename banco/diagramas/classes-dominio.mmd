@@ -92,9 +92,11 @@ classDiagram
         -iniciada_em: datetime
         -concluida_em: datetime
         +atribuir(funcionario: Funcionario) None
+        +reagendar(imovel: Imovel, agendada_para: datetime, prazo: datetime) None
         +iniciar(por: Usuario) HistoricoTarefa
         +concluir(por: Usuario, observacao: str) HistoricoTarefa
         +reabrir(por: Administrador) HistoricoTarefa
+        +desfazer(registro: HistoricoTarefa, por: Usuario, agora: datetime) None
         +esta_atrasada(agora: datetime) bool
     }
     class HistoricoTarefa {
@@ -105,6 +107,16 @@ classDiagram
         -status_novo: StatusTarefa
         -observacao: str
         -registrado_em: datetime
+    }
+    class Indicadores {
+        <<utility>>
+        +noites_no_periodo(entrada: date, saida: date, inicio: date, fim: date)$ int
+        +receita_no_periodo(reserva: Reserva, inicio: date, fim: date)$ Decimal
+        +percentual(parte: int, todo: int)$ int
+        +prontidao(imovel: Imovel, reservas: list~Reserva~, limpezas: list~Tarefa~, agora: datetime)$ dict
+        +proxima_entrada(imovel: Imovel, reservas: list~Reserva~, agora: datetime)$ tuple
+        +reservas_futuras(imovel: Imovel, reservas: list~Reserva~, agora: datetime)$ int
+        +resumo_do_mes(reservas: list~Reserva~, imoveis_ativos: list~Imovel~, inicio: date, fim: date)$ dict
     }
     class Funcao {
         <<enumeration>>
@@ -141,3 +153,5 @@ classDiagram
     Funcionario "0..1" --> "0..*" Tarefa : executa
     Tarefa "1" *-- "0..*" HistoricoTarefa : registra
     Usuario "1" --> "0..*" HistoricoTarefa : altera
+    Indicadores ..> Reserva : calcula
+    Indicadores ..> Imovel : calcula

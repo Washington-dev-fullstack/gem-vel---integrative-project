@@ -116,7 +116,7 @@
   --z-toast: 90;
   --z-skip: 100;
 
-  /* Movimento: só transform, opacity, clip-path e filter curto; nunca ease-in */
+  /* Movimento: só transform, opacity, clip-path e filter curto; nada de curva que só acelera */
   --dur-fast: 140ms;
   --dur-base: 200ms;
   --dur-moderate: 300ms;

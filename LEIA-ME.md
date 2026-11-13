@@ -3,7 +3,7 @@
 Sistema de gestão de imóveis de temporada: imóveis, reservas, hóspedes e as tarefas de limpeza e manutenção da equipe.
 Projeto integrado do Técnico em Informática, turma 2 TID: Arthur Gazzoli e Washington.
 
-Este guia cobre a **Etapa 1** (entrega de 09/11): o banco de dados criado e funcionando, os diagramas (modelo do banco e classes UML) e a primeira conexão do Python com o banco.
+Este guia leva do zero ao sistema funcionando no seu computador: o banco de dados com os dados de exemplo, a API em Python com Flask e as telas no navegador, que conversam com a API pelo Fetch.
 
 ## O que tem em cada pasta
 
@@ -14,6 +14,7 @@ Este guia cobre a **Etapa 1** (entrega de 09/11): o banco de dados criado e func
 | `banco/03_testes.sql` | confere os dados e tenta gravar dados inválidos, que o banco precisa recusar |
 | `banco/diagramas/` | modelo lógico do banco e diagramas de classes, em PNG e SVG (os `.mmd` são a fonte) |
 | `backend/` | a API em Python com Flask: `app.py`, a conexão com o banco (`gemovel/conexao.py`) e os testes (`testes/`) |
+| `frontend/` | as telas: as páginas (`paginas/`), que o Flask serve, o CSS e o JavaScript (`estaticos/`) e os testes do JavaScript (`testes/`) |
 | `DESIGN.md` | o sistema de design do Gemóvel, fonte da verdade da interface |
 | `design/componentes/` | a especificação aprovada dos componentes da interface |
 | `design/telas/` | as telas aprovadas: o que cada uma mostra, faz e pede do back-end |
@@ -94,7 +95,19 @@ Mostra a versão do MySQL e quantas linhas cada tabela tem. Para rodar os testes
 backend/.venv/Scripts/python -m unittest discover -s backend/testes -t backend -v
 ```
 
-Precisa terminar com `Ran 123 tests` e `OK`. **Os testes esperam os dados de exemplo:** rode o `01` e o `02` antes.
+Precisa terminar com `Ran 198 tests` e `OK`. **Os testes esperam os dados de exemplo:** rode o `01` e o `02` antes.
+
+Os testes do JavaScript (as regras das telas, como o conflito de datas e a ordem das tarefas) precisam do Node 22 ou mais novo, sem `npm install`:
+
+```bash
+cd frontend
+```
+
+```bash
+node --test "testes/*.test.js"
+```
+
+Precisa terminar com `fail 0`.
 
 ### 6. Ligar a API
 
@@ -104,25 +117,31 @@ backend/.venv/Scripts/python backend/app.py
 
 Abra http://localhost:5000/api/saude. Com o banco ligado, a resposta traz `"status": "ok"` e as contagens das tabelas. Com o MySQL desligado, a resposta é o erro 503 com a frase "Não foi possível conectar ao banco. O MySQL do XAMPP está ligado?". Para parar a API, use Ctrl+C.
 
-As outras rotas pedem login. O `POST /api/sessao`, com o e-mail e a senha em JSON (`{"email": ..., "senha": ...}`), guarda a sessão num cookie, e os pedidos seguintes levam o cookie junto. O que cada rota recebe e devolve está na seção 5 da especificação, `docs/superpowers/specs/2026-11-08-api-etapa-2-design.md`. Em resumo:
+As outras rotas pedem login. O `POST /api/sessao`, com o e-mail e a senha em JSON (`{"email": ..., "senha": ...}`), guarda a sessão num cookie, e os pedidos seguintes levam o cookie junto. O que cada rota recebe e devolve está na seção 5 da especificação, `docs/superpowers/specs/2026-11-08-api-etapa-2-design.md`, e, nas rotas que as telas pediram depois, no plano do front-end (`docs/superpowers/plans/2026-11-11-front-end.md`). Em resumo:
 
 | Rota | Quem usa | Para quê |
 |---|---|---|
 | `POST`, `GET` e `DELETE /api/sessao` | todos | entrar, ver quem está logado e sair |
-| `GET` e `POST /api/funcionarios` | administrador | a equipe |
-| `GET` e `POST /api/imoveis`; `GET /api/imoveis/<id>` | administrador | os imóveis |
-| `GET` e `POST /api/imoveis/<id>/bloqueios` | administrador | as datas bloqueadas de um imóvel |
-| `GET /api/hospedes?busca=` e `POST /api/hospedes` | administrador | a busca (por nome ou telefone) e o cadastro de hóspedes |
-| `GET /api/reservas?de=&ate=` e `POST /api/reservas` | administrador | as reservas do período e o cadastro, que já cria a limpeza da saída |
-| `GET` e `POST /api/tarefas` | administrador | as tarefas abertas e o cadastro |
+| `GET` e `POST /api/funcionarios`; `PATCH /api/funcionarios/<id>`, `.../senha`, `.../desativar` e `.../reativar` | administrador | a equipe |
+| `GET` e `POST /api/imoveis`; `GET` e `PATCH /api/imoveis/<id>`, `.../desativar` e `.../reativar` | administrador | os imóveis, com a prontidão e a ocupação |
+| `GET` e `POST /api/imoveis/<id>/bloqueios`; `GET /api/bloqueios?de=&ate=`; `DELETE /api/bloqueios/<id>` | administrador | as datas bloqueadas |
+| `GET /api/hospedes?busca=` e `POST /api/hospedes`; `GET`, `PATCH` e `DELETE /api/hospedes/<id>` | administrador | a busca (por nome ou telefone) e o cadastro de hóspedes |
+| `GET /api/reservas?de=&ate=` e `POST /api/reservas`; `GET` e `PATCH /api/reservas/<id>`, `.../cancelar` | administrador | as reservas do período e o cadastro, que já cria a limpeza da saída |
+| `GET` e `POST /api/tarefas` (`?dia=` ou `?imovel_id=`); `GET`, `PATCH` e `DELETE /api/tarefas/<id>` | administrador | as tarefas (sem filtro, as abertas) e o cadastro |
+| `POST /api/tarefas/<id>/estado` e `.../desfazer` | todos | começar, concluir e reabrir uma tarefa; desfazer até 10s depois |
+| `GET /api/visao-geral` e `GET /api/busca?q=` | administrador | os números do mês e o resumo de hoje; a busca geral do topo |
 | `GET /api/atividade?limite=` | administrador | as últimas mudanças de estado das tarefas |
 | `GET /api/minhas-tarefas?dia=` | funcionário | as tarefas da pessoa no dia e as que ficaram abertas |
 
 Os erros vêm sempre no mesmo formato: `{"erro": {"mensagem": ..., "campos": {...}}}`, com a frase para mostrar na tela e, quando é o caso, a frase de cada campo.
 
+### 7. Abrir o sistema
+
+Com a API ligada (passo 6), abra http://localhost:5000/entrar e entre com uma das contas de teste. O administrador cai na Visão geral, com a Agenda, as Reservas, os Imóveis, as Tarefas e a Equipe no menu; quem é da equipe cai em Minhas tarefas, feita para o celular. Cada tela busca e grava os dados pela API, com o Fetch.
+
 ## Contas de teste
 
-Todas usam a senha **`Gemovel@2026`**. O login funciona pela API (`POST /api/sessao`, no passo 6); o banco guarda só o hash da senha (nunca a senha em si).
+Todas usam a senha **`Gemovel@2026`**. Entre por http://localhost:5000/entrar (passo 7) ou pela API (`POST /api/sessao`, no passo 6); o banco guarda só o hash da senha (nunca a senha em si).
 
 | E-mail | Nome | Perfil |
 |---|---|---|

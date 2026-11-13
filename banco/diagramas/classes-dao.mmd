@@ -3,7 +3,7 @@ classDiagram
 
     class Conexao {
         -pool: MySQLConnectionPool
-        +Conexao(config: dict)
+        +Conexao(config: dict, tamanho_pool: int)
         +obter() PooledMySQLConnection
         +transacao() Transacao
         +testar() dict
@@ -24,50 +24,69 @@ classDiagram
         +buscar_por_email(email: str) Usuario
         +buscar_por_id(id: int) Usuario
         +inserir(usuario: Usuario) int
-        +atualizar(usuario: Usuario) None
-        +desativar(id: int) None
+        +mudar_senha(id: int, senha_hash: str) None
+        +mudar_ativo(id: int, ativo: bool) None
     }
     class FuncionarioDAO {
         +listar_por_administrador(administrador_id: int) list~Funcionario~
         +inserir(funcionario: Funcionario) int
+        +atualizar(funcionario: Funcionario) None
     }
     class ImovelDAO {
         +listar_por_administrador(administrador_id: int) list~Imovel~
+        +buscar(administrador_id: int, termo: str, id: int, limite: int) list~Imovel~
         +buscar_por_id(id: int, travar: bool) Imovel
         +inserir(imovel: Imovel) int
         +atualizar(imovel: Imovel) None
-        +desativar(id: int) None
+        +mudar_ativo(id: int, ativo: bool) None
     }
     class HospedeDAO {
         +buscar(administrador_id: int, termo: str) list~Hospede~
         +buscar_por_id(id: int) Hospede
         +inserir(hospede: Hospede) int
         +atualizar(hospede: Hospede) None
+        +excluir(id: int) None
     }
     class ReservaDAO {
-        +listar_por_periodo(administrador_id: int, inicio: date, fim: date) list~Reserva~
         +buscar_por_id(id: int) Reserva
+        +listar_por_periodo(administrador_id: int, inicio: date, fim: date) list~Reserva~
+        +buscar(administrador_id: int, termo: str, id: int, limite: int) list~Reserva~
+        +listar_do_hospede(hospede_id: int) list~Reserva~
+        +listar_para_indicadores(administrador_id: int, inicio_do_mes: date, hoje: date, imovel_id: int) list~Reserva~
         +buscar_conflito(imovel_id: int, entrada: date, saida: date, ignorar_id: int) object
         +existe_conflito(imovel_id: int, entrada: date, saida: date, ignorar_id: int) bool
+        +travar(id: int) None
         +inserir(reserva: Reserva) int
         +atualizar(reserva: Reserva) None
-        +cancelar(id: int) None
     }
     class BloqueioDAO {
         +listar_por_imovel(imovel_id: int) list~Bloqueio~
+        +listar_por_periodo(administrador_id: int, inicio: date, fim: date) list~Bloqueio~
         +buscar_por_id(id: int) Bloqueio
         +inserir(bloqueio: Bloqueio) int
-        +remover(id: int) None
+        +excluir(id: int) None
     }
     class TarefaDAO {
+        +buscar_por_id(id: int, travar: bool) Tarefa
         +listar_do_funcionario(funcionario_id: int, dia: date) list~Tarefa~
         +listar_abertas(administrador_id: int) list~Tarefa~
-        +buscar_por_id(id: int) Tarefa
+        +listar_do_dia(administrador_id: int, dia: date) list~Tarefa~
+        +listar_para_equipe(administrador_id: int, dia: date, agora: datetime) list~Tarefa~
+        +listar_do_imovel(imovel_id: int, desde: datetime, pular: int, quantas: int) list~Tarefa~
+        +buscar_limpeza_da_reserva(reserva_id: int) Tarefa
+        +contar_abertas_do_funcionario(funcionario_id: int) int
+        +liberar_pendentes_futuras(funcionario_id: int, agora: datetime) int
         +inserir(tarefa: Tarefa, criada_por: Usuario) int
-        +salvar_status(tarefa: Tarefa, registro: HistoricoTarefa) None
+        +atualizar(tarefa: Tarefa) None
+        +gravar_estado(tarefa: Tarefa) None
+        +excluir(id: int) None
     }
     class HistoricoTarefaDAO {
         +listar_recentes(administrador_id: int, limite: int) list~HistoricoTarefa~
+        +listar_da_tarefa(tarefa_id: int) list~HistoricoTarefa~
+        +buscar_ultimo(tarefa_id: int) HistoricoTarefa
+        +inserir(registro: HistoricoTarefa) int
+        +excluir(id: int) None
     }
 
     DAOBase <|-- UsuarioDAO
