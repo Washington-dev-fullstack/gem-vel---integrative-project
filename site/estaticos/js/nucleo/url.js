@@ -51,9 +51,16 @@ export function urlCom(url, {filtros, gaveta} = {}) {
   return nova;
 }
 
-export function destinoSeguro(volta) {
-  if (!volta || !volta.startsWith("/") || volta.startsWith("//") || volta.includes("\\")) return null;
-  return volta;
+/** O endereço de volta depois de entrar, só se for deste site; senão, null. A conferência é pela
+ * origem porque o navegador apaga tab e quebra de linha ao ler a URL ("/<tab>/site" vira "//site"). */
+export function destinoSeguro(volta, origem = location.origin) {
+  if (!volta?.startsWith("/")) return null;
+  try {
+    const url = new URL(volta, origem);
+    return url.origin === origem ? `${url.pathname}${url.search}${url.hash}` : null;
+  } catch {
+    return null;
+  }
 }
 
 // Com o history do navegador.

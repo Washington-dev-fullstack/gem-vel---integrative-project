@@ -6,7 +6,7 @@ import {html} from "../nucleo/html.js";
 import {abrirGaveta, urlCom} from "../nucleo/url.js";
 import {enderecoNaAgenda, pilulaDaSituacao} from "../gavetas/reserva.js";
 import {icone} from "./pecas.js";
-import {ir} from "../nucleo/enderecos.js";
+import {enderecoAtual, ir} from "../nucleo/enderecos.js";
 
 export const COMPARAR = {
   codigo: (a, b) => a.id - b.id,
@@ -21,9 +21,10 @@ export const COMPARAR = {
 export const ordenarReservas = (reservas, ordem) => [...reservas].sort((a, b) => COMPARAR[ordem.coluna](a, b) * ordem.sentido
   || a.data_entrada.localeCompare(b.data_entrada) || a.id - b.id);
 
-/** O endereço desta página com a gaveta aberta: o link funciona com Ctrl e em outra aba. */
+/** O endereço desta página com a gaveta aberta: o link funciona com Ctrl e em outra aba. Sai no formato
+ * do Flask ("/reservas?reserva=12"); na demonstração, o tradutor de links passa para o arquivo uma vez só. */
 export function enderecoDaGaveta(tipo, id) {
-  const url = urlCom(new URL(location.href), {gaveta: {tipo, id}});
+  const url = urlCom(new URL(enderecoAtual(), location.origin), {gaveta: {tipo, id}});
   return `${url.pathname}${url.search}`;
 }
 

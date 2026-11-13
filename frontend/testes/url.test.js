@@ -15,8 +15,9 @@ test("urlCom troca filtro e gaveta sem mexer no resto", () => {
   assert.equal(urlCom(u, {filtros: {estado: null}}).search, "?hospede=3");
   assert.equal(urlCom(u, {gaveta: {tipo: "reserva", id: 12, editar: true}}).search, "?estado=futura&reserva=12&editar");
 });
-test("destinoSeguro", () => {
+test("destinoSeguro só aceita endereço deste site, também com tab ou quebra de linha no meio", () => {
   for (const [volta, esperado] of [["/reservas?mes=2026-11", "/reservas?mes=2026-11"], ["//evil.com", null],
-       ["/\\evil.com", null], ["https://evil.com", null], ["", null], [null, null]])
-    assert.equal(destinoSeguro(volta), esperado);
+       ["/\\evil.com", null], ["https://evil.com", null], ["", null], [null, null],
+       ["/\t/exemplo.invalid", null], ["/\n/exemplo.invalid", null], ["//[", null]])
+    assert.equal(destinoSeguro(volta, "http://127.0.0.1:5000"), esperado, JSON.stringify(volta));
 });

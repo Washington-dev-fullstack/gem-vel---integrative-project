@@ -206,6 +206,18 @@ class TestReservas(CasoApi):
         self.confere_erro(self.cliente.patch(f"/api/reservas/{criada['id']}", json=corpo), 409,
                           mensagem="Esta reserva está cancelada.")
 
+    def test_editar_troca_por_hospede_novo(self):  # o PATCH recebe os campos do cadastro (decisão 2 do plano)
+        self.addCleanup(executar, "DELETE FROM hospede WHERE nome = %s", ("Hóspede Trocado Teste",))
+        corpo = self.reserva()
+        criada = self.criar(corpo)
+        del corpo["hospede_id"]
+        corpo["hospede_novo"] = {"nome": "Hóspede Trocado Teste", "telefone": "(11) 90000-0001"}
+        r = self.cliente.patch(f"/api/reservas/{criada['id']}", json=corpo)
+        self.assertEqual(r.status_code, 200, r.get_json())
+        self.assertEqual(r.json["hospede"]["nome"], "Hóspede Trocado Teste")
+        self.assertEqual(consultar("SELECT administrador_id FROM hospede WHERE id = %s", (r.json["hospede"]["id"],)),
+                         [{"administrador_id": 1}])
+
     def test_cancelar_apaga_a_limpeza_pendente(self):
         criada = self.criar(self.reserva())
         r = self.cliente.post(f"/api/reservas/{criada['id']}/cancelar", json={})

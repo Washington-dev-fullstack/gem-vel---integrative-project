@@ -4,6 +4,7 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 import {criarServidor, deslocarDatas} from "../estaticos/js/demo/servidor.js";
 import {destinoDaGuarda, paraArquivo, paraCaminho} from "../estaticos/js/nucleo/enderecos.js";
+import {enderecoDaGaveta} from "../estaticos/js/componentes/tabela-reservas.js";
 
 const AGORA = new Date(2026, 10, 13, 10, 0, 0); // sex, 13 nov 2026, 10:00
 
@@ -180,4 +181,24 @@ test("guarda da demonstração: sem sessão vai para Entrar, e cada perfil fica 
   assert.equal(destinoDaGuarda("minhas-tarefas.html", "", "administrador"), "visao-geral.html");
   assert.equal(destinoDaGuarda("index.html", "", "funcionario"), "minhas-tarefas.html");
   assert.equal(destinoDaGuarda("index.html", "?saiu=1", null), null);
+});
+
+test("demo: editar a reserva trocando por um hóspede novo cadastra o hóspede junto", () => {
+  const s = servidor();
+  entrar(s, "marina@gemovel.test");
+  const {status, corpo} = s.responder("PATCH", "/api/reservas/1", {imovel_id: 1, data_entrada: "2026-11-15",
+    data_saida: "2026-11-18", num_hospedes: 2, hospede_novo: {nome: "Carla Nunes", telefone: "(11) 97777-0000"}});
+  assert.equal(status, 200, JSON.stringify(corpo));
+  assert.equal(corpo.hospede.nome, "Carla Nunes");
+  assert.equal(s.dados.hospedes.length, 2);
+});
+
+test("demo: o link que abre a gaveta sai no formato do Flask, e o tradutor age uma vez só", (t) => {
+  const antes = {location: globalThis.location, document: globalThis.document};
+  t.after(() => Object.assign(globalThis, antes));
+  globalThis.document = {querySelector: (seletor) => (seletor.includes("gemovel-modo") ? {content: "demo"} : null)};
+  globalThis.location = new URL("https://exemplo.github.io/gemovel-integrative-project/reservas.html?estado=futura");
+  assert.equal(enderecoDaGaveta("reserva", 12), "/reservas?estado=futura&reserva=12");
+  globalThis.location = new URL("https://exemplo.github.io/gemovel-integrative-project/imovel.html?id=3#reservas");
+  assert.equal(paraArquivo(enderecoDaGaveta("reserva", 2)), "imovel.html?id=3&reserva=2");
 });

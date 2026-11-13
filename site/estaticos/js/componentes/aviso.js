@@ -53,6 +53,9 @@ function leitor() {
   });
 }
 
+/** ⌘/Ctrl Z só vale para o aviso com "Desfazer" (lote B §17); "Ver na agenda" e as outras ações, não. */
+export const desfazPeloAtalho = (acao) => acao?.rotulo === "Desfazer";
+
 // ⌘/Ctrl Z desfaz o aviso mais novo que tem "Desfazer", fora dos campos de texto.
 function ligarAtalho() {
   if (atalhoLigado) return;
@@ -114,11 +117,12 @@ export function avisar(texto, {acao = null, tom = null, fixo = false} = {}) {
   }
 
   if (acao) {
-    registro.desfazer = () => {
+    const agir = () => {
       fechar();
       acao.fazer();
     };
-    elemento.querySelector(".aviso__acao").addEventListener("click", registro.desfazer);
+    elemento.querySelector(".aviso__acao").addEventListener("click", agir);
+    if (desfazPeloAtalho(acao)) registro.desfazer = agir;
   } else if (duracao) {
     elemento.addEventListener("pointerenter", pausar);
     elemento.addEventListener("pointerleave", correr);

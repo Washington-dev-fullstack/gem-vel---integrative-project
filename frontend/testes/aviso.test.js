@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {adiarEnvio} from "../estaticos/js/componentes/aviso.js";
+import {adiarEnvio, desfazPeloAtalho} from "../estaticos/js/componentes/aviso.js";
 
 test("envia uma vez no fim da espera, sem keepalive", (t) => {
   t.mock.timers.enable({apis: ["setTimeout"]});
@@ -34,4 +34,11 @@ test("pagehide envia na hora, com keepalive, e não envia de novo", (t) => {
   t.mock.timers.tick(10000);
   alvo.dispatchEvent(new Event("pagehide"));
   assert.equal(chamadas.length, 1);
+});
+
+test("⌘/Ctrl Z só serve ao aviso com Desfazer, não a Ver na agenda nem a Entrar de novo", () => {
+  assert.equal(desfazPeloAtalho({rotulo: "Desfazer", fazer() {}}), true);
+  for (const rotulo of ["Ver na agenda", "Ver no dia", "Ver imóvel", "Entrar de novo"])
+    assert.equal(desfazPeloAtalho({rotulo, fazer() {}}), false, rotulo);
+  assert.equal(desfazPeloAtalho(null), false);
 });

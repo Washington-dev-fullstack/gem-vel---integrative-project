@@ -413,6 +413,14 @@ export function criarServidor(dados, {agora = () => new Date()} = {}) {
     return h;
   }
 
+  // O hóspede novo (que vale mais que o hospede_id) ou um dos cadastrados, no cadastro e na edição.
+  function hospedeDoCorpo(eu, corpo) {
+    if (!corpo.hospede_novo || typeof corpo.hospede_novo !== "object") return hospedeDaReserva(eu, corpo.hospede_id ?? null);
+    const novo = {id: proximoId(dados.hospedes), ...lerHospede(corpo.hospede_novo, eu, "hospede_novo.")};
+    dados.hospedes.push(novo);
+    return novo;
+  }
+
   /** Datas, hóspedes e total (R2: sem total, diária × noites); depois a capacidade (R3) e o conflito (R1). */
   function lerReserva(corpo, i, base) {
     const v = new Validador();
@@ -635,14 +643,8 @@ export function criarServidor(dados, {agora = () => new Date()} = {}) {
     ["GET", /^\/api\/reservas\/(\d+)$/, ([id]) => reservaCompleta(minhaReserva(exigir("administrador"), id))],
     ["POST", /^\/api\/reservas$/, (_, corpo) => {
       const eu = exigir("administrador");
-      let hospedeId = corpo.hospede_id ?? null;
-      if (corpo.hospede_novo && typeof corpo.hospede_novo === "object") {
-        const novo = {id: proximoId(dados.hospedes), ...lerHospede(corpo.hospede_novo, eu, "hospede_novo.")};
-        dados.hospedes.push(novo);
-        hospedeId = novo.id;
-      }
       const i = imovelDaReserva(eu, corpo.imovel_id);
-      const h = hospedeDaReserva(eu, hospedeId);
+      const h = hospedeDoCorpo(eu, corpo);
       const r = lerReserva(corpo, i, {id: proximoId(dados.reservas), imovel_id: i.id, hospede_id: h.id,
         valor_diaria: i.valor_diaria, status: "confirmada"});
       dados.reservas.push(r);
@@ -656,7 +658,7 @@ export function criarServidor(dados, {agora = () => new Date()} = {}) {
       const r = minhaReserva(eu, id);
       if (r.status === "cancelada") throw conflito("Esta reserva está cancelada.");
       const i = imovelDaReserva(eu, corpo.imovel_id);
-      const h = hospedeDaReserva(eu, corpo.hospede_id);
+      const h = hospedeDoCorpo(eu, corpo);
       const diaria = i.id === r.imovel_id ? r.valor_diaria : i.valor_diaria;
       const nova = lerReserva(corpo, i, {...r, imovel_id: i.id, hospede_id: h.id, valor_diaria: diaria});
       const mudouLugarOuSaida = nova.imovel_id !== r.imovel_id || nova.data_saida !== r.data_saida;

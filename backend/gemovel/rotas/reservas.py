@@ -53,15 +53,15 @@ def detalhar(id):
     return jsonify(reserva_completa_json(reserva, TarefaDAO(conexao).buscar_limpeza_da_reserva(id), agora))
 
 
-def _ler_reserva(com_hospede_novo):
-    """Os campos do formulário da reserva, no cadastro e na edição (que não tem hóspede novo).
-    Aqui só se confere o formato; as regras vêm depois, dentro da transação."""
+def _ler_reserva():
+    """Os campos do formulário da reserva, os mesmos no cadastro e na edição (decisão 2 do plano),
+    com o hóspede novo. Aqui só se confere o formato; as regras vêm depois, dentro da transação."""
     leitor = Leitor(corpo_json())
     campos = {"imovel_id": leitor.inteiro("imovel_id"), "hospede_id": leitor.inteiro("hospede_id"),
               "data_entrada": leitor.data("data_entrada"), "data_saida": leitor.data("data_saida"),
               "num_hospedes": leitor.inteiro("num_hospedes"), "valor_total": leitor.dinheiro("valor_total"),
               "observacoes": leitor.texto("observacoes")}
-    hospede_novo = leitor.objeto("hospede_novo") if com_hospede_novo else None
+    hospede_novo = leitor.objeto("hospede_novo")
     leitor.conferir()
     return campos, hospede_novo
 
@@ -101,6 +101,15 @@ def _conferir_hospede(hospedes, hospede_id):
         raise ErroValidacao({"hospede_id": "Hóspede não encontrado."})
 
 
+def _hospede_da_reserva(hospedes, hospede_id, hospede_novo):
+    """O id do hóspede da reserva, no cadastro e na edição: o novo, que vale mais que o hospede_id
+    (gravado aqui, dentro da transação), ou um dos cadastrados."""
+    if hospede_novo is not None:
+        return hospedes.inserir(_hospede_novo(hospede_novo, g.usuario.id))
+    _conferir_hospede(hospedes, hospede_id)
+    return hospede_id
+
+
 def _frase_capacidade(imovel):
     """Decisão 5: sem artigo antes do nome, e "1 hóspede" no singular."""
     hospedes = "hóspede" if imovel.capacidade == 1 else "hóspedes"
@@ -121,7 +130,7 @@ def _conferir_lotacao_e_datas(reservas, imovel, reserva):
 @exige_login("administrador")
 def cadastrar():
     agora = datetime.now()
-    campos, hospede_novo = _ler_reserva(com_hospede_novo=True)
+    campos, hospede_novo = _ler_reserva()
     conexao = conexao_do_app()
     with conexao.transacao() as t:  # tudo ou nada, na ordem da spec §5
         # 1. O imóvel, travado antes de tudo.
@@ -129,11 +138,7 @@ def cadastrar():
         _conferir_imovel(imovel, campos["imovel_id"])
 
         # 2. O hóspede: o novo (que vale mais que o hospede_id) ou um dos cadastrados.
-        hospedes = HospedeDAO(conexao, t)
-        if hospede_novo is not None:
-            campos["hospede_id"] = hospedes.inserir(_hospede_novo(hospede_novo, g.usuario.id))
-        else:
-            _conferir_hospede(hospedes, campos["hospede_id"])
+        campos["hospede_id"] = _hospede_da_reserva(HospedeDAO(conexao, t), campos["hospede_id"], hospede_novo)
 
         # 3. A reserva, com a diária do imóvel; a capacidade (R3) e o conflito (R1).
         reserva = Reserva(valor_diaria=imovel.valor_diaria, **campos)
@@ -151,7 +156,7 @@ def cadastrar():
 @exige_login("administrador")
 def editar(id):
     agora = datetime.now()
-    campos, _ = _ler_reserva(com_hospede_novo=False)
+    campos, hospede_novo = _ler_reserva()
     conexao = conexao_do_app()
     with conexao.transacao() as t:
         # As travas vêm antes das leituras: o imóvel de destino (como no cadastro) e a reserva.
@@ -164,7 +169,7 @@ def editar(id):
         mudou_de_imovel = campos["imovel_id"] != atual.imovel_id
         # A reserva que já estava num imóvel desativado ainda pode ser corrigida; mudar para ele, não.
         _conferir_imovel(imovel, campos["imovel_id"], aceita_desativado=not mudou_de_imovel)
-        _conferir_hospede(HospedeDAO(conexao, t), campos["hospede_id"])
+        campos["hospede_id"] = _hospede_da_reserva(HospedeDAO(conexao, t), campos["hospede_id"], hospede_novo)
 
         # A diária é a da reserva; no outro imóvel, vale a diária dele. Sem valor_total, recalcula (R2).
         diaria = imovel.valor_diaria if mudou_de_imovel else atual.valor_diaria
