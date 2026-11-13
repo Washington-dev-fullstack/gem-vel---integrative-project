@@ -45,14 +45,14 @@ export function cabecalhosDasReservas(ordem, {comImovel = true} = {}) {
 
 export function linhaDaReserva(r, {destaque = null, comImovel = true} = {}) {
   return html`<tr data-id="${r.id}" data-situacao="${r.situacao}" ${r.id === destaque ? html`data-destaque` : ""}>
-    <td><a class="tabela__link numero" href="${enderecoDaGaveta("reserva", r.id)}" data-abrir="reserva" data-id="${r.id}">${r.codigo}</a></td>
-    <td>${r.hospede?.nome ?? "–"}</td>
-    ${comImovel ? html`<td>${r.imovel.nome}</td>` : ""}
-    <td class="numero">${data(r.data_entrada)}</td>
-    <td class="numero">${data(r.data_saida)}</td>
+    <td class="tabela__codigo"><a class="tabela__link numero" href="${enderecoDaGaveta("reserva", r.id)}" data-abrir="reserva" data-id="${r.id}">${r.codigo}</a></td>
+    <td class="tabela__hospede">${r.hospede?.nome ?? "–"}</td>
+    ${comImovel ? html`<td class="tabela__imovel">${r.imovel.nome}</td>` : ""}
+    <td class="numero tabela__entrada">${data(r.data_entrada)}</td>
+    <td class="numero tabela__saida">${data(r.data_saida)}</td>
     <td class="numero coluna-p3" data-alinhar="direita">${r.noites}</td>
-    <td class="numero" data-alinhar="direita"><span class="valor">${dinheiro(r.valor_total)}</span></td>
-    <td>${pilulaDaSituacao(r.situacao)}</td>
+    <td class="numero tabela__valor" data-alinhar="direita"><span class="valor">${dinheiro(r.valor_total)}</span></td>
+    <td class="tabela__estado">${pilulaDaSituacao(r.situacao)}</td>
     <td class="tabela__acoes"><button type="button" class="botao botao--icone botao--fantasma botao--sm" data-acoes="${r.id}"
       aria-label="Ações de ${r.codigo}">${icone("acoes")}</button></td>
   </tr>`;

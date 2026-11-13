@@ -44,8 +44,23 @@
   background: var(--elev-2-bg);
   box-shadow: var(--elev-2-edge), var(--elev-2-shadow);
   color: var(--color-text);
+  /* Cresce do gatilho em 200ms e fecha em 140ms, como os menus; no celular, sobe um pouco (celular.css). */
+  --busca-fechada: scale(.98);
+  opacity: 0;
+  transform: var(--busca-fechada);
+  transform-origin: left top;
+  transition: opacity var(--dur-fast) var(--ease-exit), transform var(--dur-fast) var(--ease-exit),
+    overlay var(--dur-fast) allow-discrete, display var(--dur-fast) allow-discrete;
 }
-.busca-geral:popover-open { display: flex; flex-direction: column; }
+.busca-geral:popover-open {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-standard);
+}
+@starting-style { .busca-geral:popover-open { opacity: 0; transform: var(--busca-fechada); } }
 .busca-geral__campo {
   display: flex;
   flex: none;
@@ -111,3 +126,27 @@
 .busca-geral mark { background: none; color: inherit; font-weight: 700; text-decoration: underline 1px; text-underline-offset: 3px; }
 .busca-geral__aviso { padding: var(--space-4); color: var(--color-text-muted); font-size: var(--text-sm); text-wrap: pretty; }
 .busca-gatilho[aria-expanded="true"] { visibility: hidden; }
+
+/* Fechar: no computador, o Esc do campo também é clicável; no celular ele vira "Cancelar" (celular.css). */
+.busca-geral__fechar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 32px;
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard);
+}
+.busca-geral__fechar:hover { background-color: var(--color-hover); color: var(--color-text); }
+.busca-geral__fechar:active { transform: scale(.96); }
+.busca-geral__fechar:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.busca-geral__cancelar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

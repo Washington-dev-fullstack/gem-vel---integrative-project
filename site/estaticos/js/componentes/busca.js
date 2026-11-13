@@ -194,7 +194,7 @@ export function ligarBuscaGeral(gatilho) {
         aria-controls="busca-geral-lista" aria-label="Buscar imóvel, reserva ou hóspede" placeholder="Buscar imóvel, reserva ou hóspede"
         autocomplete="off" spellcheck="false" enterkeyhint="go">
       <span class="busca-geral__carregando" aria-hidden="true"></span>
-      <kbd class="atalho" aria-hidden="true">Esc</kbd></search>
+      <button type="button" class="busca-geral__fechar"><span class="busca-geral__cancelar">Cancelar</span><kbd class="atalho" aria-hidden="true">Esc</kbd></button></search>
     <div class="busca-geral__lista" id="busca-geral-lista" role="listbox" aria-label="Resultados da busca"></div>
     <div class="busca-geral__aviso" hidden></div>
     <p class="visualmente-oculto" role="status"></p>`);
@@ -209,8 +209,12 @@ export function ligarBuscaGeral(gatilho) {
   let ativa = -1;
   let espera = 0;
   let pedido = 0;
+  // No celular a busca ocupa a tela: abrir empilha um passo no history, e o Voltar do aparelho a fecha
+  // (como fecha a gaveta) em vez de sair da página.
+  let noHistorico = false;
 
   const aberta = () => painel.matches(":popover-open");
+  const celular = () => matchMedia("(max-width: 760px)").matches;
 
   function marcar(indice) {
     ativa = indice;
@@ -272,7 +276,7 @@ export function ligarBuscaGeral(gatilho) {
   }
 
   function posicionar() {
-    if (matchMedia("(max-width: 760px)").matches) { // no celular a busca abre em tela cheia (celular.css)
+    if (celular()) { // no celular a busca abre em tela cheia (celular.css)
       painel.style.top = painel.style.left = "";
       return;
     }
@@ -289,11 +293,15 @@ export function ligarBuscaGeral(gatilho) {
       painel.showPopover();
       posicionar();
       gatilho.setAttribute("aria-expanded", "true");
+      if (celular()) {
+        history.pushState({busca: true}, "");
+        noHistorico = true;
+      }
     }
     entrada.focus();
   }
 
-  function fechar({focar = null} = {}) {
+  function fechar({focar = null, desempilhar = true} = {}) {
     if (!aberta()) return;
     clearTimeout(espera);
     pedido += 1;
@@ -301,12 +309,24 @@ export function ligarBuscaGeral(gatilho) {
     painel.hidePopover();
     gatilho.setAttribute("aria-expanded", "false");
     focar?.focus();
+    if (noHistorico) {
+      noHistorico = false;
+      if (desempilhar) history.back();
+    }
   }
 
   function escolher(item) {
     if (!item) return;
     if (item.tipo !== "acao") guardarRecente(item);
+    // Com o passo da busca no history, o destino espera o Voltar terminar: senão ele fecharia a gaveta
+    // aberta agora.
+    const voltando = noHistorico;
+    if (voltando) addEventListener("popstate", () => seguir(item), {once: true});
     fechar();
+    if (!voltando) seguir(item);
+  }
+
+  function seguir(item) {
     // A ação abre a gaveta na própria tela quando ela a conhece; o resultado vai para a tela dele
     // (web-admin.md §8), a não ser que a pessoa já esteja em Reservas.
     const alvo = item.tipo === "acao" ? item.gaveta : {tipo: item.tipo, id: item.id};
@@ -364,6 +384,11 @@ export function ligarBuscaGeral(gatilho) {
     if (!evento.target.closest("[data-tentar]")) return;
     entrada.focus();
     buscar(entrada.value.trim());
+  });
+
+  painel.querySelector(".busca-geral__fechar").addEventListener("click", () => fechar({focar: gatilho}));
+  addEventListener("popstate", () => {
+    if (noHistorico) fechar({desempilhar: false});
   });
 
   gatilho.addEventListener("click", abrir);

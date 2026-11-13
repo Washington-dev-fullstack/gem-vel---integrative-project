@@ -46,11 +46,11 @@
 
 .tabela tbody tr { position: relative; transition: background-color var(--dur-fast) var(--ease-standard); }
 .tabela tbody tr:hover { background-color: var(--color-hover); }
-.tabela tbody tr[data-aberta] { background-color: var(--color-pressed); }
+.tabela tbody tr[data-aberta], .tabela tbody tr:has(.tabela__link:active) { background-color: var(--color-pressed); }
 .tabela tbody tr[data-aberta] td:first-child { box-shadow: inset 2px 0 0 var(--table-row-open-bar); }
 
 /* O link da primeira célula cobre a linha: um alvo só e uma parada de Tab por linha. */
-.tabela__link { color: var(--color-text); font-weight: 500; text-decoration: none; }
+.tabela__link { color: var(--color-text); font-weight: 500; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 .tabela__link::after { content: ""; position: absolute; inset: 0; }
 .tabela__link:focus-visible { outline: none; }
 .tabela__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: -2px; border-radius: var(--radius-sm); }
@@ -103,11 +103,13 @@
 .linha { position: relative; display: flex; align-items: center; gap: var(--row-gap); min-height: var(--row-h-compact); padding: 0 var(--row-pad-x); }
 .linha + .linha::before { content: ""; position: absolute; top: 0; right: 0; left: calc(var(--row-pad-x) + 16px + var(--row-gap)); height: 1px; background-color: var(--color-border); }
 .linha:has(.linha__link):hover { background-color: var(--color-hover); }
+.linha:has(.linha__link:active) { background-color: var(--color-pressed); }
 .linha__inicio { flex: none; display: grid; place-items: center; }
 .linha__meio { flex: 1; min-width: 0; }
 .linha__titulo { display: block; overflow: hidden; color: var(--color-text); font-size: var(--text-base); font-weight: 500; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
 .linha__meta { overflow: hidden; color: var(--color-text-muted); font-size: var(--text-sm); text-overflow: ellipsis; white-space: nowrap; }
 .linha__fim { position: relative; z-index: 1; flex: none; display: flex; align-items: center; gap: var(--space-2); font-variant-numeric: tabular-nums; }
+.linha__link { -webkit-tap-highlight-color: transparent; }
 .linha__link::after { content: ""; position: absolute; inset: 0; }
 .linha__link:focus-visible { outline: none; }
 .linha__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: -2px; border-radius: var(--radius-sm); }

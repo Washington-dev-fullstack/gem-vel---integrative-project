@@ -38,8 +38,9 @@
   .hoje__item--atencao { grid-template-columns: 16px minmax(0, 1fr) auto; }
   .hoje__hora { color: var(--color-text-muted); font-size: var(--text-sm); }
   .hoje__quem { display: grid; gap: var(--space-0-5); min-width: 0; }
-  .hoje__link { overflow: hidden; color: var(--color-text); font-weight: 500; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
-  .hoje__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-sm); }
+  .hoje__link { overflow: hidden; color: var(--color-text); font-weight: 500; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .hoje__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-sm); transition: background-color var(--dur-fast) var(--ease-standard); }
+  .hoje__link:active::after { background-color: var(--color-pressed); }
   .hoje__link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .hoje__link:focus-visible { outline: none; }
   .hoje__link:focus-visible::after { outline: 2px solid var(--color-focus); outline-offset: 2px; }

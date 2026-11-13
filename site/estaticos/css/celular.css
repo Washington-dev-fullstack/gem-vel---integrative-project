@@ -43,14 +43,20 @@
   .topo { position: static; padding: 0 var(--space-4); }
   .topo[data-rolou] { background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-  /* Busca: o gatilho vira um botão só com a lupa, e a busca abre em tela cheia. */
+  /* Busca: o gatilho vira um botão só com a lupa; a busca abre em tela cheia, subindo um pouco, com o
+     Cancelar à direita do campo (o Voltar do aparelho também fecha). */
   .busca-gatilho { width: var(--control-md); padding: 0; justify-content: center; }
   .busca-gatilho__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .busca-gatilho .atalho { display: none; }
-  .busca-geral { inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; }
+  .busca-geral { --busca-fechada: translateY(var(--space-3)); inset: 0; width: auto; height: auto; max-height: none; border-radius: 0; background: var(--color-bg); box-shadow: none; }
+  .busca-geral__campo { height: 56px; padding-right: var(--space-2); }
+  .busca-geral__fechar { height: var(--control-md); padding: 0 var(--space-2); color: var(--color-text); font-size: var(--text-base); }
+  .busca-geral__fechar .atalho { display: none; }
+  .busca-geral__cancelar { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
 
-  /* Cabeçalho da página: título em 32px. */
+  /* Cabeçalho da página: título em 32px; o link de voltar ganha área de toque sem mudar o desenho. */
   .cabecalho__titulo { font-size: var(--display-md); letter-spacing: var(--track-display-md); font-variation-settings: "opsz" var(--opsz-display); }
+  .cabecalho__voltar { padding-block: var(--space-2); margin-block: calc(-1 * var(--space-2)) var(--space-1); }
 
   /* Filtros: a busca da lista ocupa a linha toda. */
   .filtros__busca { flex: 1 1 100%; width: auto; }
@@ -64,6 +70,21 @@
   .tabela tbody tr[data-aberta] { box-shadow: inset 2px 0 0 var(--table-row-open-bar); }
   .tabela td, .tabela :is(th, td):is(:first-child, :last-child) { height: auto; max-width: 100%; padding: 0; border: 0; overflow: hidden; text-overflow: ellipsis; box-shadow: none; }
   .tabela .tabela__acoes { position: absolute; top: 50%; right: var(--space-2); width: auto; overflow: visible; translate: 0 -50%; }
+  /* Reservas: o hóspede e o estado em cima; o código e o imóvel no meio; as datas e o valor embaixo.
+     O ::before e o ::after da linha são as quebras entre as três. */
+  .tabela tbody tr:has(> .tabela__entrada) { row-gap: var(--space-0-5); }
+  .tabela tbody tr:has(> .tabela__entrada)::before, .tabela tbody tr:has(> .tabela__entrada)::after { content: ""; flex-basis: 100%; }
+  .tabela tbody tr:has(> .tabela__entrada)::before { order: 3; }
+  .tabela tbody tr:has(> .tabela__entrada)::after { order: 6; }
+  .tabela .tabela__hospede { order: 1; flex: 1 1 0; color: var(--color-text); font-weight: 600; white-space: nowrap; }
+  .tabela .tabela__estado { order: 2; }
+  .tabela .tabela__codigo { order: 4; }
+  .tabela .tabela__codigo .tabela__link { color: var(--color-text-muted); }
+  .tabela .tabela__imovel { order: 5; flex: 1 1 0; white-space: nowrap; }
+  .tabela .tabela__entrada { order: 7; }
+  .tabela .tabela__saida { order: 8; }
+  .tabela .tabela__saida::before { content: "→" / ""; margin-right: var(--space-2); color: var(--color-text-subtle); }
+  .tabela .tabela__valor { order: 9; margin-left: auto; color: var(--color-text); font-weight: 500; }
 
   /* Gaveta: quase tela cheia (12px de margem), sobe de baixo como folha. */
   .gaveta { --drawer-pad: var(--space-5); inset: var(--space-3); width: auto; translate: 0 calc(100% + var(--space-4)); }
@@ -82,6 +103,10 @@
   .visao .kpi { box-shadow: none; }
   .visao .kpi + .kpi { border-top: 1px solid var(--color-border); }
   .contagens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Na lista de hoje, a pílula desce para baixo do nome, que deixa de ser cortado. */
+  .hoje__item { grid-template-columns: 3rem minmax(0, 1fr); row-gap: var(--space-1); }
+  .hoje__item--atencao { grid-template-columns: 16px minmax(0, 1fr); }
+  .hoje__item > :nth-child(3) { grid-column: 2; justify-self: start; }
 
   /* Tarefas: título na largura toda; responsável e horário na segunda linha, o estado na terceira. */
   .linha-tarefa { grid-template-columns: 16px minmax(0, 1fr) 32px; grid-template-areas: "gema titulo acoes" ". info acoes" ". estado acoes"; }
