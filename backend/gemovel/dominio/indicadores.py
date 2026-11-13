@@ -69,3 +69,23 @@ def proxima_entrada(imovel, reservas, agora):
 def reservas_futuras(imovel, reservas, agora):
     """As confirmadas que ainda não saíram: as em curso e as que vêm (impedem desativar o imóvel)."""
     return sum(1 for r in _confirmadas(imovel, reservas) if _saida(r, imovel) > agora)
+
+
+def resumo_do_mes(reservas, imoveis_ativos, inicio, fim):
+    """Os indicadores da visão geral (decisão 5): a receita (as noites do mês de cada reserva), a
+    ocupação dos imóveis ativos, quantas reservas cruzam o mês e a diária média (receita ÷ noites
+    vendidas no mês). A cancelada não conta; a de um imóvel já desativado entra na receita, nas
+    reservas e na diária média, mas não na ocupação, que só conta os imóveis ativos."""
+    no_mes = [(r, noites_no_periodo(r.data_entrada, r.data_saida, inicio, fim))
+              for r in reservas if r.status is not StatusReserva.CANCELADA]
+    no_mes = [(r, noites) for r, noites in no_mes if noites > 0]
+    receita = sum((receita_no_periodo(r, inicio, fim) for r, _ in no_mes), Decimal("0.00"))
+    vendidas = sum(noites for _, noites in no_mes)
+    ativos = {imovel.id for imovel in imoveis_ativos}
+    ocupadas = sum(noites for r, noites in no_mes if r.imovel_id in ativos)
+    possiveis = len(ativos) * ((fim - inicio).days + 1)
+    return {"receita": receita,
+            "ocupacao": {"percentual": percentual(ocupadas, possiveis), "noites": ocupadas,
+                         "noites_possiveis": possiveis},
+            "reservas": len(no_mes),
+            "diaria_media": (receita / vendidas).quantize(CENTAVO, rounding=ROUND_HALF_UP) if vendidas else None}

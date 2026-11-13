@@ -2,7 +2,7 @@
 
 import re
 
-from gemovel.dao.base import DAOBase
+from gemovel.dao.base import DAOBase, escapar_like
 from gemovel.dominio.hospede import Hospede
 
 COLUNAS_HOSPEDE = ("id", "administrador_id", "nome", "telefone", "email", "documento", "observacoes")
@@ -28,11 +28,6 @@ def hospede_da_linha(linha):
     return Hospede(**{coluna: linha[coluna] for coluna in COLUNAS_HOSPEDE})
 
 
-def _escapar_like(termo):
-    """Escapa os curingas do LIKE: quem digita % ou _ procura esses caracteres, não "qualquer coisa"."""
-    return termo.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-
-
 class HospedeDAO(DAOBase):
     def _para_objeto(self, linha):
         return hospede_da_linha(linha)
@@ -44,7 +39,7 @@ class HospedeDAO(DAOBase):
         Cada um vem com os totais das reservas: pares (hospede, {"num_reservas", "ultima_reserva"})."""
         sql, parametros = _SELECT_COM_TOTAIS + " WHERE administrador_id = %s", [administrador_id]
         if termo:
-            padrao = f"%{_escapar_like(termo)}%"
+            padrao = f"%{escapar_like(termo)}%"
             condicoes = ["nome LIKE %s", "telefone LIKE %s"]
             parametros += [padrao, padrao]
             digitos = re.sub(r"[^0-9]", "", termo)

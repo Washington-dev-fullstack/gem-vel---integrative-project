@@ -34,10 +34,10 @@ def _e_da_api():
 
 def registrar(app):
     """Registra os Blueprints e os tratadores de erro no app."""
-    from gemovel.rotas import (atividade, funcionarios, hospedes, imoveis, paginas, reservas, saude, sessao,
-                               tarefas)
+    from gemovel.rotas import (atividade, funcionarios, hospedes, imoveis, paginas, painel, reservas, saude,
+                               sessao, tarefas)
 
-    for modulo in (saude, sessao, funcionarios, imoveis, hospedes, reservas, tarefas, atividade, paginas):
+    for modulo in (saude, sessao, funcionarios, imoveis, hospedes, reservas, tarefas, atividade, painel, paginas):
         app.register_blueprint(modulo.bp)
 
     @app.errorhandler(ErroGemovel)

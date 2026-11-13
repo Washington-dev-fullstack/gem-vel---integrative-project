@@ -1,6 +1,6 @@
 """DAO das reservas. A reserva vem sempre com o imóvel e o hóspede, juntados na mesma consulta."""
 
-from gemovel.dao.base import DAOBase, colunas, sem_prefixo
+from gemovel.dao.base import DAOBase, colunas, escapar_like, sem_prefixo
 from gemovel.dao.bloqueio_dao import COLUNAS_BLOQUEIO, bloqueio_da_linha
 from gemovel.dao.hospede_dao import COLUNAS_HOSPEDE, hospede_da_linha
 from gemovel.dao.imovel_dao import COLUNAS_IMOVEL, imovel_da_linha
@@ -31,6 +31,14 @@ class ReservaDAO(DAOBase):
         """As reservas do administrador que tocam o período (as canceladas também), por entrada."""
         linhas = self._consultar(_SELECT + " WHERE i.administrador_id = %s AND r.data_entrada <= %s"
                                  " AND r.data_saida > %s ORDER BY r.data_entrada, r.id", (administrador_id, fim, inicio))
+        return [self._para_objeto(linha) for linha in linhas]
+
+    def buscar(self, administrador_id, termo, id=None, limite=5):
+        """As reservas do administrador com o termo no nome do hóspede ou com o `id` que a busca leu
+        do código RSV-0012 (as canceladas também), da entrada mais nova para a mais antiga."""
+        linhas = self._consultar(_SELECT + " WHERE i.administrador_id = %s AND (h.nome LIKE %s OR r.id = %s)"
+                                 f" ORDER BY r.data_entrada DESC, r.id DESC LIMIT {int(limite)}",
+                                 (administrador_id, f"%{escapar_like(termo)}%", id))
         return [self._para_objeto(linha) for linha in linhas]
 
     def buscar_conflito(self, imovel_id, entrada, saida, ignorar_id=None):

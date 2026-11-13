@@ -7,7 +7,7 @@ from decimal import Decimal
 
 from gemovel.dominio.enums import StatusReserva, StatusTarefa
 from gemovel.dominio.indicadores import (noites_no_periodo, percentual, prontidao, proxima_entrada,
-                                         receita_no_periodo, reservas_futuras)
+                                         receita_no_periodo, reservas_futuras, resumo_do_mes)
 from testes.fabrica import nova_reserva, nova_tarefa, novo_imovel
 
 NOV = (date(2026, 11, 1), date(2026, 11, 30))
@@ -74,6 +74,22 @@ class TestIndicadores(unittest.TestCase):
         reservas = [reserva(18, 2, 5), reserva(20, 10, 14), reserva(21, 20, 22),
                     reserva(23, 13, 15, status=StatusReserva.CANCELADA), reserva(24, 9, 12)]
         self.assertEqual(reservas_futuras(imovel, reservas, AGORA), 2)  # a de 9 a 12 saiu às 11:00
+
+
+    def test_resumo_do_mes(self):
+        # Dois imóveis ativos em novembro: 60 noites possíveis. O imóvel 9 foi desativado depois.
+        ativos = [novo_imovel(id=6), novo_imovel(id=7)]
+        reservas = [
+            nova_reserva(id=1, data_entrada=date(2026, 10, 30), data_saida=date(2026, 11, 3),
+                         valor_total=Decimal("1000.00")),  # 2 das 4 noites em novembro: 500,00
+            reserva(2, 10, 13, imovel_id=7, valor_total=Decimal("900.00")),
+            reserva(3, 20, 22, imovel_id=9, valor_total=Decimal("400.00")),  # entra na receita, não na ocupação
+            reserva(4, 5, 9, valor_total=Decimal("800.00"), status=StatusReserva.CANCELADA),  # não conta
+        ]
+        self.assertEqual(resumo_do_mes(reservas, ativos, *NOV),
+                         {"receita": Decimal("1800.00"), "ocupacao": {"percentual": 8, "noites": 5, "noites_possiveis": 60},
+                          "reservas": 3, "diaria_media": Decimal("257.14")})
+        self.assertEqual(resumo_do_mes([], ativos, *NOV)["diaria_media"], None)
 
 
 if __name__ == "__main__":

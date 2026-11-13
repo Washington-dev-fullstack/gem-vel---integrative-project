@@ -17,6 +17,7 @@ _DATA = re.compile(r"\d{4}-\d{2}-\d{2}")
 _HORARIO = re.compile(r"\d{2}:\d{2}")
 _DATA_HORA = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}")
 _INTEIRO = re.compile(r"[0-9]+")
+_MES = re.compile(r"(\d{4})-(\d{2})")
 
 # O dinheiro cabe numa coluna DECIMAL(10,2).
 LIMITE_DINHEIRO = Decimal("100000000")
@@ -132,3 +133,14 @@ def parametro_inteiro(nome, padrao, minimo, maximo):
     if _INTEIRO.fullmatch(valor) and minimo <= int(valor) <= maximo:
         return int(valor)
     raise ErroValidacao({nome: f"Use um número de {minimo} a {maximo}."})
+
+
+def parametro_mes(nome, padrao):
+    """O dia 1 do mês de um parâmetro no formato 2026-11 (de 1900 a 2999); ausente ou vazio dá o padrão."""
+    valor = request.args.get(nome, "")
+    if valor == "":
+        return padrao
+    formato = _MES.fullmatch(valor)
+    if formato and 1900 <= int(formato[1]) <= 2999 and 1 <= int(formato[2]) <= 12:
+        return date(int(formato[1]), int(formato[2]), 1)
+    raise ErroValidacao({nome: "Mês inválido."})

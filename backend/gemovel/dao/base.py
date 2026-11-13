@@ -26,6 +26,12 @@ def sem_prefixo(linha, prefixo):
     return {chave[len(prefixo):]: valor for chave, valor in linha.items() if chave.startswith(prefixo)}
 
 
+
+def escapar_like(termo):
+    """Escapa os curingas do LIKE: quem digita % ou _ procura esses caracteres, não "qualquer coisa"."""
+    return termo.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 class DAOBase(ABC):
     """Um DAO roda dentro da transação que recebe (quando a rota junta vários passos numa
     transação só) ou abre uma transação curta a cada chamada."""

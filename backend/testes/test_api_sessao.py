@@ -69,7 +69,7 @@ class TestSessao(CasoApi):
                     if regra.rule != "/api/sessao" and (regra.rule, metodo) not in dois_perfis:
                         self.confere_erro(outro.open(url, method=metodo, json={}), 403)
                 conferidas.add((regra.rule, metodo))
-        self.assertEqual(len(conferidas), 36)  # as 39 rotas menos as 3 que não pedem login
+        self.assertEqual(len(conferidas), 38)  # as 41 rotas menos as 3 que não pedem login
 
     def test_sair_limpa_a_sessao(self):
         self.entrar("marina@gemovel.test")

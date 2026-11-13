@@ -1,6 +1,6 @@
 """DAO dos imóveis. Imóvel não se apaga: é desativado (ativo = 0)."""
 
-from gemovel.dao.base import DAOBase, hora
+from gemovel.dao.base import DAOBase, escapar_like, hora
 from gemovel.dominio.imovel import Imovel
 
 COLUNAS_IMOVEL = ("id", "administrador_id", "nome", "logradouro", "numero", "complemento", "bairro", "cidade",
@@ -25,6 +25,14 @@ class ImovelDAO(DAOBase):
     def listar_por_administrador(self, administrador_id):
         """Os imóveis do administrador, ativos e desativados, em ordem de nome."""
         linhas = self._consultar(_SELECT + " WHERE administrador_id = %s ORDER BY nome, id", (administrador_id,))
+        return [self._para_objeto(linha) for linha in linhas]
+
+    def buscar(self, administrador_id, termo, id=None, limite=5):
+        """Os imóveis do administrador com o termo no nome (sem diferença de acento nem de maiúscula,
+        pela collation) ou com o `id` que a busca leu do código IMV-003, em ordem de nome."""
+        linhas = self._consultar(_SELECT + " WHERE administrador_id = %s AND (nome LIKE %s OR id = %s)"
+                                 f" ORDER BY nome, id LIMIT {int(limite)}",
+                                 (administrador_id, f"%{escapar_like(termo)}%", id))
         return [self._para_objeto(linha) for linha in linhas]
 
     def buscar_por_id(self, id, travar=False):
