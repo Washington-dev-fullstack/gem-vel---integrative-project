@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {api, ErroApi} from "../estaticos/js/nucleo/api.js";
+import {api, ErroApi, ultimaEscrita} from "../estaticos/js/nucleo/api.js";
 
 // O aviso de sessão sai em globalThis, como no navegador.
 const alvo = new EventTarget();
@@ -68,4 +68,25 @@ test("parâmetro vazio não vai para o endereço", async () => {
   responder(() => json({}));
   await api.get("/api/reservas", {de: "2026-11-01", ate: null, imoveis: undefined, estado: ""});
   assert.equal(pedidos[0].url, "/api/reservas?de=2026-11-01");
+});
+
+test("escrita que deu certo troca a marca que as páginas guardadas conferem; leitura e erro, não", async () => {
+  const guardado = new Map();
+  Object.defineProperty(globalThis, "localStorage", {configurable: true, writable: true,
+    value: {getItem: (chave) => guardado.get(chave) ?? null, setItem: (chave, valor) => guardado.set(chave, String(valor))}});
+  try {
+    responder(() => json({reservas: []}));
+    await api.get("/api/reservas");
+    responder(() => erro(422, "Confira os campos destacados."));
+    await assert.rejects(api.post("/api/hospedes", {}));
+    assert.equal(ultimaEscrita(), null);
+    responder(() => new Response(null, {status: 204}));
+    await api.delete("/api/hospedes/3");
+    const primeira = ultimaEscrita();
+    await api.post("/api/reservas/3/cancelar");
+    assert.ok(primeira);
+    assert.notEqual(ultimaEscrita(), primeira);
+  } finally {
+    delete globalThis.localStorage;
+  }
 });

@@ -12,6 +12,13 @@ const parametros = new URLSearchParams(location.search);
 const form = document.querySelector("#form-entrar");
 const avisos = document.querySelector("[data-entrar-avisos]");
 
+// A conta guardada pela casca (shell.js) é de quem saiu: não pode aparecer para quem entrar agora.
+try {
+  sessionStorage.removeItem("gemovel:casca");
+} catch {
+  // Sem a sessão da aba, não há o que apagar.
+}
+
 if (parametros.has("saiu")) mostrarFaixa(avisos, {tom: "info", mensagem: "Você saiu do Gemóvel."});
 
 ligarFormulario(form, {

@@ -27,6 +27,10 @@
       raiz.dataset.tier = nivel;
     })();
   </script>
+  {# A troca de página animada (View Transitions) se liga aqui, no <head>, e não no base.css: vinda do base.css,
+     por @import numa camada, a regra não valia para a página nova e o Chrome cancelava toda troca. As animações
+     da troca continuam no base.css. #}
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
   {% block css %}
   <link rel="preload" href="/estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/estaticos/css/admin.css">

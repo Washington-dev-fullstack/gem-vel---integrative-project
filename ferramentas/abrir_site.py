@@ -22,7 +22,9 @@ class Pedido(http.server.SimpleHTTPRequestHandler):
                       ".html": "text/html", ".woff2": "font/woff2"}
 
     def end_headers(self):
-        self.send_header("Cache-Control", "no-store")  # depois de gerar o site de novo, vale o novo
+        # O navegador guarda os arquivos e só pergunta se mudaram (304, sem corpo): a troca de página não
+        # baixa tudo de novo, e o site gerado de novo vale na hora.
+        self.send_header("Cache-Control", "no-cache")
         super().end_headers()
 
     def log_message(self, formato, *args):  # sem uma linha por arquivo pedido

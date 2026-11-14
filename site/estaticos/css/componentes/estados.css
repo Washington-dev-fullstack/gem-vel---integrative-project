@@ -1,6 +1,10 @@
 /* Estados de dados: esqueleto facetado, vazio com a primeira ação e o indicador de atualização. */
 
-.esqueleto { display: grid; }
+/* O esqueleto só aparece se a carga passar de 300ms: a carga rápida vai do vazio direto aos dados, sem
+   piscar. Os dados que tomam o lugar dele entram esmaecendo em 200ms (estados.js). */
+.esqueleto { display: grid; animation: estado-surge var(--dur-base) var(--ease-standard) var(--dur-moderate) backwards; }
+.estado-surge { animation: estado-surge var(--dur-base) var(--ease-standard); }
+@keyframes estado-surge { from { opacity: 0; } }
 .esqueleto__linha {
   display: grid;
   grid-template-columns: 2fr 3fr 1fr;

@@ -70,6 +70,8 @@
 .lateral__item:active { transform: scale(.95); }
 .lateral__item:hover { background-color: var(--color-hover); color: var(--color-text); }
 .lateral__item[aria-current="page"] { background-color: transparent; color: var(--color-text); font-weight: 600; }
+/* O item tocado acende na hora, enquanto a próxima página chega (shell.js). */
+.lateral__item[data-indo], .nav-mais__item[data-indo] { background-color: var(--color-hover); color: var(--color-text); }
 .lateral__item .icone { color: inherit; }
 /* A pílula é sólida (v0.4) e desliza entre as páginas pela View Transitions API. */
 .lateral__pilula {

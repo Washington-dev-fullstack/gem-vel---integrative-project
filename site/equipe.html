@@ -28,6 +28,8 @@
     })();
   </script>
   
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
+  
   <link rel="preload" href="estaticos/fontes/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="estaticos/css/admin.css">
   <link rel="stylesheet" href="estaticos/css/telas/equipe.css">
@@ -145,6 +147,29 @@
         <svg class="icone" aria-hidden="true" focusable="false"><use href="estaticos/icones.svg#abrir"></use></svg>
       </button>
     </header>
+    <script>
+      /* A conta e o contador da página anterior já aparecem no primeiro quadro; a casca confere e atualiza (shell.js). */
+      (function () {
+        try {
+          var casca = JSON.parse(sessionStorage.getItem("gemovel:casca") || "{}");
+          var conta = document.querySelector("[data-conta]");
+          var contador = document.querySelector("[data-contador-tarefas]");
+          if (casca.nome && conta) {
+            var avatar = document.createElement("span");
+            avatar.className = "avatar avatar--md";
+            avatar.setAttribute("aria-hidden", "true");
+            avatar.textContent = casca.iniciais || "";
+            conta.querySelector("[data-conta-avatar]").appendChild(avatar);
+            conta.querySelector("[data-conta-nome]").textContent = casca.nome;
+            conta.setAttribute("aria-label", "Conta de " + casca.nome);
+          }
+          if (casca.atrasadas > 0 && contador) {
+            contador.textContent = String(casca.atrasadas);
+            contador.hidden = false;
+          }
+        } catch (e) {}
+      })();
+    </script>
     <main id="conteudo" class="principal" tabindex="-1">
       
 <div class="cabecalho">
@@ -169,6 +194,19 @@
 </div>
 <div class="avisos" data-avisos popover="manual"></div>
 <p class="visualmente-oculto" role="status" data-avisos-leitor></p>
+
+<script type="speculationrules">
+  {
+    "prerender": [{
+      "source": "document",
+      "where": {"and": [
+        {"selector_matches": ".lateral a, .cabecalho__voltar, .cartao-imovel__link"},
+        {"not": {"selector_matches": "[aria-current]"} }
+      ]},
+      "eagerness": "moderate"
+    }]
+  }
+</script>
 
   <script type="module" src="estaticos/js/telas/equipe.js"></script>
 </body>

@@ -4,11 +4,39 @@ import {html, renderizar} from "../nucleo/html.js";
 import {icone} from "./pecas.js";
 import {mostrarFaixa} from "./faixa.js";
 
+// Os dados que tomam o lugar do esqueleto entram esmaecendo (estados.css); cada área tem um observador só.
+const observadores = new WeakMap();
+
+function surgirDepois(area) {
+  observadores.get(area)?.disconnect();
+  const observador = new MutationObserver(() => {
+    if (area.querySelector(":scope > .esqueleto")) return;
+    observador.disconnect();
+    observadores.delete(area);
+    if (area.classList.contains("estado-surge")) {
+      area.classList.remove("estado-surge");
+      void area.offsetWidth;
+    }
+    area.classList.add("estado-surge");
+    const terminar = (evento) => {
+      if (evento.target !== area) return;
+      area.classList.remove("estado-surge");
+      area.removeEventListener("animationend", terminar);
+      area.removeEventListener("animationcancel", terminar);
+    };
+    area.addEventListener("animationend", terminar);
+    area.addEventListener("animationcancel", terminar);
+  });
+  observador.observe(area, {childList: true});
+  observadores.set(area, observador);
+}
+
 export function esqueleto(area, linhas = 8) {
   renderizar(area, html`<div class="esqueleto" role="status">
     <span class="visualmente-oculto">Carregando…</span>
     ${Array.from({length: linhas}, (_, i) => html`<div class="esqueleto__linha" style="--i: ${i}"><span></span><span></span><span></span></div>`)}
   </div>`);
+  surgirDepois(area);
 }
 
 export function vazio(area, {texto, detalhe = null, acao = null}) {

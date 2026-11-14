@@ -87,16 +87,18 @@ ul[role="list"], ol[role="list"], nav ul { list-style: none; padding: 0; }
 .texto-secundario { color: var(--color-text-muted); }
 .texto-terciario { color: var(--color-text-subtle); }
 
-/* Troca de página: só o conteúdo esmaece, em 200ms; a lateral e o topo não piscam. */
+/* Troca de página (quem a liga é o <style> do base.html): a lateral e o topo ficam parados; o conteúdo que
+   sai esmaece em 140ms e o que entra sobe 6px enquanto aparece, em 200ms. Os cliques atravessam a troca:
+   ela nunca segura a navegação. */
 @media (prefers-reduced-motion: no-preference) {
-  @view-transition { navigation: auto; }
-  ::view-transition-old(root), ::view-transition-new(root) {
-    animation-duration: var(--dur-base);
-    animation-timing-function: var(--ease-standard);
-  }
+  ::view-transition { pointer-events: none; }
+  ::view-transition-old(root) { animation: troca-sai var(--dur-fast) var(--ease-exit) both; }
+  ::view-transition-new(root) { animation: troca-entra var(--dur-base) var(--ease-standard) both; }
   ::view-transition-old(lateral), ::view-transition-new(lateral),
   ::view-transition-old(topo), ::view-transition-new(topo) { animation: none; }
 }
+@keyframes troca-sai { to { opacity: 0; } }
+@keyframes troca-entra { from { opacity: 0; transform: translateY(6px); } }
 
 /* Movimento reduzido: nada se desloca; tudo aparece no estado final. */
 @media (prefers-reduced-motion: reduce) {

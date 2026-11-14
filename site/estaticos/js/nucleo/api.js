@@ -26,6 +26,27 @@ export class ErroApi extends Error {
 // também daria 401, e a pessoa veria o mesmo aviso repetido.
 let sessaoAvisada = false;
 
+// Cada escrita que deu certo troca esta marca. Ela fica no localStorage, que as abas e as páginas
+// pré-carregadas dividem: a página que esperou guardada confere a marca quando aparece (shell.js).
+const MARCA_ESCRITA = "gemovel:escritas";
+
+/** A marca da última escrita que deu certo, em qualquer aba (null se nada foi gravado ainda). */
+export function ultimaEscrita() {
+  try {
+    return globalThis.localStorage?.getItem(MARCA_ESCRITA) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function marcarEscrita() {
+  try {
+    globalThis.localStorage?.setItem(MARCA_ESCRITA, String(Number(ultimaEscrita() ?? 0) + 1));
+  } catch {
+    // Sem armazenamento, a página guardada só não fica sabendo da mudança.
+  }
+}
+
 function enderecoCom(caminho, parametros) {
   const pares = Object.entries(parametros ?? {})
     .filter(([, valor]) => valor !== null && valor !== undefined && valor !== "")
@@ -50,6 +71,7 @@ async function pedir(metodo, caminho, {dados, keepalive = false} = {}) {
   } catch {
     throw new ErroApi(0, SEM_SERVIDOR);
   }
+  if (resposta.ok && metodo !== "GET") marcarEscrita();
   if (resposta.status === 204) return null;
 
   let corpo = null;
