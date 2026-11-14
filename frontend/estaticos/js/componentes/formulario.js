@@ -55,9 +55,35 @@ function grupoDe(campo) {
   return campo.closest(".campo") ?? campo.parentElement;
 }
 
+// O erro de um campo pode trazer, logo abaixo da mensagem, um botão que resolve ali mesmo (na busca do
+// hóspede, "Cadastrar “Ana”"). `acao()` roda na hora e devolve {rotulo, fazer, icone}, ou null.
+const acoesDoErro = new WeakMap();
+
+export function acaoNoErro(campo, acao) {
+  acoesDoErro.set(campo, acao);
+}
+
+/** Refaz o rótulo do botão do erro de `campo` com o texto de agora, sem tirar o erro do lugar. */
+export function atualizarAcaoDoErro(campo) {
+  const rotulo = grupoDe(campo).querySelector(".campo__acao .botao__rotulo");
+  const acao = rotulo && acoesDoErro.get(campo)?.();
+  if (acao) rotulo.textContent = acao.rotulo;
+}
+
+function botaoDaAcao(campo, acao) {
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.className = "botao botao--sm botao--secundario campo__acao";
+  renderizar(botao, html`${acao.icone ? icone(acao.icone) : ""}<span class="botao__rotulo">${acao.rotulo}</span>`);
+  botao.addEventListener("click", () => (acoesDoErro.get(campo)?.() ?? acao).fazer());
+  return botao;
+}
+
 export function limparErro(campo) {
   campo.removeAttribute("aria-invalid");
-  const erro = grupoDe(campo).querySelector(".campo__erro");
+  const grupo = grupoDe(campo);
+  grupo.querySelector(".campo__acao")?.remove();
+  const erro = grupo.querySelector(".campo__erro");
   if (!erro) return;
   const ligados = (campo.getAttribute("aria-describedby") ?? "").split(" ").filter((id) => id && id !== erro.id);
   if (ligados.length) campo.setAttribute("aria-describedby", ligados.join(" "));
@@ -65,16 +91,28 @@ export function limparErro(campo) {
   erro.remove();
 }
 
-export function marcarErro(campo, mensagem) {
-  limparErro(campo);
-  const erro = document.createElement("p");
-  erro.className = "campo__erro";
-  erro.id = `erro-${campo.id || campo.name}`;
-  renderizar(erro, html`${icone("erro")}<span>${mensagem}</span>`);
-  grupoDe(campo).append(erro);
-  campo.setAttribute("aria-invalid", "true");
-  const ligados = (campo.getAttribute("aria-describedby") ?? "").split(" ").filter(Boolean);
-  campo.setAttribute("aria-describedby", [...ligados, erro.id].join(" "));
+/** Mostra `mensagem` embaixo do campo; a mesma mensagem de novo não refaz o erro (nem a animação).
+ * Com `invalido: false`, o campo não fica inválido e o aviso não some ao digitar: é o aviso que a
+ * busca dá enquanto a pessoa ainda escreve, e quem o tira é a própria busca. */
+export function marcarErro(campo, mensagem, {invalido = true} = {}) {
+  const grupo = grupoDe(campo);
+  if (grupo.querySelector(".campo__erro")?.dataset.mensagem === mensagem) {
+    atualizarAcaoDoErro(campo);
+  } else {
+    limparErro(campo);
+    const erro = document.createElement("p");
+    erro.className = "campo__erro";
+    erro.id = `erro-${campo.id || campo.name}`;
+    erro.dataset.mensagem = mensagem;
+    renderizar(erro, html`${icone("erro")}<span>${mensagem}</span>`);
+    grupo.append(erro);
+    const acao = acoesDoErro.get(campo)?.();
+    if (acao) grupo.append(botaoDaAcao(campo, acao));
+    const ligados = (campo.getAttribute("aria-describedby") ?? "").split(" ").filter(Boolean);
+    campo.setAttribute("aria-describedby", [...ligados, erro.id].join(" "));
+  }
+  if (invalido) campo.setAttribute("aria-invalid", "true");
+  else campo.removeAttribute("aria-invalid");
 }
 
 function mostrarResumo(form, mensagem, erros) {

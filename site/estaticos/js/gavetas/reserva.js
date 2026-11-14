@@ -2,7 +2,7 @@
 // formulário de nova reserva e de editar. Usada pela tela Reservas, pelo detalhe do imóvel e pela Agenda.
 
 import {api} from "../nucleo/api.js";
-import {data, dinheiro, horario, linkDoWhatsapp} from "../nucleo/formatos.js";
+import {data, dinheiro, horario, linkDoWhatsapp, pareceTelefone} from "../nucleo/formatos.js";
 import {html} from "../nucleo/html.js";
 import {abrirGaveta, cliqueComum, fecharGaveta} from "../nucleo/url.js";
 import {adiarEnvio, avisar} from "../componentes/aviso.js";
@@ -174,15 +174,18 @@ function ligarCampos(form, {reserva, imoveis, preencher}) {
   // Hóspede: um da lista, ou um novo cadastrado ali mesmo.
   const busca = form.querySelector("[data-hospede]");
   const novo = form.querySelector("[data-novo-hospede]");
-  const trocarParaNovo = (ligado, nome = "") => {
+  const trocarParaNovo = (ligado, termo = "") => {
     busca.hidden = ligado;
     novo.hidden = !ligado;
     novo.disabled = !ligado;
     campos.hospede_id.required = !ligado;
     campos["hospede_novo.nome"].required = ligado;
     if (ligado) {
-      campos["hospede_novo.nome"].value = nome;
-      campos["hospede_novo.telefone"].focus();
+      // O texto da busca vai para o nome, ou para o telefone quando é um número; o foco, para o que falta.
+      const telefone = pareceTelefone(termo);
+      campos["hospede_novo.nome"].value = telefone ? "" : termo;
+      if (telefone) campos["hospede_novo.telefone"].value = termo;
+      (termo && !telefone ? campos["hospede_novo.telefone"] : campos["hospede_novo.nome"]).focus();
     } else {
       campos["reserva-hospede"].focus();
     }
@@ -191,6 +194,8 @@ function ligarCampos(form, {reserva, imoveis, preencher}) {
     buscar: (termo) => api.get("/api/hospedes", {busca: termo}).then((resposta) => resposta.hospedes),
     rotular: (h) => ({titulo: h.nome, detalhe: h.telefone}),
     criar: (termo) => trocarParaNovo(true, termo),
+    semResultado: "Nenhum hóspede com esse nome ou telefone.",
+    novo: "Cadastrar hóspede novo",
     aoEscolher: (h) => {
       campos.hospede_id.value = h.id;
     },

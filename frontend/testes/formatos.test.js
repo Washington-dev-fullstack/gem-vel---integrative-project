@@ -1,7 +1,7 @@
 process.env.TZ = "America/Sao_Paulo";
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {dinheiro, dinheiroSemCentavos, data, dataCurta, intervalo, periodo, horario, lerData, paraDinheiroApi} from "../estaticos/js/nucleo/formatos.js";
+import {dinheiro, dinheiroSemCentavos, data, dataCurta, intervalo, periodo, horario, lerData, paraDinheiroApi, pareceTelefone} from "../estaticos/js/nucleo/formatos.js";
 
 const hoje = lerData("2026-11-05");
 
@@ -47,4 +47,9 @@ test("dinheiroSemCentavos: os KPIs mostram o real inteiro (DESIGN.md §3)", () =
   assert.equal(sem("4560.00"), "R$ 4.560");
   assert.equal(sem("1234.50"), "R$ 1.235");
   assert.equal(sem(0), "R$ 0");
+});
+
+test("pareceTelefone: só dígitos e os sinais de um número; nome, com ou sem número, não", () => {
+  for (const texto of ["(11) 98505-6060", "+55 11 98505 6060", "98505", " 11.98505.6060 "]) assert.equal(pareceTelefone(texto), true, texto);
+  for (const texto of ["Ana Souza", "Apto 12", "", "  ", "(-)"]) assert.equal(pareceTelefone(texto), false, texto);
 });

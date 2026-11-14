@@ -81,6 +81,12 @@ export function quandoFoi(iso, agora = new Date()) {
   return data(quando, {hoje: agora});
 }
 
+/** Se o texto é um telefone (dígitos e os sinais de um número, como "(11) 98505-6060"), e não um nome. */
+export function pareceTelefone(texto) {
+  const limpo = String(texto ?? "").trim();
+  return /\d/.test(limpo) && /^[\d\s()+.-]+$/.test(limpo);
+}
+
 // Os dígitos do telefone com o 55 do Brasil quando o número vem sem ele; null se não der.
 function comCodigoDoPais(telefone) {
   const digitos = String(telefone ?? "").replace(/\D/g, "");

@@ -6,6 +6,7 @@ import {api} from "../nucleo/api.js";
 import {gruposDaBusca, juntarRecente, semAcento} from "../nucleo/busca.js";
 import {html, renderizar} from "../nucleo/html.js";
 import {abrirGaveta, destinoSeguro} from "../nucleo/url.js";
+import {acaoNoErro, atualizarAcaoDoErro, limparErro, marcarErro} from "./formulario.js";
 import {temGaveta} from "./gaveta.js";
 import {icone} from "./pecas.js";
 import {ir, paginaAtual} from "../nucleo/enderecos.js";
@@ -22,9 +23,13 @@ function destacar(texto, termo) {
 
 /**
  * Liga a busca ao campo de texto de `campo`. `buscar(termo)` devolve a promessa dos itens;
- * `rotular(item)` dá {titulo, detalhe}; `criar(termo)`, quando existe, vira a última opção.
+ * `rotular(item)` dá {titulo, detalhe}; `criar(termo)`, quando existe, vira a última opção da lista e
+ * o botão logo abaixo de todo erro do campo ("Cadastrar “Ana”"; com o campo vazio, o rótulo `novo`).
+ * Quando a busca não acha ninguém, a lista nem abre: o aviso `semResultado` aparece na hora embaixo
+ * do campo, já com esse botão.
  */
-export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscolher = () => {}, aoDigitar = () => {}}) {
+export function buscaNoFormulario(campo, {buscar, rotular, criar = null, semResultado = "Nada encontrado.",
+  novo = "Cadastrar novo", aoEscolher = () => {}, aoDigitar = () => {}}) {
   const entrada = campo.querySelector("input:not([type=hidden])");
   const id = `busca-${++contador}`;
   const lista = document.createElement("ul");
@@ -54,6 +59,21 @@ export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscol
     entrada.setAttribute("aria-expanded", "false");
     entrada.removeAttribute("aria-activedescendant");
     ativa = -1;
+  }
+
+  // O botão de cadastrar leva o texto de agora, no aviso de sem resultado e no erro do envio
+  // ("Escolha um hóspede da lista ou cadastre um novo.").
+  if (criar) {
+    acaoNoErro(entrada, () => {
+      const termo = entrada.value.trim();
+      return {icone: "mais", rotulo: termo ? `Cadastrar “${termo}”` : novo, fazer: () => cadastrar(termo)};
+    });
+  }
+
+  function cadastrar(termo) {
+    fechar();
+    limparErro(entrada);
+    criar(termo);
   }
 
   function marcar(indice) {
@@ -86,11 +106,12 @@ export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscol
   function escolher(indice) {
     const opcao = opcoes[indice];
     if (!opcao) return;
-    fechar();
     if (opcao.criar) {
-      criar(opcao.criar);
+      cadastrar(opcao.criar);
       return;
     }
+    fechar();
+    limparErro(entrada);
     entrada.value = rotular(opcao.item).titulo;
     aoEscolher(opcao.item);
   }
@@ -102,16 +123,30 @@ export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscol
     if (termo.length < 2) {
       pedido += 1;
       fechar();
+      limparErro(entrada);
       return;
     }
+    // O aviso de sem resultado fica até a próxima busca dizer outra coisa; o botão já leva o texto novo.
+    atualizarAcaoDoErro(entrada);
     espera = setTimeout(async () => {
       const meu = ++pedido;
       campo.dataset.buscando = "";
       try {
         const itens = await buscar(termo);
-        if (meu === pedido) mostrar(itens, termo);
+        if (meu !== pedido) return;
+        if (!itens.length && criar) {
+          // Ninguém com esse texto: no lugar da lista, o aviso e o botão de cadastrar, embaixo do campo.
+          opcoes = [];
+          fechar();
+          marcarErro(entrada, semResultado, {invalido: false});
+          leitor.textContent = semResultado;
+        } else {
+          limparErro(entrada);
+          mostrar(itens, termo);
+        }
       } catch {
         if (meu === pedido) {
+          limparErro(entrada);
           mostrar([], termo);
           leitor.textContent = "Não deu para buscar agora.";
         }
@@ -144,6 +179,7 @@ export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscol
       } else {
         entrada.value = "";
         aoDigitar();
+        limparErro(entrada);
       }
     }
   });
@@ -157,6 +193,7 @@ export function buscaNoFormulario(campo, {buscar, rotular, criar = null, aoEscol
   return {
     definir(item) {
       entrada.value = item ? rotular(item).titulo : "";
+      limparErro(entrada);
     },
   };
 }

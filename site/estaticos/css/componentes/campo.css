@@ -12,6 +12,12 @@
 .campo__dica { font-size: var(--text-xs); line-height: var(--lh-xs); color: var(--color-text-subtle); }
 .campo__erro { display: flex; align-items: flex-start; gap: var(--space-1-5); font-size: var(--text-xs); line-height: var(--lh-xs); color: var(--status-late-fg); }
 .campo__erro .icone { margin-top: 1px; }
+/* O botão que resolve o erro ali mesmo (na busca do hóspede, "Cadastrar “Ana”") vem logo abaixo dele;
+   um nome comprido termina em reticências. O erro e o botão surgem descendo 4px, em 200ms. */
+.campo__acao { justify-self: start; max-width: 100%; }
+.campo__acao .botao__rotulo { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.campo__erro, .campo__acao { animation: campo-surge var(--dur-base) var(--ease-standard); }
+@keyframes campo-surge { from { opacity: 0; transform: translateY(-4px); } }
 
 .entrada {
   width: 100%;
