@@ -151,7 +151,9 @@
   .lateral { overflow: visible; }
 }
 
-/* Topo: preso, transparente parado e vidro fosco depois de 8px de rolagem. */
+/* Topo: preso, transparente parado e vidro fosco depois de 8px de rolagem. O vidro chega aos poucos, em
+   400ms: o fundo e o fio de baixo (no ::before, porque o degradê não transiciona) esmaecem enquanto o
+   desfoque cresce do zero; de volta ao alto, o caminho é o inverso. */
 .topo {
   position: sticky;
   top: 0;
@@ -162,16 +164,24 @@
   gap: var(--space-3);
   height: var(--topo-h);
   padding: 0 var(--space-8);
-  transition: background-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  transition: -webkit-backdrop-filter var(--dur-slow) var(--ease-standard), backdrop-filter var(--dur-slow) var(--ease-standard);
   view-transition-name: topo;
 }
-.topo[data-rolou] {
+.topo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: var(--elev-1v-bg);
   box-shadow: inset 0 -1px 0 var(--color-border);
-  -webkit-backdrop-filter: var(--elev-1v-filter);
-  backdrop-filter: var(--elev-1v-filter);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+  pointer-events: none;
 }
-[data-tier="leve"] .topo[data-rolou] { background: var(--elev-1v-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.topo[data-rolou]::before { opacity: 1; }
+.topo[data-rolou] { -webkit-backdrop-filter: var(--elev-1v-filter); backdrop-filter: var(--elev-1v-filter); }
+[data-tier="leve"] .topo::before { background: var(--elev-1v-solid); }
+[data-tier="leve"] .topo[data-rolou] { -webkit-backdrop-filter: none; backdrop-filter: none; }
 
 .busca-gatilho {
   display: flex;

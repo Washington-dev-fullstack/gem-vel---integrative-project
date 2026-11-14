@@ -41,7 +41,8 @@
   .lateral__contador { top: 4px; right: calc(50% - 24px); }
 
   .topo { position: static; padding: 0 var(--space-4); }
-  .topo[data-rolou] { background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .topo::before { content: none; }
+  .topo[data-rolou] { -webkit-backdrop-filter: none; backdrop-filter: none; }
 
   /* Busca: o gatilho vira um botão só com a lupa; a busca abre em tela cheia, subindo um pouco, com o
      Cancelar à direita do campo (o Voltar do aparelho também fecha). */
