@@ -20,8 +20,9 @@
   opacity: 0;
   transform: translateY(var(--desloca, -4px)) scale(.96);
   transform-origin: var(--origem, left top);
+  /* Aberto, segue o botão quando a página rola: o translate (menu.js) desliza até ele em 200ms. */
   transition: opacity var(--dur-fast) var(--ease-exit), transform var(--dur-fast) var(--ease-exit),
-    overlay var(--dur-fast) allow-discrete, display var(--dur-fast) allow-discrete;
+    translate var(--dur-base) var(--ease-standard), overlay var(--dur-fast) allow-discrete, display var(--dur-fast) allow-discrete;
 }
 .menu:popover-open, .painel-filtro:popover-open {
   opacity: 1;

@@ -5,6 +5,7 @@ import {icone} from "./pecas.js";
 
 let contador = 0;
 let escutandoTamanho = false;
+const seguindo = new WeakMap();
 
 function montar(menu, itens) {
   renderizar(menu, html`${itens.map((item, i) => {
@@ -17,8 +18,14 @@ function montar(menu, itens) {
   })}`);
 }
 
-/** Prende um popover ao botão que o abriu: embaixo e à esquerda; vira para cima ou para a direita sem espaço. */
+/**
+ * Prende um popover ao botão que o abriu: embaixo e à esquerda; vira para cima ou para a direita sem espaço.
+ * Aberto, ele segue o botão quando a página ou a gaveta rola (o topo sai do lugar no celular e abaixo da
+ * faixa da demonstração), deslizando até ele em 200ms (o translate do menu.css); se o botão sai da tela, fecha.
+ */
 export function posicionarJunto(menu, botao) {
+  seguindo.get(menu)?.abort();
+  menu.style.translate = "";
   const caixa = botao.getBoundingClientRect();
   const largura = menu.offsetWidth;
   const altura = menu.offsetHeight;
@@ -30,6 +37,27 @@ export function posicionarJunto(menu, botao) {
   Object.assign(menu.style, {left: `${Math.round(esquerda)}px`, top: `${Math.round(topo)}px`});
   menu.style.setProperty("--origem", `${alinharDireita ? "right" : "left"} ${abrirParaCima ? "bottom" : "top"}`);
   menu.style.setProperty("--desloca", abrirParaCima ? "4px" : "-4px");
+
+  const parar = new AbortController();
+  seguindo.set(menu, parar);
+  let quadro = 0;
+  const seguir = () => {
+    quadro ||= requestAnimationFrame(() => {
+      quadro = 0;
+      const agora = botao.getBoundingClientRect();
+      if (!botao.isConnected || agora.bottom < 0 || agora.top > innerHeight) {
+        if (menu.matches(":popover-open")) menu.hidePopover();
+        return;
+      }
+      menu.style.translate = `${Math.round(agora.left - caixa.left)}px ${Math.round(agora.top - caixa.top)}px`;
+    });
+  };
+  document.addEventListener("scroll", seguir, {capture: true, passive: true, signal: parar.signal});
+  menu.addEventListener("toggle", (evento) => {
+    if (evento.newState !== "closed") return;
+    parar.abort();
+    cancelAnimationFrame(quadro);
+  }, {signal: parar.signal});
 }
 
 export function ligarMenu(botao, itensIniciais) {
@@ -75,7 +103,7 @@ export function ligarMenu(botao, itensIniciais) {
   menu.addEventListener("toggle", () => {
     const aberto = menu.matches(":popover-open");
     botao.setAttribute("aria-expanded", String(aberto));
-    if (!aberto && menu.contains(document.activeElement)) botao.focus();
+    if (!aberto && menu.contains(document.activeElement)) botao.focus({preventScroll: true});
   });
   botao.addEventListener("click", () => (menu.matches(":popover-open") ? fechar() : abrir(0)));
   botao.addEventListener("keydown", (evento) => {
